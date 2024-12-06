@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Registration from "./pages/Registraion";
 import { routes } from "./utils";
 import {Pricing} from "./pages/Pricing";
+import FillQuestionnaire from "./pages/FillQuestionnaire";
 
 const App = () => {
   const location = useLocation();
@@ -31,6 +32,7 @@ const App = () => {
             <Route path={routes.topic_generator} Component={TopicGenerator} />
             <Route path={routes.article_writer} Component={ArticleGenerator} />
             <Route path={routes.pricing} Component={Pricing} />
+            <Route path={routes.fill_questionnaire} Component={FillQuestionnaire} />
           </Routes>
         </div>
       </div>

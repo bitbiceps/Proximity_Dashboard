@@ -5,7 +5,7 @@ const RootLayout = ({children}) => {
   return (
     <>
     <Header/>
-    <div className='p-4'>
+    <div className=' bg-blue-50 p-4'>
     {children}
     </div>
     </>

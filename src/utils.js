@@ -6,6 +6,7 @@ export const routes = {
     login: "/login",
     registration: "/registration",
     pricing: "/pricing",
+    fill_questionnaire: "/fill_questionnaire",
 }
 
 
