@@ -6,6 +6,9 @@ export const routes = {
     login: "/login",
     registration: "/registration",
     pricing: "/pricing",
+    profile: "/profile",
+    logout: "/logout"
+
 }
 
 
@@ -13,5 +16,7 @@ export const sideBarTabs = {
     dashboard: "Dashboard",
     package: "Package",
     topicGenerator: "Topic Generator",
-    articleWriter: "Article Writer"
+    articleWriter: "Article Writer",
+    profile: "Profile",
+    logout: "Logout"
 }
