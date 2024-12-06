@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { submitRegistration } from "../redux/slices/authSlice";
 import Auth from "../assets/auth.jpg";
 import Google from "../assets/google.jpg";
 import India from "../assets/indiaflag.jpg";
 import USFlag from "../assets/us.jpg";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Registration() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [countryCode, setCountryCode] = useState("+91");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -17,6 +20,7 @@ function Registration() {
   const [password, setPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  const response = useSelector((state) => state.auth);
   const countryFlags = {
     "+91": { code: "+91", flag: India },
     "+1": { code: "+1", flag: USFlag },
@@ -47,6 +51,24 @@ function Registration() {
     dispatch(submitRegistration(formData));
     console.log("Dispatched:", formData);
   };
+
+  useEffect(() => {
+    if (
+      response.user &&
+      response.user.message === "User registered successfully"
+    ) {
+      navigate("/login", { replace: true }); 
+    }
+  }, [response, navigate]);
+
+  useEffect(() => {
+    if (
+      response.user &&
+      response.user.message === "User registered successfully"
+    ) {
+      navigate("/login", { replace: true });
+    }
+  }, [response, navigate]);
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
@@ -187,9 +209,9 @@ function Registration() {
 
           <p className="text-center text-xs text-gray-600 mt-6">
             Own an Account?{" "}
-            <a href="/login" className="underline font-bold">
+            <Link to="/login" className="underline font-bold">
               JUMP RIGHT IN
-            </a>
+            </Link>
           </p>
         </div>
       </div>
