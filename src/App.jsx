@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Package from "./pages/Package";
 import TopicGenerator from "./pages/TopicGenerator";
 import ArticleGenerator from "./pages/ArticleGenerator";
+import Profile from "./pages/Profile";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             <Route path={routes.package} Component={Package} />
             <Route path={routes.topic_generator} Component={TopicGenerator} />
             <Route path={routes.article_writer} Component={ArticleGenerator} />
+            <Route path={routes.profile} Component={Profile} />
           </Routes>
         </div>
       </div>
