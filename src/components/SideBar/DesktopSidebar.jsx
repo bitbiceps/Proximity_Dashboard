@@ -24,7 +24,7 @@ const DesktopSidebar = () => {
         <div
             className={`flex flex-col h-screen bg-white text-white transition-width duration-300 sidebar-shadow ${isHovered ? 'w-72' : 'w-24'}`}
         >
-            <div className="flex items-center justify-between p-8">
+            <div className="flex items-center justify-between px-2 py-8 lg:p-8 ">
                 <img src={logo} alt="Logo" />
             </div>
             <nav className="flex-1 overflow-y-auto">
@@ -38,7 +38,7 @@ const DesktopSidebar = () => {
                         >
                             <div className={`${transition} ${active == item.name ? "bg-app-blue-1" : "bg-white"} ${isHovered ? "h-full" : "h-full"} w-[4px] rounded-r-lg`} />
                             <li
-                                className={`${transition} flex text-[18px] items-center p-2 ${isHovered ? "w-[75%] h-[55px]" : "w-fit h-fit"} pl-6  rounded-lg ${active == item.name ? 'bg-app-blue-1 text-white' : 'hover:bg-gray-100 text-app-grey-1'} ${!isHovered ? 'justify-center' : ''}`}
+                                className={`${transition} flex text-[18px] items-center p-2 ${isHovered ? "w-[75%] h-[55px]" : "w-fit h-fit"} ${isHovered && "pl-6"}  rounded-lg ${active == item.name ? 'bg-app-blue-1 text-white' : 'hover:bg-gray-100 text-app-grey-1'} ${!isHovered ? 'justify-center' : ''}`}
                             >
                                 {isHovered ? (
                                     <>
@@ -50,8 +50,8 @@ const DesktopSidebar = () => {
                                     </>
                                 ) : (
                                     <>
-                                        {item.icon && <item.icon size={26} className="mr-2" />}
-                                        {item.img && <item.icon size={26} className="mr-2" />}
+                                        {item.icon && <item.icon size={26}  />}
+                                        {item.img && <img src={item.img} size={26} className={`${active === item.name && "filter brightness-0 invert"}`} />}
                                     </>
                                 )}
                             </li>
