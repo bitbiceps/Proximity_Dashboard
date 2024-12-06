@@ -7,7 +7,8 @@ export const routes = {
     registration: "/registration",
     pricing: "/pricing",
     profile: "/profile",
-    logout: "/logout"
+    logout: "/logout",
+    error: "*"
 
 }
 
