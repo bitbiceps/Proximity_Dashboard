@@ -16,14 +16,18 @@ import ErrorPage from "./pages/ErrorPage";
 
 const App = () => {
   const location = useLocation();
-  const noSidebarRoutes = [routes.login, routes.registration, ];
+  const validRoutes = Object.values(routes); // Extract the valid route paths from the routes object
+  const isValidRoute = validRoutes.includes(location.pathname); // Check if the current location matches any of the valid routes
 
-  const isNoSidebar = noSidebarRoutes.includes(location.pathname) || routes[location.pathname];
+  // Determine if we should show the Sidebar
+  const isNoSidebar = [routes.login, routes.registration].includes(location.pathname); // Example of routes with no sidebar
+  const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
+
 
   return (
     <Provider store={store}>
       <div className="flex">
-        {!isNoSidebar ||  <Sidebar />}
+        {!isNoSidebar && !isErrorRoute && <Sidebar />}
         <div className={isNoSidebar ? "flex-1 w-full" : "flex-1"}>
           <Routes>
             <Route path={routes.login} Component={Login} />
