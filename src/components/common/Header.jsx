@@ -15,13 +15,8 @@ const Header = () => {
     ];
 
 
-    const handleOptionSelect = (option) => {
-        console.log(`Selected: ${option.label}`);
-        // Add specific actions for each option if needed
-        if (option.label === "Logout") {
-            console.log("Logging out...");
-            // Perform logout action here
-        }
+    const handleCountrySelect = (country) => {
+        console.log("Selected Country:", country.name);
     };
     return (
         <div className='w-full h-[100px] bg-white shadow-custom flex items-center px-12  justify-between'>
@@ -34,7 +29,7 @@ const Header = () => {
                 <Notifications />
                 {/* User */}
                 <UserAvatar user={{ name: "Sana Ray", role: "Admin", avatar }} />
-                <Dropdown options={userOptions} label="label" onOptionSelect={handleOptionSelect} />
+                <Dropdown label="label" onOptionSelect={handleCountrySelect} />
             </div>
         </div>
     )
