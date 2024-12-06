@@ -10,19 +10,21 @@ import ArticleGenerator from "./pages/ArticleGenerator";
 import Login from "./pages/Login";
 import Registration from "./pages/Registraion";
 import { routes } from "./utils";
-import {Pricing} from "./pages/Pricing";
+import { Pricing } from "./pages/Pricing";
+import Profile from "./pages/Profile";
+import ErrorPage from "./pages/ErrorPage";
 import FillQuestionnaire from "./pages/FillQuestionnaire";
 
 const App = () => {
   const location = useLocation();
-  const noSidebarRoutes = [routes.login, routes.registration];
+  const noSidebarRoutes = [routes.login, routes.registration, ];
 
-  const isNoSidebar = noSidebarRoutes.includes(location.pathname);
+  const isNoSidebar = noSidebarRoutes.includes(location.pathname) || routes[location.pathname];
 
   return (
     <Provider store={store}>
       <div className="flex">
-        {!isNoSidebar && <Sidebar />}
+        {!isNoSidebar ||  <Sidebar />}
         <div className={isNoSidebar ? "flex-1 w-full" : "flex-1"}>
           <Routes>
             <Route path={routes.login} Component={Login} />
@@ -33,6 +35,10 @@ const App = () => {
             <Route path={routes.article_writer} Component={ArticleGenerator} />
             <Route path={routes.pricing} Component={Pricing} />
             <Route path={routes.fill_questionnaire} Component={FillQuestionnaire} />
+            <Route path={routes.profile} Component={Profile} />
+            <Route path={routes.error} Component={ErrorPage} />
+            
+
           </Routes>
         </div>
       </div>

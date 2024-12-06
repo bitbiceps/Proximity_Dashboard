@@ -7,6 +7,10 @@ export const routes = {
     registration: "/registration",
     pricing: "/pricing",
     fill_questionnaire: "/fill_questionnaire",
+    profile: "/profile",
+    logout: "/logout",
+    error: "*"
+
 }
 
 
@@ -14,5 +18,7 @@ export const sideBarTabs = {
     dashboard: "Dashboard",
     package: "Package",
     topicGenerator: "Topic Generator",
-    articleWriter: "Article Writer"
+    articleWriter: "Article Writer",
+    profile: "Profile",
+    logout: "Logout"
 }
