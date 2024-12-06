@@ -4,15 +4,18 @@ import avatar from "../../assets/header/avatar.svg"
 import Notifications from './Notifications'
 import UserAvatar from './UserAvatar'
 import Dropdown from './Dropdown'
+import spainish from "../../assets/lang_flags/spanish.svg"
+import uk from "../../assets/lang_flags/uk.svg"
+import french from "../../assets/lang_flags/french.svg"
 
 const Header = () => {
     const [search, setSearch] = useState("")
-    const userOptions = [
-        { id: 1, label: "Profile" },
-        { id: 2, label: "Settings" },
-        { id: 3, label: "Help" },
-        { id: 4, label: "Logout" },
+    const langOptions = [
+        { name: "Spanish", flag: spainish },
+        { name: "French", flag: french },
+        { name: "English", flag: uk },
     ];
+    const [selected, setSelected] = useState(langOptions[0])
 
 
     const handleCountrySelect = (country) => {
@@ -29,7 +32,7 @@ const Header = () => {
                 <Notifications />
                 {/* User */}
                 <UserAvatar user={{ name: "Sana Ray", role: "Admin", avatar }} />
-                <Dropdown label="label" onOptionSelect={handleCountrySelect} />
+                {/* <Dropdown label="Select Language" onSelect={handleCountrySelect} options={langOptions} selected={selected} /> */}
             </div>
         </div>
     )

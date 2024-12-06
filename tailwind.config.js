@@ -15,7 +15,8 @@ export default {
           grey: {
             1: "#A2A2A2",
             2: "#F5F6FA",
-            3: "#D5D5D5"
+            3: "#D5D5D5",
+            4: "#404040"
           },
           // orange: {
           //   1: "#FE5E009C"
