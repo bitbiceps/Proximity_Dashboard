@@ -4,7 +4,8 @@ export const routes = {
     topic_generator: "/topic_generator",
     article_writer: "/article_writer",
     login: "/login",
-    registration: "/registration"
+    registration: "/registration",
+    pricing: "/pricing",
 }
 
 
