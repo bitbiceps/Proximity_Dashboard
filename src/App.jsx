@@ -13,6 +13,7 @@ import { routes } from "./utils";
 import { Pricing } from "./pages/Pricing";
 import Profile from "./pages/Profile";
 import ErrorPage from "./pages/ErrorPage";
+import FillQuestionnaire from "./pages/FillQuestionnaire";
 
 const App = () => {
   const location = useLocation();
@@ -33,8 +34,11 @@ const App = () => {
             <Route path={routes.topic_generator} Component={TopicGenerator} />
             <Route path={routes.article_writer} Component={ArticleGenerator} />
             <Route path={routes.pricing} Component={Pricing} />
+            <Route path={routes.fill_questionnaire} Component={FillQuestionnaire} />
             <Route path={routes.profile} Component={Profile} />
             <Route path={routes.error} Component={ErrorPage} />
+            
+
           </Routes>
         </div>
       </div>
