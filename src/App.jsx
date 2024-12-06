@@ -41,8 +41,6 @@ const App = () => {
             <Route path={routes.fill_questionnaire} Component={FillQuestionnaire} />
             <Route path={routes.profile} Component={Profile} />
             <Route path={routes.error} Component={ErrorPage} />
-            
-
           </Routes>
         </div>
       </div>
