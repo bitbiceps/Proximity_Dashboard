@@ -10,6 +10,7 @@ import ArticleGenerator from "./pages/ArticleGenerator";
 import Login from "./pages/Login";
 import Registration from "./pages/Registraion";
 import { routes } from "./utils";
+import {Pricing} from "./pages/Pricing";
 
 const App = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ const App = () => {
             <Route path={routes.package} Component={Package} />
             <Route path={routes.topic_generator} Component={TopicGenerator} />
             <Route path={routes.article_writer} Component={ArticleGenerator} />
+            <Route path={routes.pricing} Component={Pricing} />
           </Routes>
         </div>
       </div>
