@@ -10,7 +10,6 @@ function Login() {
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
       <div className="flex flex-col md:flex-row w-full h-full max-w-none bg-white">
-        {/* Left Section (Image) */}
         <div className="w-full md:w-1/2 h-1/2 md:h-full">
           <img
             src={Auth}
@@ -19,13 +18,11 @@ function Login() {
           />
         </div>
 
-        {/* Right Section (Form) */}
         <div className="flex flex-col w-full md:w-1/2 px-8 md:px-48 py-6 md:py-16 h-full justify-center">
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-8 text-center">
             Unlock Your PR Potential
           </h2>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            {/* Full Name */}
             <div>
               <label className="block text-sm text-gray-500 mb-1">
                 Full Name
@@ -37,7 +34,6 @@ function Login() {
               />
             </div>
 
-            {/* Email Address */}
             <div>
               <label className="block text-sm text-gray-500 mb-1">
                 Email Address
@@ -49,7 +45,6 @@ function Login() {
               />
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm text-gray-500 mb-1">
                 Password
@@ -61,7 +56,6 @@ function Login() {
               />
             </div>
 
-            {/* Create Account Button */}
             <button
               type="submit"
               className="mt-4 w-full bg-[#4D49F6] text-white py-2 rounded-full text-sm font-semibold shadow-lg"
@@ -70,13 +64,11 @@ function Login() {
             </button>
           </form>
 
-          {/* Google Sign-up */}
           <button className="mt-8 w-full flex items-center bg-gray-50 justify-center border py-2 rounded-md text-sm">
             <img src={Google} alt="Google" className="w-4 h-4 mr-2" />
             Login with Google
           </button>
 
-          {/* Footer */}
           <p className="text-center text-xs text-gray-600 mt-6">
             New to Account?{" "}
             <a href="/login" className="underline font-bold">
