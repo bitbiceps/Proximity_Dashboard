@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const ErrorPage = () => {
     return (
-        <div className="h-screen bg-gradient-to-r flex flex-col justify-center items-center text-white font-sans">
+        <div className="h-screen bg-gradient-to-r flex flex-col justify-center items-center  font-sans">
             <motion.div
                 className="text-center"
                 initial={{ opacity: 0 }}
