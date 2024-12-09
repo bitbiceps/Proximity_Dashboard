@@ -14,16 +14,21 @@ import { Pricing } from "./pages/Pricing";
 import Profile from "./pages/Profile";
 import ErrorPage from "./pages/ErrorPage";
 import FillQuestionnaire from "./pages/FillQuestionnaire";
-
+import QuestionnaireForm from "./pages/QuestionnaireForm";
+import ArticlesUnlocked from "./pages/ArticlesUnlocked";
+import TitleSuggestions from "./pages/TitleSuggestions";
+import GeneratedArticle from "./pages/GeneratedArticle";
+import PRServices from "./pages/PRServices";
 const App = () => {
   const location = useLocation();
   const validRoutes = Object.values(routes); // Extract the valid route paths from the routes object
   const isValidRoute = validRoutes.includes(location.pathname); // Check if the current location matches any of the valid routes
 
   // Determine if we should show the Sidebar
-  const isNoSidebar = [routes.login, routes.registration].includes(location.pathname); // Example of routes with no sidebar
+  const isNoSidebar = [routes.login, routes.registration].includes(
+    location.pathname
+  ); // Example of routes with no sidebar
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
-
 
   return (
     <Provider store={store}>
@@ -35,12 +40,33 @@ const App = () => {
             <Route path={routes.registration} Component={Registration} />
             <Route path={routes.root} Component={Dashboard} />
             <Route path={routes.package} Component={Package} />
+            <Route path={routes.pr_services} Component={PRServices} />
+
             <Route path={routes.topic_generator} Component={TopicGenerator} />
             <Route path={routes.article_writer} Component={ArticleGenerator} />
             <Route path={routes.pricing} Component={Pricing} />
-            <Route path={routes.fill_questionnaire} Component={FillQuestionnaire} />
+            <Route
+              path={routes.fill_questionnaire}
+              Component={FillQuestionnaire}
+            />
             <Route path={routes.profile} Component={Profile} />
             <Route path={routes.error} Component={ErrorPage} />
+            <Route
+              path={routes.questionnaire_form}
+              Component={QuestionnaireForm}
+            />
+            <Route
+              path={routes.articles_unlocked}
+              Component={ArticlesUnlocked}
+            />
+            <Route
+              path={routes.title_suggestions}
+              Component={TitleSuggestions}
+            />
+            <Route
+              path={routes.generated_article}
+              Component={GeneratedArticle}
+            />
           </Routes>
         </div>
       </div>

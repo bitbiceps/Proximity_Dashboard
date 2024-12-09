@@ -6,7 +6,7 @@ const Sidebar = () => {
     return (
         <div className="relative h-screen w-fit shadow-custom">
             {/* Desktop Sidebar */}
-            <div className="hidden md:block">
+            <div className="hidden md:block overflow-hidden">
                 <DesktopSidebar />
             </div>
 
