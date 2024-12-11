@@ -19,6 +19,7 @@ import ArticlesUnlocked from "./pages/ArticlesUnlocked";
 import TitleSuggestions from "./pages/TitleSuggestions";
 import GeneratedArticle from "./pages/GeneratedArticle";
 import PRServices from "./pages/PRServices";
+import PopupSearch from "./pages/PopupSearch";
 const App = () => {
   const location = useLocation();
   const validRoutes = Object.values(routes); // Extract the valid route paths from the routes object
@@ -67,6 +68,9 @@ const App = () => {
               path={routes.generated_article}
               Component={GeneratedArticle}
             />
+            <Route path={routes.popup_search} Component={PopupSearch} />
+            <Route path={routes.profile} Component={Profile} />
+           
           </Routes>
         </div>
       </div>

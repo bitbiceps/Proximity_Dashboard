@@ -18,15 +18,13 @@ function Login() {
     dispatch(loginUser({ email, password }));
   };
 
-  // Redirect to the home page on successful login and replace the history entry
   useEffect(() => {
     if (user && user.message === "Login successful") {
-      navigate("/", { replace: true }); // Replace login page in history stack
-      dispatch(resetState()); // Reset state after login
+      navigate("/", { replace: true });
+      dispatch(resetState()); 
     }
   }, [user, navigate, dispatch]);
 
-  // Prevent logged-in users from accessing the login page
   useEffect(() => {
     if (user && user.message === "Login successful") {
       navigate("/", { replace: true });
@@ -112,4 +110,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Login
