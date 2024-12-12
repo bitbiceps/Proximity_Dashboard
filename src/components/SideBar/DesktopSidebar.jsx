@@ -31,7 +31,7 @@ const DesktopSidebar = () => {
 
     return (
         <div
-            className={`flex flex-col h-screen bg-white text-white transition-width duration-300 sidebar-shadow ${isHovered ? 'w-72' : 'w-24'}`}
+            className={`flex flex-col h-screen bg-white text-white transition-width duration-300 sidebar-shadow ${isHovered ? 'w-72' : 'w-24'} sticky top-0 left-0`}
         >
             <div className="flex items-center justify-between px-2 py-8 lg:p-8 ">
                 <img src={logo} alt="Logo" />

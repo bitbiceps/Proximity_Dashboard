@@ -1,106 +1,132 @@
 import React, { useRef } from "react";
 import RootLayout from "../layouts/RootLayout";
+import payment from "../assets/common/payment.png";
+import { FaCaretRight, FaCaretLeft } from "react-icons/fa6";
+
+import person from "../assets/person.png";
+import gradientImage from "../assets/gradient.png";
+import star from "../assets/common/star.png"
+import calender from "../assets/common/calender.png"
+
+// swiper
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Autoplay, Navigation } from "swiper/modules";
 
 function Dashboard() {
-  const scrollRef = useRef(null);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const container = scrollRef.current;
-      const cardWidth = container.children[0].offsetWidth;
-      const scrollAmount = cardWidth + 16;
-
-      if (direction === "left") {
-        container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-      } else {
-        container.scrollBy({ left: scrollAmount, behavior: "smooth" });
-      }
-    }
-  };
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
 
   return (
     <RootLayout>
-      <div className="min-h-screen bg-gray-100 p-4">
-        <header className="text-center bg-blue-50 p-6 rounded-md shadow-md">
-          <h1 className="text-2xl font-bold">Welcome Back Sana!</h1>
-          <p className="text-gray-600 mt-2">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
-            posuere convallis ligula vitae vulputate.
+      <div className="min-h-screen bg-gray-100 py-4 px-8">
+        <header className="text-center bg-blue-50 p-6 rounded-md shadow-md w-[72vw] mx-auto">
+          <h1 className="text-[32px] font-bold text-app-black-1">Welcome Back Sana!</h1>
+          <p className="mt-2 text-[20px] font-light">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere convallis <br /> ligula vitae vulputate. Mauris id ultrices mi, in tempor erat.
           </p>
-          <button className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700">
+          <button className="mt-4 bg-app-blue-1 text-white px-6 py-2 rounded-md hover:opacity-80 transition-opacity duration-100">
             Explore Products
           </button>
         </header>
 
         <section className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">AI Tools</h2>
-          <div className="flex justify-around space-x-4">
-            {["Payment", "Payment", "Payment"].map((tool, index) => (
-              <button
-                key={index}
-                className="border border-purple-500 text-purple-500 py-2 px-4 rounded-md hover:bg-purple-100 flex items-center space-x-2"
-              >
-                <span className="material-icons text-purple-500">
-                  credit_card
-                </span>
-                {tool}
-              </button>
-            ))}
+          <h2 className="text-[32px] font-medium mb-4 text-app-black-1">AI Tools</h2>
+          <div className="flex justify-between w-full lg:w-[60%]">
+            {Array(3)
+              .fill(0)
+              .map(() => (
+                <img src={payment} alt="Payment" className="cursor-pointer" />
+              ))}
           </div>
         </section>
 
         <section className="mt-8 overflow-x-hidden">
-          <div className="flex items-center justify-start mb-4">
-            <h2 className="text-xl font-semibold">Blogs</h2>
+          <div className="flex items-center justify-between mb-4 w-[95%]">
+            <h2 className="text-[32px] font-medium">Blogs</h2>
 
-            <div className="flex ">
-              <button
-                onClick={() => scroll("left")}
-                className="bg-white border shadow-md rounded-full p-2 hover:bg-gray-100"
-              >
-                ❮
-              </button>
-              <button
-                onClick={() => scroll("right")}
-                className="bg-white border shadow-md rounded-full p-2 hover:bg-gray-100"
-              >
-                ❯
-              </button>
+            <div className="flex w-fit transition-colors duration-300 justify-center">
+              <div ref={prevRef} className="cursor-pointer">
+                <FaCaretLeft size={70} className="w-fit h-fit text-app-black-1 hover:text-gray-400" />
+              </div>
+
+              <div ref={nextRef} className="cursor-pointer">
+                <FaCaretRight size={70} className="w-fit h-fit text-app-black-1 hover:text-gray-400" />
+              </div>
             </div>
           </div>
 
-          <div
-            ref={scrollRef}
-            className="flex overflow-hidden space-x-4"
-            style={{
-              paddingRight: "calc(50% - 128px)",
-              scrollSnapType: "x mandatory",
-            }}
-          >
-            {Array(5)
-              .fill(0)
-              .map((_, index) => (
-                <div
-                  key={index}
-                  className="flex-shrink-0 w-64 bg-white shadow-md rounded-md scroll-snap-align"
-                  style={{
-                    scrollSnapAlign: "start",
-                  }}
-                >
-                  <img
-                    src="https://via.placeholder.com/300x200"
-                    alt="Blog"
-                    className="w-full h-40 object-cover rounded-t-md"
-                  />
-                  <div className="p-4">
-                    <p className="text-sm text-gray-500 mb-1">Nature</p>
-                    <h3 className="text-lg font-bold mb-2">
-                      Lorem Ipsum Diator Heading
-                    </h3>
-                    <p className="text-gray-600 text-sm">Oct 11, 2023</p>
-                  </div>
-                </div>
-              ))}
+          <div className="relative">
+            <Swiper
+              className="overflow-x-hidden"
+              modules={[Navigation, Autoplay]}
+              slidesPerView={3.3} // Number of slides shown at once
+              loop={true}
+              autoplay={{
+                delay: 1500,
+                disableOnInteraction: false,
+              }}
+              speed={1000}
+              navigation={{
+                prevEl: prevRef.current,
+                nextEl: nextRef.current,
+              }}
+              onBeforeInit={(swiper) => {
+                // Assign navigation refs
+                swiper.params.navigation.prevEl = prevRef.current;
+                swiper.params.navigation.nextEl = nextRef.current;
+              }}
+              breakpoints={{
+                320: {
+                  slidesPerView: 2,
+                },
+                768: {
+                  slidesPerView: 2,
+                },
+                1024: {
+                  slidesPerView: 3.3,
+                },
+              }}
+            >
+              {Array(5)
+                .fill(0)
+                .map((_, index) => (
+                  <SwiperSlide key={index} className="z-10">
+                    <div
+                      style={{ backgroundImage: `url(${person})` }}
+                      className="bg-cover bg-center overflow-hidden rounded-2xl shadow-md w-[350px] h-[350px]"
+                    >
+                      <div className="h-full flex w-full p-4 flex-col items-start justify-end">
+                        <div className="w-full h-fit flex items-start gap-4">
+                          <div className="w-fit bg-[#FFFFFF4F] border-[0.18px] border-white flex items-center gap-1 rounded-full overflow-hidden px-[2px] justify-between">
+                            <img src={star} alt="Star" className="object-contain w-[12px]" />
+                            <p className="text-[8px]">
+                              Featured
+                            </p>
+                          </div>
+
+                          <div className="w-fit bg-[#FFFFFF4F] border-[0.18px] border-white flex items-center gap-1 rounded-full overflow-hidden px-[2px] justify-between">
+                            <img src={calender} alt="Star" className="object-contain w-[12px]" />
+                            <p className="text-[8px]">
+                              OCT 17, 2024
+                            </p>
+                          </div>
+                        </div>
+                        <p className="text-[22px] text-app-black-1 font-semibold w-[84%]">
+                          Lorem Ipsum Diator Heading
+                        </p>
+                      </div>
+
+                    </div>
+                  </SwiperSlide>
+                ))}
+            </Swiper>
+            <div
+              style={{ backgroundImage: `url(${gradientImage})` }}
+              className="hidden lg:block absolute w-[300px] h-[300px] right-[-10vw] px-2 top-0 z-20 overflow-hidden"
+            />
           </div>
         </section>
       </div>

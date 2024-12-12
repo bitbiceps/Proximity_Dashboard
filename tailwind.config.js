@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        "gradent-white": "linear-gradient(90deg, rgba(245, 246, 250, 0) 0%, #F5F6FA 58.67%)"
+      },
       // colors
       colors: {
         app: {
@@ -21,6 +24,9 @@ export default {
           // orange: {
           //   1: "#FE5E009C"
           // }
+          black: {
+            1: "#202224"
+          }
         }
       },
       // shadow
