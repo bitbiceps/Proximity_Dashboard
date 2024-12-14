@@ -7,10 +7,9 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login", 
+        "http://localhost:5000/api/auth/login",
         credentials
       );
-      console.log("response.data",response)
       return response.data; // assuming the response contains user data
     } catch (error) {
       return rejectWithValue(error.response?.data || "Login failed");
@@ -64,7 +63,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
+
       // Handle registration action
       .addCase(submitRegistration.pending, (state) => {
         state.loading = true;

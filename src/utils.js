@@ -26,3 +26,11 @@ export const sideBarTabs = {
   profile: "Profile",
   logout: "Logout",
 };
+
+export const cookieAccessKeys = {
+  tokens: {
+    accessToken: "accessToken",
+    refreshToken: "refreshToken",
+  },
+};
+

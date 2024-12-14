@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, resetState } from "../redux/slices/authSlice";
 import Auth from "../assets/auth.jpg";
 import Google from "../assets/google.jpg";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import { cookieAccessKeys, routes } from "../utils";
 
 function Login() {
   const dispatch = useDispatch();
@@ -18,18 +20,28 @@ function Login() {
     dispatch(loginUser({ email, password }));
   };
 
-  useEffect(() => {
+  const handleLoginSuccess = useCallback(() => {
     if (user && user.message === "Login successful") {
-      navigate("/", { replace: true });
-      dispatch(resetState()); 
+      // Set Access Token in cookies
+      Cookies.set(
+        cookieAccessKeys.tokens.accessToken,
+        user.tokens[cookieAccessKeys.tokens.accessToken]
+      );
+
+      // Set Refresh Token in cookies
+      Cookies.set(
+        cookieAccessKeys.tokens.refreshToken,
+        user.tokens[cookieAccessKeys.tokens.refreshToken]
+      );
+
+      navigate(routes.root, { replace: true });
+      dispatch(resetState());
     }
-  }, [user, navigate, dispatch]);
+  }, [user, cookieAccessKeys, dispatch]);
 
   useEffect(() => {
-    if (user && user.message === "Login successful") {
-      navigate("/", { replace: true });
-    }
-  }, [user, navigate]);
+    handleLoginSuccess();
+  }, [handleLoginSuccess]);
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
@@ -110,4 +122,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;
