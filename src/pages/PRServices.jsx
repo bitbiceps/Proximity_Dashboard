@@ -6,6 +6,7 @@ import Product4 from "../assets/product-image-4.svg";
 import Product5 from "../assets/product-image-5.svg";
 import Product6 from "../assets/product-image-6.svg";
 import Product7 from "../assets/product-image-7.svg";
+import RootLayout from "../layouts/RootLayout";
 
 const PRServices = () => {
   const services = [
@@ -19,6 +20,7 @@ const PRServices = () => {
   ];
 
   return (
+    <RootLayout>
     <div className="bg-gray-100 py-10">
       <h2 className="text-center text-3xl font-bold mb-8">
         Tailored PR Solutions for Every Need
@@ -46,6 +48,7 @@ const PRServices = () => {
         ))}
       </div>
     </div>
+    </RootLayout>
   );
 };
 

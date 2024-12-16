@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import RootLayout from "../layouts/RootLayout";
 import payment from "../assets/common/payment.png";
 import { FaCaretRight, FaCaretLeft } from "react-icons/fa6";
-
+import { Link } from "react-router-dom";
 import person from "../assets/person.png";
 import gradientImage from "../assets/gradient.png";
 import star from "../assets/common/star.png";
@@ -23,7 +23,7 @@ function Dashboard() {
 
   const initialDashboardCallback = useCallback(() => {
     console.log(
-      Cookies.get(cookieAccessKeys.tokens.accessToken),
+      Cookies.get(cookieAccessKeys?.tokens?.accessToken),
       "Access Token"
     );
     console.log(
@@ -47,9 +47,9 @@ function Dashboard() {
             posuere convallis <br /> ligula vitae vulputate. Mauris id ultrices
             mi, in tempor erat.
           </p>
-          <button className="mt-4 bg-app-blue-1 text-white px-6 py-2 rounded-md hover:opacity-80 transition-opacity duration-100">
+          <Link to="/pr_services"><button className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700">
             Explore Products
-          </button>
+          </button></Link>
         </header>
 
         <section className="mt-8">

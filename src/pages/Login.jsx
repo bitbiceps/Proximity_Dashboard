@@ -6,7 +6,7 @@ import Google from "../assets/google.jpg";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
-import { cookieAccessKeys, routes } from "../utils";
+import { cookieAccessKeys } from "../utils";
 
 function Login() {
   const dispatch = useDispatch();
@@ -24,20 +24,21 @@ function Login() {
     if (user && user.message === "Login successful") {
       // Set Access Token in cookies
       Cookies.set(
-        cookieAccessKeys.tokens.accessToken,
-        user.tokens[cookieAccessKeys.tokens.accessToken]
+        cookieAccessKeys?.tokens?.accessToken,
+        user.tokens[cookieAccessKeys?.tokens?.accessToken]
       );
 
       // Set Refresh Token in cookies
       Cookies.set(
-        cookieAccessKeys.tokens.refreshToken,
-        user.tokens[cookieAccessKeys.tokens.refreshToken]
+        cookieAccessKeys?.tokens?.refreshToken,
+        user.tokens[cookieAccessKeys?.tokens?.refreshToken]
       );
 
-      navigate(routes.root, { replace: true });
+      navigate("/", { replace: true });
+
       dispatch(resetState());
     }
-  }, [user, cookieAccessKeys, dispatch]);
+  }, [user, dispatch, navigate]);
 
   useEffect(() => {
     handleLoginSuccess();

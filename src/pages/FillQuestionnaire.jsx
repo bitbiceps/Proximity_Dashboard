@@ -3,22 +3,35 @@ import RootLayout from "../layouts/RootLayout";
 import { Button } from "../components/common/Button";
 import { ArticlesCard } from "../components/common/ArticlesCard";
 import article from "../assets/article-image.png";
-import lock from "../assets/lock.svg"
+import lock from "../assets/lock.svg";
+import { Link } from "react-router-dom";
 const articleData = [
   {
-    head: <div>Tech PR Agency <br /> for Startups</div>,
+    head: (
+      <div>
+        Tech PR Agency <br /> for Startups
+      </div>
+    ),
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere convallis ligula vitae vulputate. Mauris id ultrices mi, in tempor erat.",
     image: article,
   },
   {
-    head: <div>Tech PR Agency <br /> for Startups</div>,
+    head: (
+      <div>
+        Tech PR Agency <br /> for Startups
+      </div>
+    ),
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere convallis ligula vitae vulputate. Mauris id ultrices mi, in tempor erat.",
     image: article,
   },
   {
-    head: <div>Tech PR Agency <br /> for Startups</div>,
+    head: (
+      <div>
+        Tech PR Agency <br /> for Startups
+      </div>
+    ),
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras posuere convallis ligula vitae vulputate. Mauris id ultrices mi, in tempor erat.",
     image: article,
@@ -34,8 +47,10 @@ const FillQuestionnaire = () => {
         </div>
         <div className="bg-[#FBFCFF] py-[26px] px-[40px] border-[0.6px] border-[#D5D5D5] rounded-[12px] mt-[53px]">
           <div className="flex justify-between">
-            <div className="flex items-center justify-center">Lorem ipsum heading</div>
-            <Button text={"Fill the Questionnaire"} />
+            <div className="flex items-center justify-center">
+              Lorem ipsum heading
+            </div>
+            {/* <Button text={"Fill the Questionnaire"} /> */}
           </div>
         </div>
         <div className="mt-[65px] text-[32px] leading-[38px] font-bold text-[#202224] text-center">
@@ -43,10 +58,15 @@ const FillQuestionnaire = () => {
         </div>
 
         <div className="relative mt-[42px] mb-[60px] rounded-[8px] py-[40px] ">
-          
           {/* overlay */}
-          <div className="absolute inset-0 z-[20] rounded-[8px] bg-[#D0D0D04D] opacity-[95%] border-[1px] border-[#FE5E00] flex justify-center items-center " style={{ boxShadow: '0px 0px 4px 0px #0000002B', backdropFilter: 'blur(5px)' }}>
-          <img src={lock}/>
+          <div
+            className="absolute inset-0 z-[20] rounded-[8px] bg-[#D0D0D04D] opacity-[95%] border-[1px] border-[#FE5E00] flex justify-center items-center "
+            style={{
+              boxShadow: "0px 0px 4px 0px #0000002B",
+              backdropFilter: "blur(5px)",
+            }}
+          >
+            <img src={lock} />
           </div>
 
           {/* Articles Container */}
@@ -61,7 +81,6 @@ const FillQuestionnaire = () => {
             ))}
           </div>
         </div>
-
       </div>
     </RootLayout>
   );

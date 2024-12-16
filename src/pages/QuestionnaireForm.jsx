@@ -1,5 +1,6 @@
 import React from "react";
 import RootLayout from "../layouts/RootLayout";
+import { Link } from "react-router-dom";
 
 const QuestionnaireForm = () => {
   return (
@@ -59,12 +60,12 @@ const QuestionnaireForm = () => {
             ))}
 
             <div className="flex justify-end mt-8">
-              <button
+             <Link to="/articles_unlocked"> <button
                 type="submit"
                 className="px-20 py-4 bg-blue-600 text-white font-medium text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Submit
-              </button>
+              </button></Link>
             </div>
           </form>
         </div>

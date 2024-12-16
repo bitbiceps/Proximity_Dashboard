@@ -7,7 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Package from "./pages/Package";
 import TopicGenerator from "./pages/TopicGenerator";
 import ArticleGenerator from "./pages/ArticleGenerator";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import Registration from "./pages/Registraion";
 import { routes } from "./utils";
 import { Pricing } from "./pages/Pricing";
@@ -21,6 +21,13 @@ import GeneratedArticle from "./pages/GeneratedArticle";
 import PRServices from "./pages/PRServices";
 import PopupSearch from "./pages/PopupSearch";
 import ProtectedRoute from "./components/common/ProtectedRoutes";
+// import PaymentForm from "./pages/PaymentForm";
+// import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
+); // Replace with your Stripe publishable key
 
 const App = () => {
   const location = useLocation();
@@ -103,6 +110,38 @@ const App = () => {
               path={routes.popup_search}
               element={<ProtectedRoute Component={PopupSearch} />}
             />
+             {/* <Route
+              path={routes.payment}
+              element={
+                <Elements stripe={stripePromise}>
+                  <PaymentForm />
+                </Elements>
+              }
+            /> */}
+            {/* <Route path={routes.package} Component={Package} />
+            <Route path={routes.pr_services} Component={PRServices} />
+            <Route path={routes.topic_generator} Component={TopicGenerator} />
+            <Route path={routes.article_writer} Component={ArticleGenerator} />
+           
+            <Route path={routes.profile} Component={Profile} />
+            <Route path={routes.error} Component={ErrorPage} />
+            <Route
+              path={routes.questionnaire_form}
+              Component={QuestionnaireForm}
+            />
+            <Route
+              path={routes.articles_unlocked}
+              Component={ArticlesUnlocked}
+            />
+            <Route
+              path={routes.title_suggestions}
+              Component={TitleSuggestions}
+            />
+            <Route
+              path={routes.generated_article}
+              Component={GeneratedArticle}
+            />
+            <Route path={routes.popup_search} Component={PopupSearch} /> */}
           </Routes>
         </main>
       </div>
