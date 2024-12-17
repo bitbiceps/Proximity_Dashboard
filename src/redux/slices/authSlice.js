@@ -10,6 +10,7 @@ export const loginUser = createAsyncThunk(
         "http://localhost:5000/api/auth/login",
         credentials
       );
+      console.log("resssssssss",response.data)
       return response.data; // assuming the response contains user data
     } catch (error) {
       return rejectWithValue(error.response?.data || "Login failed");
@@ -26,6 +27,7 @@ export const submitRegistration = createAsyncThunk(
         "http://localhost:5000/api/auth/register",
         formData
       );
+      console.log("sign",response.data)
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Registration failed");

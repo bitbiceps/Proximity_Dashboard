@@ -61,14 +61,15 @@ function Registration() {
     }
   }, [response, navigate]);
 
-  useEffect(() => {
-    if (
-      response.user &&
-      response.user.message === "User registered successfully"
-    ) {
-      navigate("/login", { replace: true });
-    }
-  }, [response, navigate]);
+  // useEffect(() => {
+  //   console.log("response",response)
+  //   if (
+  //     response.user &&
+  //     response.user.message === "User registered successfully"
+  //   ) {
+  //     navigate("/login", { replace: true });
+  //   }
+  // }, [response, navigate]);
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
