@@ -10,27 +10,27 @@ const TopicGenerator = () => {
     ({ articles: { currentSelectedArticle } }) => currentSelectedArticle
   );
 
-  const [topics, setTopics] = useState([
-    "Lorem ipsum heading",
-    "Lorem ipsum heading",
-    "Lorem ipsum heading",
-  ]);
+  const [topics, setTopics] = useState([]);
 
   const fetchTopics = useCallback(async () => {
     try {
-      if (article.topics) {
-        console.log(article);
+      // If no topics in the article, fetch from the API
+      const { data } = await requests.addTopic({ articleId: article._id });
+
+      // Log the response to check the structure
+      console.log("API Response:", data);
+
+      // Safely set topics, if the response is as expected
+      if (Array.isArray(data?.topic?.topics)) {
+        console.log("valid")
+        setTopics(data.topic.topics); // Set topics if it's an array
       } else {
-        const { data } = await requests.addTopic({ articleId: article._id });
-        // setTopics(data.topic);
-        toast.success(data.message);
+        toast.error("Topics are not available or response is malformed");
       }
     } catch (error) {
-      // Handle error
-      toast.error(error.message);
+      toast.error(error.message || "Something went wrong!");
     }
   }, [article]);
-
   useEffect(() => {
     fetchTopics();
   }, [fetchTopics]);
@@ -65,7 +65,7 @@ const TopicGenerator = () => {
               Generated Titles
             </h2>
             <div className="space-y-6 mt-8">
-              {topics.map((title, index) => (
+              {Array(...topics).map((title, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-4 bg-gray-50 border border-gray-300 rounded-lg"
