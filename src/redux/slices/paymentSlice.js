@@ -2,13 +2,13 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createPaymentIntent = createAsyncThunk(
   "payment/createPaymentIntent",
-  async ({ userId, amount }, { rejectWithValue }) => {
+  async ({ userId, amount,planId }, { rejectWithValue }) => {
     console.log("userIIII",userId,amount)
     try {
-      const response = await fetch("http://localhost:5000/api/create-payment-intent", {
+      const response = await fetch("http://localhost:5000/pay/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, amount }),
+        body: JSON.stringify({ userId, amount,planId }),
       });
          
       if (!response.ok) {

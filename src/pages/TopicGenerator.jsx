@@ -22,7 +22,6 @@ const TopicGenerator = () => {
 
       // Safely set topics, if the response is as expected
       if (Array.isArray(data?.topic?.topics)) {
-        console.log("valid")
         setTopics(data.topic.topics); // Set topics if it's an array
       } else {
         toast.error("Topics are not available or response is malformed");
