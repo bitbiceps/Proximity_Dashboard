@@ -2,8 +2,16 @@ import React, { useState } from "react";
 import RootLayout from "../layouts/RootLayout";
 import { toast } from "react-toastify";
 import requests from "../axios/instance";
+import { useDispatch, useSelector } from "react-redux";
+import { setArticles } from "../redux/slices/articleSlice";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../utils";
 
 const QuestionnaireForm = () => {
+  const userId = useSelector(({ auth: { user } }) => user.userId); // Accessing userId from Redux state
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [answers, setAnswers] = useState(
     Array(8)
       .fill("")
@@ -35,9 +43,22 @@ const QuestionnaireForm = () => {
       return;
     }
 
+    // toast.loading("Fetching Articles");
+
     try {
-      const res = await requests.submitQuestionnaire({ ...answers });
-    } catch (error) {}
+      const { data } = await requests.submitQuestionnaire({
+        ...answers,
+        userId,
+        numberOfArticles: 2,
+      });
+      if (data) {
+        dispatch(setArticles(data?.articles));
+        toast.success(data.message);
+        navigate(routes.articles_unlocked, { replace: true });
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (

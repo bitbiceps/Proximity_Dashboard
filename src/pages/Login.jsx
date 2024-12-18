@@ -35,8 +35,6 @@ function Login() {
       );
 
       navigate("/", { replace: true });
-
-      dispatch(resetState());
     }
   }, [user, dispatch, navigate]);
 
