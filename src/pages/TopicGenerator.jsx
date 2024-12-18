@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import requests from "../axios/instance";
 import { toast } from "react-toastify";
 import Loading from "../components/common/Loading";
+import axios from "axios";
 const TopicGenerator = () => {
   const article = useSelector(
     ({ articles: { currentSelectedArticle } }) => currentSelectedArticle
@@ -21,8 +22,10 @@ const TopicGenerator = () => {
       console.log("API Response:", data);
 
       // Safely set topics, if the response is as expected
+      console.log("typeof", typeof data?.topic?.topics, data?.topic?.topics);
       if (Array.isArray(data?.topic?.topics)) {
-        setTopics(data.topic.topics); // Set topics if it's an array
+        console.log("dfghj", data?.topic?.topics);
+        setTopics(data?.topic?.topics); // Set topics if it's an array
       } else {
         toast.error("Topics are not available or response is malformed");
       }
@@ -33,7 +36,23 @@ const TopicGenerator = () => {
   useEffect(() => {
     fetchTopics();
   }, [fetchTopics]);
+  const handleVerify = async (topicId, index) => {
+    try {
+      const response = await axios.put(
+        "http://localhost:5000/topic/request-verify",
+        { topicId, index } 
+      );
 
+      if (response.status === 200) {
+        const updatedTopics = [...topics];
+        updatedTopics[index].verifyRequested = true;
+        setTopics(updatedTopics);
+        console.log("Topicss verified successfully:", response.data);
+      }
+    } catch (error) {
+      console.error("Error verifying topic:", error);
+    }
+  };
   return (
     <RootLayout>
       {topics ? (
@@ -64,15 +83,25 @@ const TopicGenerator = () => {
               Generated Titles
             </h2>
             <div className="space-y-6 mt-8">
-              {Array(...topics).map((title, index) => (
+              {topics.map((title, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-4 bg-gray-50 border border-gray-300 rounded-lg"
                 >
-                  <span className="text-gray-700 font-semibold">{title}</span>
+                  <span className="text-gray-700 font-semibold">
+                    {title.value}
+                  </span>
                   <div className="space-x-2">
-                    <button className="px-6 py-2 text-sm font-medium text-white bg-[#4D49F6] rounded-sm ">
-                      Verify
+                    <button
+                      onClick={() => handleVerify(title._id, index)}
+                      className={`px-6 py-2 text-sm font-medium rounded-sm ${
+                        title.verifyRequested
+                          ? "bg-green-500 text-white"
+                          : "bg-[#4D49F6] text-white"
+                      }`}
+                    >
+                        {title.verifyRequested ? "Verified" : "Verify"}
+
                     </button>
                     <button className="px-4 py-2 text-sm font-medium  border border-[#00CDE2] rounded-sm ">
                       Update
