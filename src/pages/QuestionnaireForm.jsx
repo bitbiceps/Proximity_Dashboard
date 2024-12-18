@@ -1,74 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
 import RootLayout from "../layouts/RootLayout";
-import { Link } from "react-router-dom";
 
 const QuestionnaireForm = () => {
+  // State to track the answers for each question
+  const [answers, setAnswers] = useState(
+    Array(8)
+      .fill("")
+      .reduce((acc, _, index) => {
+        acc[`q${index + 1}`] = "";
+        return acc;
+      }, {})
+  );
+
+  // Handle change in input fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [name]: value,
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const allAnswered = Object.values(answers).every(
+      (answer) => answer.trim() !== ""
+    );
+
+    if (!allAnswered) {
+      alert("Please answer all the questions before submitting.");
+      return;
+    }
+
+    // Process the form data (you can send the data to the backend or perform another action)
+    console.log("Form submitted with answers:", answers);
+  };
+
   return (
     <RootLayout>
-      <div className="flex justify-center items-start h-screen overflow-hidden">
-        <div className="w-full max-w-4xl mt-8 px-4">
-          <h1 className="text-2xl font-bold text-center mb-8">
-            Fill the Questionnaire
-          </h1>
-          <form>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-32 gap-y-4 mb-6">
-              <div>
-                <label
-                  htmlFor="firstName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  placeholder="Enter your first name"
-                  className="mt-1 block w-full px-3 py-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-transparent"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  placeholder="Enter your last name"
-                  className="mt-1 block w-full px-3 py-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-transparent"
-                />
-              </div>
-            </div>
+      <div className="p-6 max-w-4xl mx-auto relative">
+        <h1 className="font-bold text-center mb-8 text-xl">
+          Fill the Questionnaire
+        </h1>
 
-            {Array.from({ length: 4 }, (_, index) => (
-              <div className="mb-4" key={index}>
-                <label
-                  htmlFor={`field-${index}`}
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id={`field-${index}`}
-                  placeholder="Enter your first name"
-                  className="mt-1 block w-full px-3 py-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-transparent"
-                />
-              </div>
-            ))}
-
-            <div className="flex justify-end mt-8">
-             <Link to="/articles_unlocked"> <button
-                type="submit"
-                className="px-20 py-4 bg-blue-600 text-white font-medium text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                Submit
-              </button></Link>
+        <form onSubmit={handleSubmit}>
+          {[
+            "What industry do your contributions being talked about in this article cater/belong to?",
+            "What professional achievements have you secured while working on the subject matter of this article?",
+            "How have you been able to create impact at your workplace through your work in the capacity of a crucial member of your organization, by being involved and participating in the area of work that this particular article would cover?",
+            "What have been some of your biggest projects within or outside of an organization while being engaged in this particular arena?",
+            "What are some of your works or results thereof that can be measured in quantifiable terms (in the context of the subject matter at hand)? Also share the quantified figures.",
+            "What are some major challenges that you successfully overcame as part of your involvement in the concerned area of work, which in turn allowed you to achieve a great result?",
+            "Please enlist all of your published work within the context of the subject matter being covered in this article.",
+            "From the standpoint of an experienced professional in this particular arena/category of work, what are your original thoughts and insights in relevance to what you do/have done? You may also share your insights on the current or upcoming future trends and practices, and firsthand suggestions coming from having worked on major projects.",
+          ].map((question, index) => (
+            <div className="mb-8" key={`q${index + 1}`}>
+              <label className="block mb-2 text-lg">{`${
+                index + 1
+              }. ${question}`}</label>
+              <input
+                type="text"
+                name={`q${index + 1}`}
+                value={answers[`q${index + 1}`] || ""}
+                onChange={handleChange}
+                placeholder="Your answer"
+                className="w-full p-3 border border-gray-300 rounded-md text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </div>
-          </form>
-        </div>
+          ))}
+
+          <div className="text-right">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-6 py-3 rounded-md text-sm cursor-pointer hover:bg-blue-600"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
       </div>
     </RootLayout>
   );

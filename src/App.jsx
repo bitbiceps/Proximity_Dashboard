@@ -7,7 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Package from "./pages/Package";
 import TopicGenerator from "./pages/TopicGenerator";
 import ArticleGenerator from "./pages/ArticleGenerator";
-import Login from "./pages/login";
+import Login from "./pages/Login";
 import Registration from "./pages/Registraion";
 import { routes } from "./utils";
 import { Pricing } from "./pages/Pricing";

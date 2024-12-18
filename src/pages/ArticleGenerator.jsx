@@ -5,6 +5,7 @@ import { ArticlesCard } from "../components/common/ArticlesCard";
 import article from "../assets/article-image.png";
 import lock from "../assets/lock.svg";
 import { Link } from "react-router-dom";
+import { routes } from "../utils";
 const articleData = [
   {
     head: (
@@ -48,10 +49,12 @@ const ArticleGenerator = () => {
         <div className="bg-[#FBFCFF] py-[26px] px-[40px] border-[0.6px] border-[#D5D5D5] rounded-[12px] mt-[53px]">
           <div className="flex justify-between">
             <div className="flex items-center justify-center">
-              Lorem ipsum heading
+              Fill the questionnaire
             </div>
-           <Link to="/questionnaire_form"> <Button text={"Fill the Questionnaire"} />
-           </Link>
+            <Link to={routes.questionnaire_form}>
+              {" "}
+              <Button text={"Fill the Questionnaire"} />
+            </Link>
           </div>
         </div>
         <div className="mt-[65px] text-[32px] leading-[38px] font-bold text-[#202224] text-center">
