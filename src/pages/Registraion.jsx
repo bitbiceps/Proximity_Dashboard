@@ -166,7 +166,7 @@ function Registration() {
                 <span className="border-r-2 h-4 mx-2"></span>
                 <input
                   type="tel"
-                  placeholder="+919999999999"
+                  placeholder="9999999999"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className="w-full focus:outline-none text-sm text-gray-800"

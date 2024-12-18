@@ -9,12 +9,15 @@ import articleIcon from "../../assets/sidebar/article.svg";
 import profileIcon from "../../assets/sidebar/profile.svg";
 import logoutIcon from "../../assets/sidebar/logout.svg";
 import Divider from "../common/Divider";
+import { useLocation } from "react-router-dom";
 
 const DesktopSidebar = ({ logout }) => {
-  const [active, setActive] = useState(sideBarTabs.dashboard); // Track the active state of the sidebar
+  const [active, setActive] = useState(sideBarTabs.package); // Track the active state of the sidebar
   const isHovered = true;
   const transition = "transition-all duration-200 ease-in-out";
-
+  const location = useLocation();
+  const current = location.state?.current;
+  console.log("current",current)
   const navItems1 = [
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
     { name: sideBarTabs.package, to: routes.package, img: packageIcon },

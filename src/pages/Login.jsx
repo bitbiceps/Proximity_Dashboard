@@ -11,6 +11,7 @@ import { cookieAccessKeys } from "../utils";
 function Login() {
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state) => state.auth);
+  console.log("userssss", user);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +24,12 @@ function Login() {
   const handleLoginSuccess = useCallback(() => {
     if (user && user.message === "Login successful") {
       // Set Access Token in cookies
+      console.log(
+        "tokenssss",
+        user,
+        "val",
+        user.tokens[cookieAccessKeys?.tokens?.accessToken]
+      );
       Cookies.set(
         cookieAccessKeys?.tokens?.accessToken,
         user.tokens[cookieAccessKeys?.tokens?.accessToken]
@@ -34,11 +41,12 @@ function Login() {
         user.tokens[cookieAccessKeys?.tokens?.refreshToken]
       );
 
-      navigate("/", { replace: true });
-
-      dispatch(resetState());
+      navigate("/package", {
+        replace: true,
+        state: { current: "Package" },
+      });
     }
-  }, [user, dispatch, navigate]);
+  }, [user, navigate]);
 
   useEffect(() => {
     handleLoginSuccess();

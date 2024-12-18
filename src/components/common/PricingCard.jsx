@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import tick from "../../assets/circle-tick.svg";
-import { Link } from "react-router-dom";
+import { Link, replace } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,20 +11,23 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { createPaymentIntent } from "../../redux/slices/paymentSlice";
+import { useNavigate } from "react-router-dom";
+import { resetState } from "../../redux/slices/authSlice";
+
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
 );
 
-const PaymentForm = ({ amount, userId }) => {
+const PaymentForm = ({ amount, userId, planId }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const paymentData = useSelector((state) => state.payment);
   console.log("pipippppp", paymentData);
   const [paymentStatus, setPaymentStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
- 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -37,7 +40,7 @@ const PaymentForm = ({ amount, userId }) => {
 
     try {
       // Dispatch payment data to backend via Redux
-      await dispatch(createPaymentIntent({ userId, amount }));
+      dispatch(createPaymentIntent({ userId, amount, planId }));
 
       // Confirm the payment with the retrieved client secret
       const { error, paymentIntent } = await stripe.confirmCardPayment(
@@ -48,7 +51,11 @@ const PaymentForm = ({ amount, userId }) => {
           },
         }
       );
-   console.log("paymentIntent",paymentIntent)
+      if (paymentIntent.status === "succeeded") {
+        dispatch(resetState());
+        navigate("/login", { replace: true });
+      }
+      console.log("paymentIntent", paymentIntent);
       if (error) {
         setPaymentStatus(`Payment failed: ${error.message}`);
       } else if (paymentIntent.status === "succeeded") {
@@ -117,7 +124,7 @@ const PaymentForm = ({ amount, userId }) => {
   );
 };
 
-const Modal = ({ show, handleClose, amount, userId }) => {
+const Modal = ({ show, handleClose, amount, userId, planId }) => {
   if (!show) return null;
   return (
     <div
@@ -168,7 +175,7 @@ const Modal = ({ show, handleClose, amount, userId }) => {
           Make a Payment
         </h2>
         <Elements stripe={stripePromise}>
-          <PaymentForm amount={amount} userId={userId} />
+          <PaymentForm amount={amount} userId={userId} planId={planId} />
         </Elements>
       </div>
     </div>
@@ -176,21 +183,28 @@ const Modal = ({ show, handleClose, amount, userId }) => {
 };
 
 export const PricingCard = ({
+  cardId,
+  id,
   category,
   duration,
   price,
   included,
   excluded,
+  active,
 }) => {
+  console.log("id", "category", id);
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
-  const userData=useSelector(state=>state.auth)
-  console.log("userData",userData)
+  const { user, loading, error, registerUser } = useSelector(
+    (state) => state.auth
+  );
+  console.log("userDataaass", user);
   const handleOpenModal = () => setShowModal(true); // Open the modal
   const handleCloseModal = () => setShowModal(false); // Close the modal
-
   return (
     <div
-      className="w-[300px] bg-[#ffffff] py-[34px] rounded-[12px]"
+      className={`w-[300px] py-[34px] rounded-[12px] ${
+        active ? "bg-[#E6F7FF]" : "bg-[#ffffff]"
+      }`}
       style={{ boxShadow: "0px 0px 4px 0px #00000040" }}
     >
       <div className="text-[#202224] font-bold text-[18px] w-full text-center">
@@ -226,12 +240,16 @@ export const PricingCard = ({
       {/* Divider */}
       <div className="mx-[24px] mt-[50px] opacity-[30%] h-[1.7px] bg-[#212121]"></div>
       <div className="mt-[30px] flex justify-center">
-        <button
-          className="border-[1.7px] border-[#4D49F6] rounded-full text-[#4D49F6] font-bold text-[14px] py-[16px] px-[34px]"
-          onClick={handleOpenModal} // Open modal on click
-        >
-          Get Started
-        </button>
+        {active ? (
+          <div  className="bg-green-400 border-[#4D49F6] rounded-full text-[#4D49F6] font-bold text-[14px] py-[16px] px-[34px] ">Your Current Plan</div>
+        ) : (
+          <button
+            className="border-[1.7px] border-[#4D49F6] rounded-full text-[#4D49F6] font-bold text-[14px] py-[16px] px-[34px]"
+            onClick={handleOpenModal} // Open modal on click
+          >
+            Get Started
+          </button>
+        )}
       </div>
       <div className="text-center mt-[24px]">
         <Link className="text-[14px] font-semibold text-[#212121] underline">
@@ -244,7 +262,8 @@ export const PricingCard = ({
         show={showModal}
         handleClose={handleCloseModal}
         amount={5000}
-        userId="507f191e810c19729de860ea"
+        userId={user.userId}
+        planId={id}
       />
     </div>
   );

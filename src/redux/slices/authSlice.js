@@ -10,7 +10,6 @@ export const loginUser = createAsyncThunk(
         "http://localhost:5000/api/auth/login",
         credentials
       );
-      console.log("resssssssss",response.data)
       return response.data; // assuming the response contains user data
     } catch (error) {
       return rejectWithValue(error.response?.data || "Login failed");
@@ -27,7 +26,7 @@ export const submitRegistration = createAsyncThunk(
         "http://localhost:5000/api/auth/register",
         formData
       );
-      console.log("sign",response.data)
+      console.log("sign", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Registration failed");
@@ -73,7 +72,7 @@ const authSlice = createSlice({
       })
       .addCase(submitRegistration.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.registerUser = action.payload;
         state.error = null;
       })
       .addCase(submitRegistration.rejected, (state, action) => {
