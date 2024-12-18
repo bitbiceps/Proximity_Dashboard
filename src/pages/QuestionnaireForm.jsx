@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import RootLayout from "../layouts/RootLayout";
+import { toast } from "react-toastify";
+import requests from "../axios/instance";
 
 const QuestionnaireForm = () => {
-  // State to track the answers for each question
   const [answers, setAnswers] = useState(
     Array(8)
       .fill("")
       .reduce((acc, _, index) => {
-        acc[`q${index + 1}`] = "";
+        acc[`question${index + 1}`] = ""; // Generate keys like question1, question2, ...
         return acc;
       }, {})
   );
@@ -17,24 +18,26 @@ const QuestionnaireForm = () => {
     const { name, value } = e.target;
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [name]: value,
+      [name]: value, // Dynamically update the state based on the question name
     }));
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    // Check if all answers are filled in
     const allAnswered = Object.values(answers).every(
       (answer) => answer.trim() !== ""
     );
 
     if (!allAnswered) {
-      alert("Please answer all the questions before submitting.");
+      toast.error("Please answer all the questions before submitting.");
       return;
     }
 
-    // Process the form data (you can send the data to the backend or perform another action)
-    console.log("Form submitted with answers:", answers);
+    try {
+      const res = await requests.submitQuestionnaire({ ...answers });
+    } catch (error) {}
   };
 
   return (
@@ -61,8 +64,8 @@ const QuestionnaireForm = () => {
               }. ${question}`}</label>
               <input
                 type="text"
-                name={`q${index + 1}`}
-                value={answers[`q${index + 1}`] || ""}
+                name={`question${index + 1}`}
+                value={answers[`question${index + 1}`] || ""}
                 onChange={handleChange}
                 placeholder="Your answer"
                 className="w-full p-3 border border-gray-300 rounded-md text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"

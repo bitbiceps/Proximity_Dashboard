@@ -24,6 +24,7 @@ import ProtectedRoute from "./components/common/ProtectedRoutes";
 // import PaymentForm from "./pages/PaymentForm";
 // import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { ToastContainer } from "react-toastify";
 
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
@@ -110,7 +111,7 @@ const App = () => {
               path={routes.popup_search}
               element={<ProtectedRoute Component={PopupSearch} />}
             />
-             {/* <Route
+            {/* <Route
               path={routes.payment}
               element={
                 <Elements stripe={stripePromise}>
@@ -144,6 +145,7 @@ const App = () => {
             <Route path={routes.popup_search} Component={PopupSearch} /> */}
           </Routes>
         </main>
+        <ToastContainer />
       </div>
     </Provider>
   );
