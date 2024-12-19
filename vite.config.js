@@ -9,5 +9,6 @@ export default defineConfig({
   },
   preview: {
     port: 3000, // Set the port for preview server (npm run preview)
+    host: '0.0.0.0', // Allow external network access
   },
 })
