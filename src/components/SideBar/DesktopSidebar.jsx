@@ -12,12 +12,12 @@ import Divider from "../common/Divider";
 import { useLocation } from "react-router-dom";
 
 const DesktopSidebar = ({ logout }) => {
-  const [active, setActive] = useState(sideBarTabs.package); // Track the active state of the sidebar
+  const [active, setActive] = useState(); // Track the active state of the sidebar
   const isHovered = true;
   const transition = "transition-all duration-200 ease-in-out";
   const location = useLocation();
   const current = location.state?.current;
-  console.log("current",current)
+  console.log("current", current);
   const navItems1 = [
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
     { name: sideBarTabs.package, to: routes.package, img: packageIcon },
@@ -54,7 +54,7 @@ const DesktopSidebar = ({ logout }) => {
               <NavLink
                 key={item.name + index + "Top"}
                 to={item.to}
-                onClick={() => setActive(item.name)} // Set active on click
+                // onClick={() => setActive(item.name)} // Set active on click
                 className={`${transition} flex items-center w-full h-[60px] gap-6 ${
                   active == item.name && "mb-4"
                 }`}
@@ -117,7 +117,7 @@ const DesktopSidebar = ({ logout }) => {
                   <NavLink
                     key={item.name + index + "Bottom"}
                     to={item.to}
-                    onClick={() => setActive(item.name)} // Set active on click
+                    // onClick={() => setActive(item.name)} // Set active on click
                     className={`${transition} flex items-center w-full h-[60px] gap-6 ${
                       active == item.name && "mb-4"
                     }`}
@@ -181,7 +181,7 @@ const DesktopSidebar = ({ logout }) => {
                   <div
                     key={item.name}
                     onClick={() => {
-                      setActive(item.name);
+                      // setActive(item.name);
                       if (item.callBack) item.callBack();
                     }} // Set active on click
                     className={`${transition} cursor-pointer flex items-center w-full h-[60px] gap-6 ${

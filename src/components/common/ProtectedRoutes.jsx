@@ -7,7 +7,7 @@ const ProtectedRoute = ({ Component, ...rest }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   const checkAuth = useCallback(() => {
-    const authToken = Cookies.get(cookieAccessKeys.tokens.accessToken);
+    const authToken = Cookies.get(cookieAccessKeys?.tokens?.accessToken);
     return !!authToken;
   }, []);
 
