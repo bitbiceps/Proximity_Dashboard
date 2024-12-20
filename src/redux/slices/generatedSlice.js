@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { article } from "framer-motion/m";
 
 export const updateRequestArticle = createAsyncThunk(
   "generated/updateRequestArticle",

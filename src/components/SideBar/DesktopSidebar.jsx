@@ -52,7 +52,7 @@ const DesktopSidebar = ({ logout }) => {
           <ul className="h-fit">
             {navItems1.map((item, index) => (
               <NavLink
-                key={item.name + index + "Top"}
+                key={item.name + index + "Top Nav"}
                 to={item.to}
                 // onClick={() => setActive(item.name)} // Set active on click
                 className={`${transition} flex items-center w-full h-[60px] gap-6 ${
@@ -112,10 +112,9 @@ const DesktopSidebar = ({ logout }) => {
           <ul className="h-fit mb-12">
             <Divider className={"mb-4"} />
             {navItems2.map((item, index) => (
-              <>
+              <React.Fragment key={item.name + index + "Bottom Nav"}>
                 {item.to ? (
                   <NavLink
-                    key={item.name + index + "Bottom"}
                     to={item.to}
                     // onClick={() => setActive(item.name)} // Set active on click
                     className={`${transition} flex items-center w-full h-[60px] gap-6 ${
@@ -244,7 +243,7 @@ const DesktopSidebar = ({ logout }) => {
                     </li>
                   </div>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </ul>
         </div>

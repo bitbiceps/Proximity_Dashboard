@@ -1,29 +1,32 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import RootLayout from "../layouts/RootLayout";
 import TermsCondition from "../components/common/modal/TermsCondition";
 import { useSelector, useDispatch } from "react-redux";
 import { updateRequestArticle } from "../redux/slices/generatedSlice";
 import { toast } from "react-toastify"; // Import toast
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toast
+import "react-toastify/dist/ReactToastify.css"; // Import CSS for Toast
 const GeneratedArticle = () => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
-  const { articleUpdate, loading, error } = useSelector((state) => state.generated);
-  console.log("r",articleUpdate.message)
+  const { articleVerify, articleUpdate, loading, error } = useSelector(
+    (state) => state.generated
+  );
   const articles = useSelector(({ articles: { articles } }) => articles);
   const currentArticle = useSelector(
     (state) => state.articles.currentSelectedArticle
   );
   useEffect(() => {
-    if (articleUpdate?.message === "Article updateRequested status toggled successfully") {
+    if (
+      articleVerify?.message ===
+      "Article updateRequested status toggled successfully"
+    ) {
       toast.success("Article updated successfully!");
     }
-  }, [articleUpdate]);
+  }, [articleVerify]);
 
-  console.log("sdfghj", articles, currentArticle);
   const handleUpdate = (articleId) => {
     console.log("adsssssss", articleId);
-    dispatch(updateRequestArticle({articleId}));
+    dispatch(updateRequestArticle({ articleId }));
   };
   return (
     <RootLayout>
@@ -64,13 +67,16 @@ const GeneratedArticle = () => {
             mattis. Morbi est est, facilisis auctor dui et, dignissim elementum
             augue.
           </p>
-          
-          {articles.map((a,i)=>(
-           <p key={a._id}className="text-gray-700 text-justify leading-relaxed mb-6">
-               {a._id==currentArticle._id && <p>{a.value}</p>}
-             </p>
+
+          {articles.map((a, i) => (
+            <div
+              key={a._id}
+              className="text-gray-700 text-justify leading-relaxed mb-6"
+            >
+              {a._id == currentArticle._id && <p>{a.value}</p>}
+            </div>
           ))}
-         
+
           <p className="text-gray-700 text-justify leading-relaxed mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
             lacus sem. Fusce volutpat fermentum turpis a mollis. Pellentesque
