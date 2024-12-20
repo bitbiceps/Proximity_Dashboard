@@ -53,7 +53,7 @@ const QuestionnaireForm = () => {
       });
       if (data) {
         dispatch(setArticles(data?.articles));
-        toast.success(data.message);
+        toast.success(data?.message);
         navigate(routes.articles_unlocked, { replace: true });
       }
     } catch (error) {

@@ -1,15 +1,36 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { verifyRequestArticle } from "../../../redux/slices/generatedSlice";
+import { toast } from "react-toastify"; // Import toast
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toast
+import { useNavigate } from "react-router-dom";
 
 const TermsCondition = () => {
   const [isChecked, setIsChecked] = useState(false);
-
+  const dispatch = useDispatch();
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
-
-  const handleAgree = () => {
+  const navigate=useNavigate()
+  const { articleVerify, articleUpdate, loading, error } = useSelector(
+    (state) => state.generated
+  );
+  console.log("r", articleVerify.message);
+  const articles = useSelector(({ articles: { articles } }) => articles);
+  const currentArticle = useSelector(
+    (state) => state.articles.currentSelectedArticle
+  );
+   useEffect(() => {
+      if (articleVerify?.message === "Article submitted successfully") {
+        toast.success("Article submitted successfully");
+        navigate("/",{replace:true})
+      }
+    }, [articleVerify,navigate]);
+  const handleAgree = (articleId) => {
+    console.log("artaa", articleId);
     if (isChecked) {
-      alert("Thank you for accepting the terms and conditions.");
+      dispatch(verifyRequestArticle({articleId}));
+      
     } else {
       alert("Please accept the terms and conditions to proceed.");
     }
@@ -28,11 +49,11 @@ const TermsCondition = () => {
         <div className="overflow-y-auto max-h-80 text-sm text-gray-600 mb-6">
           <p className="mb-4">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. In bibendum
-            vitae nisi a aliquam. In in purus hendrerit, efficitur magna sodales,
-            dapibus dui. Praesent libero lacus, placerat quis elit in, semper
-            mollis elit. Donec ullamcorper aliquet rhoncus. In faucibus efficitur
-            eros ac elementum. Duis ut finibus libero. Nullam tempor justo justo,
-            id mattis arcu sollicitudin et.
+            vitae nisi a aliquam. In in purus hendrerit, efficitur magna
+            sodales, dapibus dui. Praesent libero lacus, placerat quis elit in,
+            semper mollis elit. Donec ullamcorper aliquet rhoncus. In faucibus
+            efficitur eros ac elementum. Duis ut finibus libero. Nullam tempor
+            justo justo, id mattis arcu sollicitudin et.
           </p>
           <p className="mb-4">
             Nam consectetur lacus eros, at pretium mi sagittis ac. Donec sed
@@ -67,9 +88,11 @@ const TermsCondition = () => {
         <div className="flex justify-end mt-6">
           <button
             className={`px-8 py-3 text-white font-semibold rounded-lg ${
-              isChecked ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"
+              isChecked
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
             }`}
-            onClick={handleAgree}
+            onClick={() => handleAgree(currentArticle._id)}
             disabled={!isChecked}
           >
             Agree
