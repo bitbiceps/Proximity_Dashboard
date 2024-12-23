@@ -16,6 +16,7 @@ export const routes = {
   title_suggestions: "/title_suggestions",
   generated_article: "/generated_article",
   popup_search: "/popup_search",
+  // payment:"/payment"
 };
 
 export const sideBarTabs = {
@@ -25,6 +26,7 @@ export const sideBarTabs = {
   articleWriter: "Article Writer",
   profile: "Profile",
   logout: "Logout",
+  articles_unlocked:"Articles Unlocked"
 };
 
 export const cookieAccessKeys = {

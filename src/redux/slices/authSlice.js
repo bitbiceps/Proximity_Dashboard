@@ -17,6 +17,24 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const updatedArticles = createAsyncThunk(
+  "auth/updatedArticles",
+  async (userId, { rejectWithValue }) => {
+    console.log("djfbhdbfhdbfhdb", userId);
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/auth/updated/${userId}`
+      );
+      console.log("upddddddddddddd", response);
+      console.log("saveRes", response.data);
+
+      return response.data; // assuming the response contains user data
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Login failed");
+    }
+  }
+);
+
 // Registration async thunk
 export const submitRegistration = createAsyncThunk(
   "auth/submitRegistration",
@@ -40,12 +58,15 @@ const authSlice = createSlice({
     user: null,
     loading: false,
     error: null,
+    updatedArticles: null,
+    registerUser: null,
   },
   reducers: {
     resetState: (state) => {
       state.user = null;
       state.loading = false;
       state.error = null;
+      state.updatedArticles= null;
     },
   },
   extraReducers: (builder) => {
@@ -63,6 +84,10 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      .addCase(updatedArticles.fulfilled, (state, action) => {
+        state.updatedArticles = action.payload;
       })
 
       // Handle registration action

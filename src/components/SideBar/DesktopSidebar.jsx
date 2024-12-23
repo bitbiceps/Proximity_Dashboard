@@ -10,25 +10,38 @@ import profileIcon from "../../assets/sidebar/profile.svg";
 import logoutIcon from "../../assets/sidebar/logout.svg";
 import Divider from "../common/Divider";
 import { useLocation } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { updatedArticles } from "../../redux/slices/authSlice";
 const DesktopSidebar = ({ logout }) => {
   const [active, setActive] = useState(); // Track the active state of the sidebar
   const isHovered = true;
   const transition = "transition-all duration-200 ease-in-out";
   const location = useLocation();
   const current = location.state?.current;
-  console.log("current", current);
+  const dispatch=useDispatch()
+  const user = useSelector((state) => state.auth);
+  const articles = useSelector(({ articles: { articles } }) => articles);
+
+  console.log("artttttttt", user);
+  console.log("articlesss", user);
+  const finalData =
+    user?.user?.user?.articles?.length > 0 ? user?.user?.user?.articles : articles;
+    console.log("fffffff",finalData)
   const navItems1 = [
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
     { name: sideBarTabs.package, to: routes.package, img: packageIcon },
+    // {
+    //   name: sideBarTabs.topicGenerator,
+    //   to: routes.topic_generator,
+    //   img: topicGeneratorIcon,
+    // },
     {
-      name: sideBarTabs.topicGenerator,
-      to: routes.topic_generator,
-      img: topicGeneratorIcon,
-    },
-    {
-      name: sideBarTabs.articleWriter,
-      to: routes.article_writer,
+      name:
+        finalData?.length > 0
+          ? sideBarTabs.articles_unlocked
+          : sideBarTabs.articleWriter,
+      to:
+        finalData.length > 0 ? routes.articles_unlocked : routes.article_writer,
       img: articleIcon,
     },
   ];
@@ -54,7 +67,7 @@ const DesktopSidebar = ({ logout }) => {
               <NavLink
                 key={item.name + index + "Top Nav"}
                 to={item.to}
-                // onClick={() => setActive(item.name)} // Set active on click
+                onClick={() => dispatch(updatedArticles(user.user.userId))} // Set active on click
                 className={`${transition} flex items-center w-full h-[60px] gap-6 ${
                   active == item.name && "mb-4"
                 }`}

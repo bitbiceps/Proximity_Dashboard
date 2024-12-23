@@ -14,7 +14,7 @@ const RootLayout = ({ children }) => {
   return (
     <>
       <Header />
-      {userData.user.user.paymentStatus === true ? (
+      {userData?.user?.user?.paymentStatus === true ? (
         <div className="bg-blue-50 p-4">{children}</div>
       ) : (
         <div className="flex items-center justify-center min-h-screen">

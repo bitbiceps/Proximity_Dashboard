@@ -23,7 +23,7 @@ const PaymentForm = ({ amount, userId, planId }) => {
   const elements = useElements();
   const dispatch = useDispatch();
   const paymentData = useSelector((state) => state.payment);
-  console.log("pipippppp", paymentData);
+  console.log("pipippppssp", paymentData);
   const [paymentStatus, setPaymentStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -52,6 +52,7 @@ const PaymentForm = ({ amount, userId, planId }) => {
         }
       );
       if (paymentIntent.status === "succeeded") {
+        console.log("paymentIntentss", paymentIntent.status);
         dispatch(resetState());
         navigate("/login", { replace: true });
       }
@@ -241,7 +242,9 @@ export const PricingCard = ({
       <div className="mx-[24px] mt-[50px] opacity-[30%] h-[1.7px] bg-[#212121]"></div>
       <div className="mt-[30px] flex justify-center">
         {active ? (
-          <div  className="bg-green-400 border-[#4D49F6] rounded-full text-[#4D49F6] font-bold text-[14px] py-[16px] px-[34px] ">Your Current Plan</div>
+          <div className="bg-green-400 border-[#4D49F6] rounded-full text-[#4D49F6] font-bold text-[14px] py-[16px] px-[34px] ">
+            Your Current Plan
+          </div>
         ) : (
           <button
             className="border-[1.7px] border-[#4D49F6] rounded-full text-[#4D49F6] font-bold text-[14px] py-[16px] px-[34px]"

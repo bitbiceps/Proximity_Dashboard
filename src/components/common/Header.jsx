@@ -18,7 +18,6 @@ const Header = () => {
   ];
   const [selected, setSelected] = useState(langOptions[0]);
   const response = useSelector((state) => state.auth);
-  console.log("response", response);
   const handleCountrySelect = (country) => {
     console.log("Selected Country:", country.name);
   };
@@ -42,7 +41,7 @@ const Header = () => {
         {/* User */}
         <UserAvatar
           user={{
-            name: `${response.user.user.fullName}`,
+            name: `${response?.user?.user?.fullName}`,
             role: "User",
             avatar,
           }}

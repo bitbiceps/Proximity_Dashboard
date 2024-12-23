@@ -5,7 +5,9 @@ import Cookies from "js-cookie";
 import { cookieAccessKeys, routes } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import { resetState } from "../../redux/slices/authSlice";
+
 import { useDispatch } from "react-redux";
+import { resetpState } from "../../redux/slices/articleSlice";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ const Sidebar = () => {
     Cookies.remove(cookieAccessKeys.tokens.refreshToken);
 
     dispatch(resetState());
+    dispatch(resetpState())
     navigate(routes.login, { replace: true });
   };
   // useEffect(()=>{

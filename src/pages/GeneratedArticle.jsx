@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import RootLayout from "../layouts/RootLayout";
 import TermsCondition from "../components/common/modal/TermsCondition";
 import { useSelector, useDispatch } from "react-redux";
-import { updateRequestArticle } from "../redux/slices/generatedSlice";
+import {
+  resetState,
+  updateRequestArticle,
+} from "../redux/slices/generatedSlice";
 import { toast } from "react-toastify"; // Import toast
 import "react-toastify/dist/ReactToastify.css"; // Import CSS for Toast
 const GeneratedArticle = () => {
@@ -17,16 +20,21 @@ const GeneratedArticle = () => {
   );
   useEffect(() => {
     if (
-      articleVerify?.message ===
+      articleUpdate?.message ===
       "Article updateRequested status toggled successfully"
     ) {
-      toast.success("Article updated successfully!");
+      toast.success(articleUpdate?.message);
     }
-  }, [articleVerify]);
+  }, [articleUpdate]);
 
   const handleUpdate = (articleId) => {
     console.log("adsssssss", articleId);
     dispatch(updateRequestArticle({ articleId }));
+  };
+  console.log("showModal", showModal);
+  const handleVerify = () => {
+    setShowModal(true);
+    console.log("reseeeeeeee");
   };
   return (
     <RootLayout>
@@ -57,7 +65,7 @@ const GeneratedArticle = () => {
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
             Generated Article
           </h2>
-          <p className="text-gray-700 text-justify leading-relaxed mb-6">
+          {/* <p className="text-gray-700 text-justify leading-relaxed mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
             lacus sem. Fusce volutpat fermentum turpis a mollis. Pellentesque
             ornare imperdiet eros, et convallis eros tristique id. Aliquam
@@ -66,7 +74,7 @@ const GeneratedArticle = () => {
             consequat ligula fermentum nec. Morbi vestibulum elit in congue
             mattis. Morbi est est, facilisis auctor dui et, dignissim elementum
             augue.
-          </p>
+          </p> */}
 
           {articles.map((a, i) => (
             <div
@@ -77,12 +85,12 @@ const GeneratedArticle = () => {
             </div>
           ))}
 
-          <p className="text-gray-700 text-justify leading-relaxed mb-6">
+          {/* <p className="text-gray-700 text-justify leading-relaxed mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
             lacus sem. Fusce volutpat fermentum turpis a mollis. Pellentesque
             ornare imperdiet eros, et convallis eros tristique id. Aliquam
             elementum, erat
-          </p>
+          </p> */}
 
           <div className="flex justify-center space-x-4">
             <button
@@ -92,7 +100,7 @@ const GeneratedArticle = () => {
               Update
             </button>
             <button
-              onClick={() => setShowModal(true)}
+              onClick={handleVerify}
               className="px-8 py-2 text-white bg-[#4D49F6] rounded-lg "
             >
               Verify

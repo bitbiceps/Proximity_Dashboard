@@ -1,8 +1,11 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { verifyRequestArticle } from "../../../redux/slices/generatedSlice";
+import {
+  resetState,
+  verifyRequestArticle,
+} from "../../../redux/slices/generatedSlice";
 import { toast } from "react-toastify"; // Import toast
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS for Toast
+import "react-toastify/dist/ReactToastify.css"; // Import CSS for Toast
 import { useNavigate } from "react-router-dom";
 
 const TermsCondition = () => {
@@ -11,26 +14,32 @@ const TermsCondition = () => {
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const { articleVerify, articleUpdate, loading, error } = useSelector(
     (state) => state.generated
   );
-  console.log("r", articleVerify.message);
+  // console.log("r", articleVerify.message);
   const articles = useSelector(({ articles: { articles } }) => articles);
   const currentArticle = useSelector(
     (state) => state.articles.currentSelectedArticle
   );
-   useEffect(() => {
-      if (articleVerify?.message === "Article submitted successfully") {
-        toast.success("Article submitted successfully");
-        navigate("/",{replace:true})
-      }
-    }, [articleVerify,navigate]);
+  // useEffect(() => {
+  //   if (articleVerify?.message === "Article submitted successfully") {
+  //     toast.success("Article submitted successfully");
+  //     navigate("/", { replace: true });
+  //   }
+  // }, [articleVerify, navigate]);
   const handleAgree = (articleId) => {
     console.log("artaa", articleId);
     if (isChecked) {
-      dispatch(verifyRequestArticle({articleId}));
-      
+      dispatch(verifyRequestArticle({ articleId }));
+      if (articleVerify?.message === "Article submitted successfully") {
+        toast.success("Article submitted successfully");
+        navigate("/", { replace: true });
+      }
+      dispatch(resetState());
+
+      console.log("staterest");
     } else {
       alert("Please accept the terms and conditions to proceed.");
     }

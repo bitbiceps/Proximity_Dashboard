@@ -11,6 +11,9 @@ const articlesSlice = createSlice({
   name: "articles",
   initialState,
   reducers: {
+    resetpState: (state) => {
+      state.articles=[]
+    },
     // Setter action to set the articles
     setArticles: (state, action) => {
       state.articles = action.payload;
@@ -22,7 +25,7 @@ const articlesSlice = createSlice({
 });
 
 // Export the actions
-export const { setArticles, setCurrentSelectedArticle } = articlesSlice.actions;
+export const { setArticles, setCurrentSelectedArticle,resetpState } = articlesSlice.actions;
 
 // Export the reducer
 export default articlesSlice.reducer;

@@ -52,10 +52,19 @@ export const verifyRequestArticle = createAsyncThunk(
 const generatedSlice = createSlice({
   name: "generated",
   initialState: {
+    specificArticle:null,
     articleVerify: null,
     articleUpdate: null,
     loading: false,
     error: null,
+  },
+  reducers: {
+    resetState: (state) => {
+      state.articleVerify = null;
+      state.articleUpdate = false;
+      state.loading = null;
+      state.error=null;
+    },
   },
   //   reducers: {
   //     resetPaymentState: (state) => {
@@ -87,6 +96,7 @@ const generatedSlice = createSlice({
         state.loading = false;
         console.log("verify", action.payload);
         state.articleVerify = action.payload;
+        state.specificArticle=action.payload
       })
       .addCase(verifyRequestArticle.rejected, (state, action) => {
         state.loading = false;
@@ -95,5 +105,5 @@ const generatedSlice = createSlice({
   },
 });
 
-// export const { resetPaymentState } = paymentSlice.actions;
+export const { resetState } = generatedSlice.actions;
 export default generatedSlice.reducer;
