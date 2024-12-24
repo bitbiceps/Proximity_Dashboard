@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { baseURL } from "../../axios/instance";
 
 export const updateRequestArticle = createAsyncThunk(
   "generated/updateRequestArticle",
@@ -6,7 +7,7 @@ export const updateRequestArticle = createAsyncThunk(
     console.log("userIIdsdsdsII", { articleId });
     try {
       const response = await fetch(
-        "http://localhost:5000/article/request-update",
+        `${baseURL}/article/request-update`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -31,7 +32,7 @@ export const verifyRequestArticle = createAsyncThunk(
   async ({ articleId }, { rejectWithValue }) => {
     console.log("userIIdsdsdsII", { articleId });
     try {
-      const response = await fetch("http://localhost:5000/article/submit", {
+      const response = await fetch(`${baseURL}/article/submit`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ articleId }),

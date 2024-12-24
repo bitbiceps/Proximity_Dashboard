@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { baseURL } from "../../axios/instance";
 
 // Login async thunk
 export const loginUser = createAsyncThunk(
@@ -7,7 +8,7 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${baseURL}/api/auth/login`,
         credentials
       );
       return response.data; // assuming the response contains user data
@@ -22,9 +23,7 @@ export const updatedArticles = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     console.log("djfbhdbfhdbfhdb", userId);
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/auth/updated/${userId}`
-      );
+      const response = await axios.get(`${baseURL}/api/auth/updated/${userId}`);
       console.log("upddddddddddddd", response);
       console.log("saveRes", response.data);
 
@@ -41,7 +40,7 @@ export const submitRegistration = createAsyncThunk(
   async (formData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        `${baseURL}/api/auth/register`,
         formData
       );
       console.log("sign", response.data);

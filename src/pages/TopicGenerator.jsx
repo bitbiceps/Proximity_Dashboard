@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import RootLayout from "../layouts/RootLayout";
 import { useSelector } from "react-redux";
-import requests from "../axios/instance";
+import requests, { baseURL } from "../axios/instance";
 import { toast } from "react-toastify";
 import Loading from "../components/common/Loading";
 import axios from "axios";
@@ -38,10 +38,10 @@ const TopicGenerator = () => {
 
   const handleVerify = async (topicId, index) => {
     try {
-      const response = await axios.put(
-        "http://localhost:5000/topic/request-verify",
-        { topicId, index }
-      );
+      const response = await axios.put(`${baseURL}/topic/request-verify`, {
+        topicId,
+        index,
+      });
       if (response.status === 200) {
         const updatedTopics = [...topics];
         updatedTopics[index].verifyRequested = true;
@@ -56,7 +56,7 @@ const TopicGenerator = () => {
   const handleUpdate = async (topicId, index) => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/topic/request-update",
+        `${baseURL}/topic/request-update`,
         { topicId, index }
       );
       if (response.status === 200) {
@@ -72,7 +72,7 @@ const TopicGenerator = () => {
 
   const handleSubmit = async (_id) => {
     try {
-      const response = await axios.put("http://localhost:5000/topic/submit", {
+      const response = await axios.put(`${baseURL}/topic/submit`, {
         _id,
       });
       console.log("response", response);
@@ -87,7 +87,7 @@ const TopicGenerator = () => {
   const handleSuggestionSubmit = async (topicId) => {
     if (suggestion.trim()) {
       const response = await axios.put(
-        "http://localhost:5000/topic/add-suggestion",
+        `${baseURL}/topic/add-suggestion`,
         {
           topicId,
           suggestion,

@@ -1,23 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { baseURL } from "../../axios/instance";
 
 export const createPaymentIntent = createAsyncThunk(
   "payment/createPaymentIntent",
-  async ({ userId, amount,planId }, { rejectWithValue }) => {
-    console.log("userIIII",userId,amount)
+  async ({ userId, amount, planId }, { rejectWithValue }) => {
+    console.log("userIIII", userId, amount);
     try {
-      const response = await fetch("http://localhost:5000/pay/create-payment-intent", {
+      const response = await fetch(`${baseURL}/pay/create-payment-intent`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, amount,planId }),
+        body: JSON.stringify({ userId, amount, planId }),
       });
-         
+
       if (!response.ok) {
         throw new Error("Failed to create payment intent");
       }
 
       const data = await response.json();
-      console.log("data",data)
-      return data.clientSecret; 
+      console.log("data", data);
+      return data.clientSecret;
     } catch (error) {
       return rejectWithValue(error.message);
     }
