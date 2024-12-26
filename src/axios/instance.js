@@ -1,7 +1,6 @@
 import axios from "axios";
 import apiRoutes from "./apiRoutes";
 
-// export const baseURL = "http://localhost:5000";
 export const baseURL = "https://api.proximity.press";
 
 const api = axios.create({
