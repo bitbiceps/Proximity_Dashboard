@@ -18,7 +18,7 @@ export const createPaymentIntent = createAsyncThunk(
 
       const data = await response.json();
       console.log("data", data);
-      return data.clientSecret;
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }

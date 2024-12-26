@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import tick from "../../assets/circle-tick.svg";
 import { Link, replace } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
@@ -23,10 +23,11 @@ const PaymentForm = ({ amount, userId, planId }) => {
   const elements = useElements();
   const dispatch = useDispatch();
   const paymentData = useSelector((state) => state.payment);
-  console.log("pipippppssp", paymentData);
   const [paymentStatus, setPaymentStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const [clientSecret, setClientSecret] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,29 +39,35 @@ const PaymentForm = ({ amount, userId, planId }) => {
       return;
     }
 
+    // if (!clientSecret) {
+    //   setLoading(false);
+    //   setPaymentStatus("Payment data is not ready yet.");
+    //   return;
+    // }
+
     try {
       // Dispatch payment data to backend via Redux
-      dispatch(createPaymentIntent({ userId, amount, planId }));
-
+      const result = await dispatch(
+        createPaymentIntent({ userId, amount, planId })
+      );
+      const clientSecret = result.payload?.clientSecret;
+      console.log("cliccccccc", clientSecret, result);
       // Confirm the payment with the retrieved client secret
       const { error, paymentIntent } = await stripe.confirmCardPayment(
-        paymentData.clientSecret,
+        clientSecret,
         {
           payment_method: {
             card: elements.getElement(CardElement),
           },
         }
       );
-      if (paymentIntent.status === "succeeded") {
-        console.log("paymentIntentss", paymentIntent.status);
-        dispatch(resetState());
-        navigate("/login", { replace: true });
-      }
       console.log("paymentIntent", paymentIntent);
       if (error) {
         setPaymentStatus(`Payment failed: ${error.message}`);
       } else if (paymentIntent.status === "succeeded") {
         setPaymentStatus("Payment successful!");
+        dispatch(resetState());
+        navigate("/login", { replace: true });
       }
     } catch (err) {
       setPaymentStatus(`Error: ${err.message}`);

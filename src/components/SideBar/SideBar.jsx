@@ -8,7 +8,7 @@ import { resetState } from "../../redux/slices/authSlice";
 
 import { useDispatch } from "react-redux";
 import { resetpState } from "../../redux/slices/articleSlice";
-
+import { resetPaymentState } from "../../redux/slices/paymentSlice";
 const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -19,6 +19,7 @@ const Sidebar = () => {
 
     dispatch(resetState());
     dispatch(resetpState())
+    dispatch(resetPaymentState())
     navigate(routes.login, { replace: true });
   };
   // useEffect(()=>{
