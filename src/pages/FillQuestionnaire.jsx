@@ -4,7 +4,8 @@ import { Button } from "../components/common/Button";
 import { ArticlesCard } from "../components/common/ArticlesCard";
 import article from "../assets/article-image.png";
 import lock from "../assets/lock.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { routes } from "../utils";
 const articleData = [
   {
     head: (
@@ -39,6 +40,9 @@ const articleData = [
 ];
 
 const FillQuestionnaire = () => {
+  const navigate = useNavigate()
+   
+
   return (
     <RootLayout>
       <div className="mx-[5%]">
@@ -50,7 +54,10 @@ const FillQuestionnaire = () => {
             <div className="flex items-center justify-center">
               Lorem ipsum heading
             </div>
-            {/* <Button text={"Fill the Questionnaire"} /> */}
+            <Button onClick={() => {
+                            // dispatch(setCurrentSelectedArticle(item));
+                            navigate(routes.questionnaire_form);
+                          }} text={"Fill the Questionnaire"} />
           </div>
         </div>
         <div className="mt-[65px] text-[32px] leading-[38px] font-bold text-[#202224] text-center">

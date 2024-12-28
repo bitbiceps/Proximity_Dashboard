@@ -13,6 +13,7 @@ export const routes = {
   error: "*",
   questionnaire_form: "/questionnaire_form",
   articles_unlocked: "/articles_unlocked",
+  topic_unlocked: "/topic_unlocked",
   title_suggestions: "/title_suggestions",
   generated_article: "/generated_article",
   popup_search: "/popup_search",

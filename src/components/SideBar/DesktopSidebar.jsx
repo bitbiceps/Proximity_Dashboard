@@ -21,7 +21,8 @@ const DesktopSidebar = ({ logout }) => {
   const dispatch=useDispatch()
   const user = useSelector((state) => state.auth);
   const articles = useSelector(({ articles: { articles } }) => articles);
-
+  const topics = useSelector((state) => state.topics?.topics || []);
+  console.log("topicccccccccccccccccc", topics)
   console.log("artttttttt", user);
   console.log("articlesss", user);
   const finalData =
@@ -30,11 +31,11 @@ const DesktopSidebar = ({ logout }) => {
   const navItems1 = [
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
     { name: sideBarTabs.package, to: routes.package, img: packageIcon },
-    // {
-    //   name: sideBarTabs.topicGenerator,
-    //   to: routes.topic_generator,
-    //   img: topicGeneratorIcon,
-    // },
+    {
+      name: sideBarTabs.topicGenerator,
+      to: topics.length > 0 ? routes.topic_unlocked : routes.fill_questionnaire,
+      img: topicGeneratorIcon,
+    },
     {
       name:
         finalData?.length > 0

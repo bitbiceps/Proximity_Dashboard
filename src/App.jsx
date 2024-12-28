@@ -25,6 +25,7 @@ import ProtectedRoute from "./components/common/ProtectedRoutes";
 // import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { ToastContainer } from "react-toastify";
+import TopicUnlocked from "./pages/TopicUnlocked";
 
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
@@ -98,6 +99,10 @@ const App = () => {
             <Route
               path={routes.articles_unlocked}
               element={<ProtectedRoute Component={ArticlesUnlocked} />}
+            />
+            <Route
+              path={routes.topic_unlocked}
+              element={<ProtectedRoute Component={TopicUnlocked} />}
             />
             <Route
               path={routes.title_suggestions}

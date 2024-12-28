@@ -3,6 +3,10 @@ import React from 'react';
 const TruncatedText = ({ content }) => {
   // Function to truncate the text after 30 words
   const truncateText = (text, wordLimit) => {
+    if (typeof text !== 'string') {
+      return ''; // Return an empty string if content is not a string
+    }
+
     const words = text.split(' ');
     if (words.length > wordLimit) {
       return words.slice(0, wordLimit).join(' ') + '...'; // Truncate and add ellipsis

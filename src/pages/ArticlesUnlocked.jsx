@@ -22,6 +22,7 @@ const ArticlesUnlocked = () => {
       ? user?.user?.articles
       : articles;
   console.log("final", final);
+  // already commented 
   // const { specificArticle, articleVerify, articleUpdate, loading, error } =
   //   useSelector((state) => state.generated);
   // console.log("articles", specificArticle);
@@ -56,3 +57,68 @@ const ArticlesUnlocked = () => {
 };
 
 export default ArticlesUnlocked;
+
+
+// import React from "react";
+// import { ArticlesCard } from "../components/common/ArticlesCard";
+// import article from "../assets/article-image.png";
+// import RootLayout from "../layouts/RootLayout";
+// import { useDispatch, useSelector } from "react-redux";
+// import { setCurrentSelectedArticle, updateVisibilityState } from "../redux/slices/articleSlice";
+// import { useNavigate } from "react-router-dom";
+// import { routes } from "../utils";
+
+// const ArticlesUnlocked = () => {
+//   const articles = useSelector(({ articles: { articles } }) => articles);
+//   const visibilityState = useSelector(({ articles: { visibilityState } }) => visibilityState);
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+
+//   const { user, loading, error, updatedArticles, registerUser } = useSelector(
+//     (state) => state.auth
+//   );
+
+//   const final =
+//     updatedArticles?.articles?.articles?.length > 0
+//       ? updatedArticles.articles.articles
+//       : user?.user?.articles?.length > 0
+//       ? user?.user?.articles
+//       : articles;
+
+//   return (
+//     <RootLayout>
+//       <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
+//         {/* Articles Container */}
+//         <div className="w-full flex justify-center gap-[20px] relative z-[10]">
+//           {final.map((item, index) => {
+//             const visibility = visibilityState[item._id] || { headVisible: false, contentVisible: false };
+
+//             return (
+//               <ArticlesCard
+//                 key={index}
+//                 image={article}
+//                 head={
+//                   visibility.headVisible ? (
+//                     <div>
+//                       Tech Pr Agency <br /> for startups
+//                     </div>
+//                   ) : (
+//                     <div style={{ display: "none" }} />
+//                   )
+//                 }
+//                 content={visibility.contentVisible ? item.value : ""}
+//                 isSubmitted={item.submitted} // Pass submitted status
+//                 onClick={() => {
+//                   dispatch(setCurrentSelectedArticle(item));
+//                   {!visibility.headVisible ? navigate(routes.topic_generator) : navigate(routes.generated_article)}
+//                 }}
+//               />
+//             );
+//           })}
+//         </div>
+//       </div>
+//     </RootLayout>
+//   );
+// };
+
+// export default ArticlesUnlocked;
