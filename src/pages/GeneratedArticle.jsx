@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css"; // Import CSS for Toast
 const GeneratedArticle = () => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
-  const { articleVerify, articleUpdate, loading, error, articleGenerate } =
+  const { articleVerify, articleUpdate, loading, error, articleGenerate,articleloading } =
     useSelector((state) => state.generated);
   const articles = useSelector(({ articles: { articles } }) => articles);
   const currentArticle = useSelector(
@@ -36,6 +36,15 @@ const GeneratedArticle = () => {
     setShowModal(true);
     console.log("reseeeeeeee");
   };
+  if (articleloading) {
+    return (
+      <RootLayout>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-xl font-semibold text-gray-600">Loading...</div>
+        </div>
+      </RootLayout>
+    );
+  }
   return (
     <RootLayout>
       <div className="  flex flex-col items-center py-8">

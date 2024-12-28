@@ -72,7 +72,8 @@ export const getAllTopics = createAsyncThunk(
   "generated/getAllTopics",
   async (userId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${baseURL}/topic?userId=${userId}`, { // Query parameter added
+      const response = await fetch(`${baseURL}/topic?userId=${userId}`, {
+        // Query parameter added
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -95,7 +96,8 @@ const generatedSlice = createSlice({
     loading: false,
     error: null,
     articleGenerate: null,
-    allTopics:null
+    allTopics: null,
+    articleloading: false,
   },
   reducers: {
     resetState: (state) => {
@@ -104,7 +106,8 @@ const generatedSlice = createSlice({
       state.loading = null;
       state.error = null;
       state.articleGenerate = null;
-      state.allTopics=null
+      state.allTopics = null;
+      state.articleloading=null;
     },
   },
   //   reducers: {
@@ -143,10 +146,16 @@ const generatedSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      .addCase(generateArticles.pending, (state) => {
+        state.articleloading = true;
+        state.error = null;
+      })
       .addCase(generateArticles.fulfilled, (state, action) => {
+        state.articleloading=false
         console.log("genertaed", action.payload);
         state.articleGenerate = action.payload;
       })
+     
       .addCase(getAllTopics.fulfilled, (state, action) => {
         console.log("getAll Topics", action.payload);
         state.allTopics = action.payload;
