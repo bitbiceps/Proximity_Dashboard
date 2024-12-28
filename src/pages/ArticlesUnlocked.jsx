@@ -84,7 +84,7 @@ const ArticlesUnlocked = () => {
 
   // Filter topics based on the conditions
   const submittedTopics = allTopics?.data?.filter(
-    (topic) => topic.status === "submitted" && topic.finalTopic
+    (topic) => topic.status === "review" && topic.finalTopic
   );
   console.log("dfgh", submittedTopics, allTopics);
   return (
@@ -92,14 +92,15 @@ const ArticlesUnlocked = () => {
       <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
         {submittedTopics?.length > 0 ? (
           /* Render Articles Cards */
-          <div className="  gap-[20px] relative z-[10]">
+          <div className=" w-full flex justify-center gap-[20px] relative z-[10]">
             {submittedTopics.map((item, index) => (
               <ArticlesCard
                 key={index}
                 image={article}
                 head={item.finalTopic}
                 content={item.finalTopic} // Assuming finalTopic is the content as well
-                isSubmitted={true} // All rendered topics are submitted
+                articleStatus={item.articleStatus}
+
                 onClick={() => {
                   {
                     console.log("eeee", item._id);
