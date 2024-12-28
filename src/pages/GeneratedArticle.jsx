@@ -11,13 +11,13 @@ import "react-toastify/dist/ReactToastify.css"; // Import CSS for Toast
 const GeneratedArticle = () => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
-  const { articleVerify, articleUpdate, loading, error } = useSelector(
-    (state) => state.generated
-  );
+  const { articleVerify, articleUpdate, loading, error, articleGenerate } =
+    useSelector((state) => state.generated);
   const articles = useSelector(({ articles: { articles } }) => articles);
   const currentArticle = useSelector(
     (state) => state.articles.currentSelectedArticle
   );
+  console.log("articleGenerated", articleGenerate);
   useEffect(() => {
     if (
       articleUpdate?.message ===
@@ -76,14 +76,15 @@ const GeneratedArticle = () => {
             augue.
           </p> */}
 
-          {articles.map((a, i) => (
+          {/* {articles.map((a, i) => (
             <div
               key={a._id}
               className="text-gray-700 text-justify leading-relaxed mb-6"
             >
               {a._id == currentArticle._id && <p>{a.value}</p>}
             </div>
-          ))}
+          ))} */}
+          <div>{articleGenerate?.value}</div>
 
           {/* <p className="text-gray-700 text-justify leading-relaxed mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
@@ -94,7 +95,7 @@ const GeneratedArticle = () => {
 
           <div className="flex justify-center space-x-4">
             <button
-              onClick={() => handleUpdate(currentArticle._id)}
+              onClick={() => handleUpdate(articleGenerate._id)}
               className="px-8 py-2 text-blue-500 border border-[#4D49F6] rounded-lg "
             >
               Update

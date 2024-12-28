@@ -1,19 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { baseURL } from "../../axios/instance";
+import { article } from "framer-motion/client";
 
 export const updateRequestArticle = createAsyncThunk(
   "generated/updateRequestArticle",
   async ({ articleId }, { rejectWithValue }) => {
     console.log("userIIdsdsdsII", { articleId });
     try {
-      const response = await fetch(
-        `${baseURL}/article/request-update`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ articleId }),
-        }
-      );
+      const response = await fetch(`${baseURL}/article/request-update`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ articleId }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to create payment intent");
@@ -50,21 +48,63 @@ export const verifyRequestArticle = createAsyncThunk(
     }
   }
 );
+export const generateArticles = createAsyncThunk(
+  "generated/generateArticles",
+  async (topicId, { rejectWithValue }) => {
+    console.log("topicIddd", { topicId });
+    try {
+      const response = await fetch(`${baseURL}/article/create-article`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topicId }),
+      });
+
+      const data = await response.json();
+      console.log("generateArticles", data);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getAllTopics = createAsyncThunk(
+  "generated/getAllTopics",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${baseURL}/topic?userId=${userId}`, { // Query parameter added
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await response.json();
+      console.log("generateArticles", data);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const generatedSlice = createSlice({
   name: "generated",
   initialState: {
-    specificArticle:null,
+    specificArticle: null,
     articleVerify: null,
     articleUpdate: null,
     loading: false,
     error: null,
+    articleGenerate: null,
+    allTopics:null
   },
   reducers: {
     resetState: (state) => {
       state.articleVerify = null;
       state.articleUpdate = false;
       state.loading = null;
-      state.error=null;
+      state.error = null;
+      state.articleGenerate = null;
+      state.allTopics=null
     },
   },
   //   reducers: {
@@ -97,11 +137,19 @@ const generatedSlice = createSlice({
         state.loading = false;
         console.log("verify", action.payload);
         state.articleVerify = action.payload;
-        state.specificArticle=action.payload
+        state.specificArticle = action.payload;
       })
       .addCase(verifyRequestArticle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(generateArticles.fulfilled, (state, action) => {
+        console.log("genertaed", action.payload);
+        state.articleGenerate = action.payload;
+      })
+      .addCase(getAllTopics.fulfilled, (state, action) => {
+        console.log("getAll Topics", action.payload);
+        state.allTopics = action.payload;
       });
   },
 });
