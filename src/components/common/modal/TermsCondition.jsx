@@ -15,14 +15,15 @@ const TermsCondition = () => {
     setIsChecked(!isChecked);
   };
   const navigate = useNavigate();
-  const { articleVerify, articleUpdate, loading, error } = useSelector(
-    (state) => state.generated
-  );
+  const { articleVerify, articleUpdate, loading, error, articleGenerate } =
+    useSelector((state) => state.generated);
   // console.log("r", articleVerify.message);
+  console.log("articleGenerate",articleGenerate,articleVerify)
   const articles = useSelector(({ articles: { articles } }) => articles);
   const currentArticle = useSelector(
     (state) => state.articles.currentSelectedArticle
   );
+
   // useEffect(() => {
   //   if (articleVerify?.message === "Article submitted successfully") {
   //     toast.success("Article submitted successfully");
@@ -33,8 +34,8 @@ const TermsCondition = () => {
     console.log("artaa", articleId);
     if (isChecked) {
       dispatch(verifyRequestArticle({ articleId }));
-      if (articleVerify?.message === "Article submitted successfully") {
-        toast.success("Article submitted successfully");
+      if (articleVerify?.message === "Article submitted for review") {
+        toast.success("Article submitted for review");
         navigate("/", { replace: true });
       }
       dispatch(resetState());
@@ -101,7 +102,7 @@ const TermsCondition = () => {
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
-            onClick={() => handleAgree(currentArticle._id)}
+            onClick={() => handleAgree(articleGenerate._id)}
             disabled={!isChecked}
           >
             Agree

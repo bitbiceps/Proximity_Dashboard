@@ -11,6 +11,7 @@ export const loginUser = createAsyncThunk(
         `${baseURL}/api/auth/login`,
         credentials
       );
+      console.log("logres",response)
       return response.data; // assuming the response contains user data
     } catch (error) {
       return rejectWithValue(error.response?.data || "Login failed");
@@ -57,7 +58,7 @@ const authSlice = createSlice({
     user: null,
     loading: false,
     error: null,
-    updatedArticles: null,
+    approvedTopics: null,
     registerUser: null,
   },
   reducers: {
@@ -65,7 +66,7 @@ const authSlice = createSlice({
       state.user = null;
       state.loading = false;
       state.error = null;
-      state.updatedArticles = null;
+      state.approvedTopics = null;
       state.registerUser = null;
     },
     registerResetState: (state) => {
