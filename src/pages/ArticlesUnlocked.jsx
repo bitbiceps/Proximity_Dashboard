@@ -84,7 +84,7 @@ const ArticlesUnlocked = () => {
 
   // Filter topics based on the conditions
   const submittedTopics = allTopics?.data?.filter(
-    (topic) => topic.status === "review" && topic.finalTopic
+    (topic) => topic.status === "completed" && topic.finalTopic
   );
   // console.log("unlocked", user.user, "uuuuuuu", updatedArticles);
   // const final =
