@@ -14,20 +14,9 @@ const ArticlesUnlocked = () => {
   // Destructuring the required state values directly from useSelector
   const { allTopics } = useSelector((state) => state.generated);
 
-  // Memoize the filtered topics to prevent recalculating on each render
-  const submittedTopics = useMemo(() => {
-    return allTopics?.data?.filter(
-      (topic) => topic.status === "completed" && topic.finalTopic
-    );
-  }, [allTopics]);
-
-  // Handler to dispatch article generation and navigate
-  const handleCardClick = useCallback(
-    (topicId) => {
-      dispatch(generateArticles(topicId));
-      navigate(routes.generated_article);
-    },
-    [dispatch, navigate]
+  // Filter topics based on the conditions
+  const submittedTopics = allTopics?.data?.filter(
+    (topic) => topic.status === "completed" && topic.finalTopic
   );
 
   // Early return if no topics are available

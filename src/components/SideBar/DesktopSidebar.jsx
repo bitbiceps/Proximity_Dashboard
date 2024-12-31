@@ -38,7 +38,7 @@ const DesktopSidebar = ({ logout }) => {
     { name: sideBarTabs.package, to: routes.package, img: packageIcon },
     {
       name: sideBarTabs.topicGenerator,
-      to: topics.length > 0 ? routes.topic_unlocked : routes.fill_questionnaire,
+      to: topics.length > 0 ? routes.topic_unlocked : user.user.topics.length > 0 ? routes.topic_unlocked : routes.fill_questionnaire,
       img: topicGeneratorIcon,
     },
     // {
