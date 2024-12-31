@@ -274,7 +274,7 @@ const TopicGenerator = ({topicId}) => {
   //get topic if no topic then questionare 
   const fetchGeneratedTopic = useCallback(async () => {
     try {
-      const url = `http://localhost:5000/topic?userId=${user.userId}`; // Use the full backend URL
+      const url = `${baseURL}/topic?userId=${user.userId}`; // Use the full backend URL
       console.log("Request URL:", url);
   
       const { data } = await axios.get(url);
@@ -292,7 +292,7 @@ const TopicGenerator = ({topicId}) => {
   //fetch topic 
   const fetchTopicById = useCallback(async () => {
     try {
-      const url = `http://localhost:5000/topic/get?topicId=${currentSelectedTopic}`; // Use the full backend URL
+      const url = `${baseURL}/topic/get?topicId=${currentSelectedTopic}`; // Use the full backend URL
       console.log("article to be fetiched :", currentSelectedTopic);
   
       const { data } = await axios.get(url);
