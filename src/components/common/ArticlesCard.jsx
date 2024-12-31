@@ -5,7 +5,7 @@ export const ArticlesCard = ({ image, head, content, articleStatus, onClick }) =
 
   return (
     <div
-      onClick={isInReview ? null : onClick} // Disable click if in review
+      onClick={onClick} // Disable click if in review
       className={`py-[32px] px-[40px] ${
         isInReview ? "py-[32px] px-[40px] cursor-not-allowed opacity-75 border-[1px] border-yellow-300 shadow-yellow-100 shadow-sm" : "bg-[#FFFFFF]"
       } w-[300px] rounded-[12px]`}

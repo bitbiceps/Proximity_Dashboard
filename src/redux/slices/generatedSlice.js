@@ -50,13 +50,13 @@ export const verifyRequestArticle = createAsyncThunk(
 );
 export const generateArticles = createAsyncThunk(
   "generated/generateArticles",
-  async (topicId, { rejectWithValue }) => {
-    console.log("topicIddd", { topicId });
+  async ({_id,userId}, { rejectWithValue }) => {
+    console.log("topicIddd", { _id, userId});
     try {
       const response = await fetch(`${baseURL}/article/create-article`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topicId }),
+        body: JSON.stringify({ _id ,userId}),
       });
 
       const data = await response.json();
@@ -107,16 +107,9 @@ const generatedSlice = createSlice({
       state.error = null;
       state.articleGenerate = null;
       state.allTopics = null;
-      state.articleloading=null;
+      state.articleloading = null;
     },
   },
-  //   reducers: {
-  //     resetPaymentState: (state) => {
-  //       state.clientSecret = null;
-  //       state.loading = false;
-  //       state.error = null;
-  //     },
-  //   },
   extraReducers: (builder) => {
     builder
       .addCase(updateRequestArticle.pending, (state) => {
@@ -151,11 +144,11 @@ const generatedSlice = createSlice({
         state.error = null;
       })
       .addCase(generateArticles.fulfilled, (state, action) => {
-        state.articleloading=false
+        state.articleloading = false;
         console.log("genertaed", action.payload);
         state.articleGenerate = action.payload;
       })
-     
+
       .addCase(getAllTopics.fulfilled, (state, action) => {
         console.log("getAll Topics", action.payload);
         state.allTopics = action.payload;
