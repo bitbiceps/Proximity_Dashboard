@@ -24,12 +24,7 @@ const TermsCondition = () => {
     (state) => state.articles.currentSelectedArticle
   );
 
-  // useEffect(() => {
-  //   if (articleVerify?.message === "Article submitted successfully") {
-  //     toast.success("Article submitted successfully");
-  //     navigate("/", { replace: true });
-  //   }
-  // }, [articleVerify, navigate]);
+
   const handleAgree = (articleId) => {
     console.log("artaa", articleId);
     if (isChecked) {
@@ -102,7 +97,9 @@ const TermsCondition = () => {
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
-            onClick={() => handleAgree(articleGenerate._id)}
+            onClick={() => {
+              console.log(handleAgree(articleGenerate._id))
+            }}
             disabled={!isChecked}
           >
             Agree
