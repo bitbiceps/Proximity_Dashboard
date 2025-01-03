@@ -55,10 +55,6 @@ const ArticlesUnlocked = () => {
                 content={item.finalTopic} // Assuming finalTopic is the content as well
                 articleStatus={item.articleStatus}
                 onClick={() => {
-                  {
-                    const { _id, userId } = item;
-                    console.log("eeee", _id, userId);
-                  }
                   const { _id, userId } = item;
                   dispatch(generateArticles({_id,userId}));
                   navigate(routes.generated_article);
