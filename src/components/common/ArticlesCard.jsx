@@ -7,12 +7,17 @@ export const ArticlesCard = ({
   articleStatus,
   onClick,
 }) => {
+  const isDisabled =
+    articleStatus === "review" || articleStatus === "completed";
+  console.log("sttttt", articleStatus);
   return (
     <div
-      onClick={articleStatus === "review" ? null : onClick} // Disable click if in review
+      onClick={isDisabled ? null : onClick} // Disable click if in review
       className={`py-[32px] px-[40px] ${
         articleStatus === "review"
-          ? "cursor-not-allowed opacity-75 border-[1px] border-yellow-300 shadow-yellow-100 shadow-sm"
+          ? "py-[32px] px-[40px] cursor-not-allowed opacity-75 border-[1px] border-yellow-300 shadow-yellow-100 shadow-sm"
+          : articleStatus === "completed"
+          ? "py-[32px] px-[40px] cursor-not-allowed opacity-75 border-[1px] border-green-300 shadow-green-100 shadow-sm"
           : "bg-[#FFFFFF]"
       } w-[300px] rounded-[12px]`}
     >
@@ -23,14 +28,16 @@ export const ArticlesCard = ({
         className={`mt-[14px] ${
           articleStatus === "review"
             ? "text-yellow-500 font-medium mt-2 text-center"
+            : articleStatus === "completed"
+            ? "text-green-500 font-medium mt-2 text-center"
             : "text-[#201446]"
         }`}
       >
-        {/* {articleStatus === "review" 
-          ? "Under review" 
-          : articleStatus === "completed" 
-          ? "Completed" 
-          : "Pending"} */}
+        {articleStatus === "review"
+          ? "Under review"
+          : articleStatus === "completed"
+          ? "Approved"
+          : ""}
       </div>
       <div className="mt-[14px] text-[14px] leading-[20px] text-[#202224] font-normal text-center capitalize">
         {/* Render the content if available */}

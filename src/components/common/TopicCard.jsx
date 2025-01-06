@@ -13,13 +13,13 @@ export const TopicCard = ({
   return (
     <div
       onClick={isDisabled ? null : onClick} // Disable click if submitted or completed
-      className={`bg-[#FFFFFF] w-[300px] rounded-[12px] ${
+      className={`py-[32px] px-[40px] ${
         status === "review"
           ? "py-[32px] px-[40px] cursor-not-allowed opacity-75 border-[1px] border-yellow-300 shadow-yellow-100 shadow-sm"
           : status === "completed"
-          ? "py-[32px] px-[40px] cursor-not-allowed bg-green-100 border-[1px] border-green-300 shadow-green-100 shadow-sm"
-          : "py-[32px] px-[40px] cursor-pointer"
-      }`}
+          ? "py-[32px] px-[40px] cursor-not-allowed opacity-75 border-[1px] border-green-300 shadow-green-100 shadow-sm"
+          : "bg-[#FFFFFF]"
+      } w-[300px] rounded-[12px]`}
     >
       <div>
         <img src={image} alt="Article" className="w-full h-auto rounded-md" />
