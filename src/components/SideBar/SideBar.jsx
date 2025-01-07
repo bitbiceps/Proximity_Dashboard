@@ -6,12 +6,17 @@ import { cookieAccessKeys, routes } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import { resetState } from "../../redux/slices/authSlice";
 import { resetStateTopic } from "../../redux/slices/topicSlice"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { resetpState } from "../../redux/slices/articleSlice";
 import { resetPaymentState } from "../../redux/slices/paymentSlice";
+import { setMobileOpen } from "../../redux/slices/sidebarSlice";
 const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => state.auth);
+  const articles = useSelector(({ articles: { articles } }) => articles);
+  const topics = useSelector((state) => state.topics?.topics || []);
 
   const logout = () => {
     Cookies.remove(cookieAccessKeys?.tokens?.accessToken);
@@ -23,20 +28,21 @@ const Sidebar = () => {
     dispatch(resetPaymentState())
     navigate(routes.login, { replace: true });
   };
-  // useEffect(()=>{
 
-  // },[dispatch])
+  useEffect(() => {
+    dispatch(setMobileOpen(false))
+  },[])
 
   return (
     <div className="relative h-screen w-fit shadow-custom">
       {/* Desktop Sidebar */}
       <div className="hidden md:block overflow-hidden">
-        <DesktopSidebar logout={logout} />
+        <DesktopSidebar logout={logout}  user={user} articles={articles} topics={topics} />
       </div>
 
       {/* Mobile Sidebar */}
       <div className="md:hidden">
-        <MobileSidebar logout={logout} />
+        <MobileSidebar logout={logout} user={user} articles={articles} topics={topics}  />
       </div>
     </div>
   );

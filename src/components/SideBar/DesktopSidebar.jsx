@@ -10,19 +10,16 @@ import profileIcon from "../../assets/sidebar/profile.svg";
 import logoutIcon from "../../assets/sidebar/logout.svg";
 import Divider from "../common/Divider";
 import { useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { updatedArticles } from "../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 import { getAllTopics } from "../../redux/slices/generatedSlice";
-const DesktopSidebar = ({ logout }) => {
+const DesktopSidebar = ({ logout, user,articles, topics }) => {
   const [active, setActive] = useState(); // Track the active state of the sidebar
   const isHovered = true;
   const transition = "transition-all duration-200 ease-in-out";
   const location = useLocation();
   const current = location.state?.current;
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const articles = useSelector(({ articles: { articles } }) => articles);
-  const topics = useSelector((state) => state.topics?.topics || []);
+
 
   const finalData =
     user?.user?.user?.articles?.length > 0
@@ -72,7 +69,10 @@ const DesktopSidebar = ({ logout }) => {
               <NavLink
                 key={item.name + index + "Top Nav"}
                 to={item.to}
-                onClick={() => handleGeneration()} // Set active on click
+                onClick={() => {
+                  handleGeneration()
+                  setActive(item.name)
+                }} // Set active on click
                 className={`${transition} flex items-center w-full h-[60px] gap-6 ${
                   active == item.name && "mb-4"
                 }`}
@@ -134,7 +134,7 @@ const DesktopSidebar = ({ logout }) => {
                 {item.to ? (
                   <NavLink
                     to={item.to}
-                    // onClick={() => setActive(item.name)} // Set active on click
+                    onClick={() => setActive(item.name)} // Set active on click
                     className={`${transition} flex items-center w-full h-[60px] gap-6 ${
                       active == item.name && "mb-4"
                     }`}

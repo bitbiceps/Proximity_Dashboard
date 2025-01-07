@@ -7,7 +7,9 @@ import Dropdown from "./Dropdown";
 import spainish from "../../assets/lang_flags/spanish.svg";
 import uk from "../../assets/lang_flags/uk.svg";
 import french from "../../assets/lang_flags/french.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { CgMenuRight } from "react-icons/cg";
+import { toggleMobileOpen } from "../../redux/slices/sidebarSlice";
 
 const Header = () => {
   const [search, setSearch] = useState("");
@@ -21,21 +23,27 @@ const Header = () => {
   const handleCountrySelect = (country) => {
     console.log("Selected Country:", country.name);
   };
+
+  const dispatch = useDispatch();
+
+  const toogleMobileSidebar = () => {
+    dispatch(toggleMobileOpen());
+  };
   return (
-    <div className="w-full h-[100px] bg-white shadow-custom flex items-center px-12  justify-between">
-      <div className="flex items-center w-fit h-[50px] bg-app-grey-2  rounded-full overflow-hidden px-8 gap-4 border border-app-grey-3">
+    <div className="w-full h-[80px] lg:h-[100px] bg-white shadow-custom flex items-center px-4 lg:px-12  justify-between">
+      <div className="flex items-center w-fit h-[40px] md:h-[40px] lg:h-[50px] bg-app-grey-2  rounded-full overflow-hidden px-8 gap-4 border border-app-grey-3">
         <img src={searchIcon} alt="Search" />
         <input
           placeholder="Search"
           value={search}
-          className="bg-transparent h-[80%] outline-none border-none w-[346px]"
+          className="bg-transparent h-[80%] outline-none border-none w-[30vw] lg:w-[346px]"
           onChange={(e) => setSearch(e.target.value)}
           type="text"
           name=""
           id=""
         />
       </div>
-      <div className="flex items-center gap-12">
+      <div className="flex items-center gap-2 md:gap-4 lg:gap-10 xl:gap-12">
         {/* Notifications */}
         <Notifications />
         {/* User */}
@@ -45,6 +53,11 @@ const Header = () => {
             role: "User",
             avatar,
           }}
+        />
+        <CgMenuRight
+          onClick={toogleMobileSidebar}
+          className="md:hidden"
+          size={30}
         />
         {/* <Dropdown label="Select Language" onSelect={handleCountrySelect} options={langOptions} selected={selected} /> */}
       </div>

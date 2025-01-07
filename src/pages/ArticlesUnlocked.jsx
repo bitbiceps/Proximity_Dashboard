@@ -46,7 +46,7 @@ const ArticlesUnlocked = () => {
       <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
         {submittedTopics?.length > 0 ? (
           /* Render Articles Cards */
-          <div className=" w-full flex gap-[20px] relative z-[10]">
+          <div className=" w-full flex gap-[20px] relative z-[10] flex-wrap  px-8 md:px-0">
             {submittedTopics.map((item, index) => (
               <ArticlesCard
                 key={index}
@@ -56,7 +56,7 @@ const ArticlesUnlocked = () => {
                 articleStatus={item.articleStatus}
                 onClick={() => {
                   const { _id, userId } = item;
-                  dispatch(generateArticles({_id,userId}));
+                  dispatch(generateArticles({ _id, userId }));
                   navigate(routes.generated_article);
                 }}
               />

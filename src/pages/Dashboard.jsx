@@ -16,8 +16,11 @@ import "swiper/css/pagination";
 import { Autoplay, Navigation } from "swiper/modules";
 import Cookies from "js-cookie";
 import { cookieAccessKeys } from "../utils";
+import { useSelector } from "react-redux";
 
 function Dashboard() {
+  const response = useSelector((state) => state.auth);
+
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -28,9 +31,10 @@ function Dashboard() {
     );
     console.log(
       Cookies.get(cookieAccessKeys.tokens.refreshToken),
-      "Referesh Token"
+      "Refresh Token"
     );
   }, [cookieAccessKeys]);
+
   useEffect(() => {
     initialDashboardCallback();
   }, []);
@@ -38,25 +42,26 @@ function Dashboard() {
   return (
     <RootLayout>
       <div className="min-h-screen bg-gray-100 py-4 px-8">
-        <header className="text-center bg-blue-50 p-6 rounded-md shadow-md w-[72vw] mx-auto">
+        <header className="text-center bg-blue-50 p-6 rounded-md shadow-md w-full lg:w-[72vw] mx-auto">
           <h1 className="text-[32px] font-bold text-app-black-1">
-            Welcome Back Sana!
+            Welcome Back, {response?.user?.user?.fullName}!
           </h1>
-          <p className="mt-2 text-[20px] font-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
-            posuere convallis <br /> ligula vitae vulputate. Mauris id ultrices
-            mi, in tempor erat.
+          <p className="mt-2 text-[16px] lg:text-[20px] font-light">
+            We're excited to have you back! Explore our latest tools and
+            features designed to make your life easier and more productive.
           </p>
-          <Link to="/pr_services"><button className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700">
-            Explore Products
-          </button></Link>
+          <Link to="/pr_services">
+            <button className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-md hover:bg-purple-700">
+              Explore Products
+            </button>
+          </Link>
         </header>
 
         <section className="mt-8">
-          <h2 className="text-[32px] font-medium mb-4 text-app-black-1">
+          <h2 className="text-[28px] lg:text-[32px] font-medium mb-4 text-app-black-1">
             AI Tools
           </h2>
-          <div className="flex justify-between w-full lg:w-[60%]">
+          <div className="flex flex-wrap justify-between w-full lg:w-[60%] gap-4">
             {Array(3)
               .fill(0)
               .map((_, idx) => (
@@ -64,27 +69,27 @@ function Dashboard() {
                   key={idx + "Payment button"}
                   src={payment}
                   alt="Payment"
-                  className="cursor-pointer"
+                  className="cursor-pointer w-[45%] lg:w-[30%] mb-4"
                 />
               ))}
           </div>
         </section>
 
         <section className="mt-8 overflow-x-hidden">
-          <div className="flex items-center justify-between mb-4 w-[95%]">
-            <h2 className="text-[32px] font-medium">Blogs</h2>
+          <div className="flex items-center justify-between mb-4 w-full lg:w-[95%]">
+            <h2 className="text-[28px] lg:text-[32px] font-medium">Blogs</h2>
 
             <div className="flex w-fit transition-colors duration-300 justify-center">
               <div ref={prevRef} className="cursor-pointer">
                 <FaCaretLeft
-                  size={70}
+                  size={30}
                   className="w-fit h-fit text-app-black-1 hover:text-gray-400"
                 />
               </div>
 
               <div ref={nextRef} className="cursor-pointer">
                 <FaCaretRight
-                  size={70}
+                  size={30}
                   className="w-fit h-fit text-app-black-1 hover:text-gray-400"
                 />
               </div>
@@ -101,6 +106,7 @@ function Dashboard() {
                 delay: 1500,
                 disableOnInteraction: false,
               }}
+              spaceBetween={20} // Reduced space between slides for better responsiveness
               speed={1000}
               navigation={{
                 prevEl: prevRef.current,
@@ -112,14 +118,25 @@ function Dashboard() {
                 swiper.params.navigation.nextEl = nextRef.current;
               }}
               breakpoints={{
+                // Mobile screens
                 320: {
-                  slidesPerView: 2,
+                  slidesPerView: 1, // Show 1.5 slides on mobile
+                  spaceBetween: 10, // Less space between slides on mobile
                 },
+                // Tablets (768px)
                 768: {
-                  slidesPerView: 2,
+                  slidesPerView: 2, // Show 2 slides on tablet
+                  spaceBetween: 20, // Moderate space between slides
                 },
+                // Desktops (1024px)
                 1024: {
-                  slidesPerView: 3.3,
+                  slidesPerView: 3, // Show 3 slides on desktop
+                  spaceBetween: 30, // Moderate space between slides on desktop
+                },
+                // Extra large screens (1280px and above)
+                1280: {
+                  slidesPerView: 3.3, // Show 3.3 slides on larger screens
+                  spaceBetween: 40, // More space on large screens
                 },
               }}
             >
@@ -129,7 +146,7 @@ function Dashboard() {
                   <SwiperSlide key={index} className="z-10">
                     <div
                       style={{ backgroundImage: `url(${person})` }}
-                      className="bg-cover bg-center overflow-hidden rounded-2xl shadow-md w-[350px] h-[350px]"
+                      className="bg-cover bg-center overflow-hidden rounded-2xl shadow-md w-[100%] h-[350px] lg:h-[400px] xl:w-[350px] xl:h-[350px] mx-auto"
                     >
                       <div className="h-full flex w-full p-4 flex-col items-start justify-end">
                         <div className="w-full h-fit flex items-start gap-4">
@@ -145,14 +162,14 @@ function Dashboard() {
                           <div className="w-fit bg-[#FFFFFF4F] border-[0.18px] border-white flex items-center gap-1 rounded-full overflow-hidden px-[2px] justify-between">
                             <img
                               src={calender}
-                              alt="Star"
+                              alt="Calendar"
                               className="object-contain w-[12px]"
                             />
                             <p className="text-[8px]">OCT 17, 2024</p>
                           </div>
                         </div>
-                        <p className="text-[22px] text-app-black-1 font-semibold w-[84%]">
-                          Lorem Ipsum Diator Heading
+                        <p className="text-[20px] lg:text-[22px] text-app-black-1 font-semibold w-[84%]">
+                          Enhance Your Productivity with AI-Powered Tools
                         </p>
                       </div>
                     </div>
@@ -161,7 +178,7 @@ function Dashboard() {
             </Swiper>
             <div
               style={{ backgroundImage: `url(${gradientImage})` }}
-              className="hidden lg:block absolute w-[300px] h-[300px] right-[-10vw] px-2 top-0 z-20 overflow-hidden"
+              className="hidden xl:block absolute w-[300px] h-[300px] right-[-10vw] top-0 z-20 overflow-hidden"
             />
           </div>
         </section>

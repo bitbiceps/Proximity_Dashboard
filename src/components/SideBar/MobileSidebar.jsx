@@ -10,9 +10,14 @@ import profileIcon from "../../assets/sidebar/profile.svg";
 import logoutIcon from "../../assets/sidebar/logout.svg";
 import logo from "../../assets/sidebar/logo.svg";
 import Divider from "../common/Divider";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleMobileOpen } from "../../redux/slices/sidebarSlice";
 
-const MobileSidebar = ({ logout }) => {
-  const [isOpen, setIsOpen] = useState(true); // Manage mobile sidebar open/close state
+const MobileSidebar = ({ logout, user,articles, topics }) => {
+  const isMobileOpen = useSelector(
+    ({ sidebar: { isMobileOpen } }) => isMobileOpen
+  );
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const isHovered = true; // Set the hover state
@@ -23,13 +28,18 @@ const MobileSidebar = ({ logout }) => {
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
     { name: sideBarTabs.package, to: routes.package, img: packageIcon },
     {
-      name: sideBarTabs.topicGenerator,
-      to: routes.topic_generator,
+      name: sideBarTabs?.topicGenerator,
+      to:
+        topics?.length > 0
+          ? routes?.topic_unlocked
+          : user?.user?.topics?.length > 0
+          ? routes?.topic_unlocked
+          : routes.fill_questionnaire,
       img: topicGeneratorIcon,
     },
     {
-      name: sideBarTabs.articleWriter,
-      to: routes.article_writer,
+      name: sideBarTabs.articles_unlocked,
+      to: routes.articles_unlocked,
       img: articleIcon,
     },
   ];
@@ -50,17 +60,21 @@ const MobileSidebar = ({ logout }) => {
     }
   };
 
+  const toogleMobileSidebar = () => {
+    dispatch(toggleMobileOpen());
+  };
+
   return (
     <div
       className={`fixed inset-0 z-50 bg-gray-800 text-white transition-transform duration-300  ${
-        isOpen ? "-translate-x-10" : "-translate-x-full"
+        isMobileOpen ? "-translate-x-10" : "-translate-x-full"
       }`}
     >
-      <div className="p-4 flex justify-between items-center pl-24">
+      <div className="p-4 flex justify-between items-center pl-12 lg:pl-24">
         <div className="flex items-center justify-between p-8">
           <img className="filter brightness-0 invert" src={logo} alt="Logo" />
         </div>
-        <button onClick={() => setIsOpen(false)}>
+        <button onClick={toogleMobileSidebar}>
           <AiOutlineClose size={24} />
         </button>
       </div>
@@ -72,7 +86,7 @@ const MobileSidebar = ({ logout }) => {
                 key={item.name}
                 to={item.to || "#"} // Ensure no route issue with null paths
                 onClick={() => handleNavigation(item.to)} // Navigate on click
-                className={`${transition} flex pl-24 items-center w-full h-[60px] gap-6 ${
+                className={`${transition} flex pl-12 lg:pl-24 items-center w-full h-[60px] gap-6 ${
                   location.pathname === item.to ? "mb-4" : ""
                 }`}
               >

@@ -53,7 +53,7 @@ const Package = () => {
   const cardId = user.user.paymentStatus === true ? user.user.planId : null;
   console.log("cardId", cardId);
   return (
-    // <RootLayout>
+    <RootLayout>
     <div>
       <div className="text-center text-[32px] text-[#202224] font-bold my-[50px] ">
         Tech PR Agency For Startups
@@ -74,7 +74,7 @@ const Package = () => {
         ))}
       </div>
     </div>
-    // </RootLayout>
+    </RootLayout>
   );
 };
 export default Package;

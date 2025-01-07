@@ -9,7 +9,6 @@ export const ArticlesCard = ({
 }) => {
   const isDisabled =
     articleStatus === "review" || articleStatus === "completed";
-  console.log("sttttt", articleStatus);
   return (
     <div
       onClick={isDisabled ? null : onClick} // Disable click if in review
