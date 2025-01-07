@@ -72,12 +72,6 @@ const ArticlesUnlocked = () => {
               It seems like your topics are not yet verified. Please verify your
               topics to unlock articles.
             </p>
-            {/* <button
-              className="mt-4 px-6 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-600"
-              onClick={() => navigate(routes.verify_topics)} // Navigate to topics verification page
-            >
-              Verify Topics
-            </button> */}
           </div>
         )}
       </div>
