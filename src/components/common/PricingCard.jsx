@@ -216,34 +216,42 @@ export const PricingCard = ({
       style={{ boxShadow: "0px 0px 4px 0px #00000040" }}
     >
       <div className="text-[#202224] font-bold text-[18px] w-full text-center">
-        {category}
+        {category || "Plan Category"}
       </div>
       <div className="mt-[14px] text-[13px] text-[#212121] text-center font-normal">
-        {duration}
+        {duration || "Plan Duration"}
       </div>
       <div className="font-extrabold text-[40px] text-[#FE5E00] leading-[40px] mt-[14px] text-center">
-        {price}
+        {price || "$0.00"}
       </div>
       {/* Divider */}
       <div className="mx-[24px] mt-[30px] opacity-[30%] h-[1.7px] bg-[#212121]"></div>
       <div className="flex flex-col items-center mt-[5px]">
         {/* Included Items */}
-        {included.map((item, index) => (
-          <div className="flex justify-start mt-[25px] w-[190px]" key={index}>
-            <img src={tick} alt="tick" />
-            <div className="ml-[12px] font-semibold text-[#212121] text-[14px]">
-              {item}
+        {included.length > 0 ? (
+          included.map((item, index) => (
+            <div className="flex justify-start mt-[25px] w-[190px]" key={index}>
+              <img src={tick} alt="tick" />
+              <div className="ml-[12px] font-semibold text-[#212121] text-[14px]">
+                {item || "Included Feature"}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div className="mt-[25px] text-[#212121] text-[14px]">No Features Included</div>
+        )}
         {/* Excluded Items */}
-        {excluded.map((item, index) => (
-          <div className="flex justify-start mt-[25px] w-[190px]" key={index}>
-            <div className="ml-[30px] font-semibold text-[#21212180] text-[14px]">
-              {item}
+        {excluded.length > 0 ? (
+          excluded.map((item, index) => (
+            <div className="flex justify-start mt-[25px] w-[190px]" key={index}>
+              <div className="ml-[30px] font-semibold text-[#21212180] text-[14px]">
+                {item || "Excluded Feature"}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div className="mt-[25px] text-[#21212180] text-[14px]">No Features Excluded</div>
+        )}
       </div>
       {/* Divider */}
       <div className="mx-[24px] mt-[50px] opacity-[30%] h-[1.7px] bg-[#212121]"></div>
