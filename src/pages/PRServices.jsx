@@ -47,7 +47,10 @@ const PRServices = () => {
                   {service.title}
                 </h3>
                 <div className="flex justify-center">
-                  <button disabled={service.locked} className="bg-[#4D49F6] text-white py-3 px-4 rounded hover:bg-blue-600 transition-colors">
+                  <button
+                    disabled={service.locked}
+                    className="bg-[#4D49F6] text-white py-3 px-4 rounded hover:bg-blue-600 transition-colors"
+                  >
                     Choose Package
                   </button>
                 </div>

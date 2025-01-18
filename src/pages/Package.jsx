@@ -1,7 +1,7 @@
 import React from "react";
-import RootLayout from "../layouts/RootLayout";
 import { PricingCard } from "../components/common/PricingCard";
 import { useSelector } from "react-redux";
+import RootLayout2 from "../layouts/RootLayout2";
 const priceData = [
   {
     id: 1,
@@ -75,9 +75,8 @@ const Package = () => {
   );
   // console.log("userssssssss",user.user.planId)
   const cardId = user.user.paymentStatus === true ? user.user.planId : null;
-  console.log("cardId", cardId);
   return (
-    <RootLayout>
+    <RootLayout2>
       <div>
         <div className="text-center text-[32px] text-[#202224] font-bold my-[50px] ">
           Tech PR Agency For Startups
@@ -98,7 +97,7 @@ const Package = () => {
           ))}
         </div>
       </div>
-    </RootLayout>
+    </RootLayout2>
   );
 };
 export default Package;
