@@ -138,6 +138,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/slices/authSlice";
 import Auth from "../assets/auth.jpg";
+import lefBg from "../assets/bg-left.png"
+import news from "../assets/news.png"
 import Google from "../assets/google.jpg";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -173,10 +175,21 @@ function Login() {
       );
 
       toast.success("Login successful!");
+      const primaryQuestions = user?.user?.questionnaire?.basicInformation;
+      const questionsArray = Object.keys(primaryQuestions).map((key) => ({
+        number: parseInt(key),
+        ...primaryQuestions[key],
+      }));
+      const allQuestionsFilled = primaryQuestions[questionsArray.length ].answer.trim().length > 0 
+      console.log("lenght of primary question ", primaryQuestions[questionsArray.length].answer.trim().length , allQuestionsFilled)
+    if (allQuestionsFilled) {
       navigate("/package", {
         replace: true,
         state: { current: "Package" },
       });
+    } else {
+      navigate("/primary-questionnaire", { replace: true });
+    }
     }
   }, [user, navigate]);
 
@@ -192,12 +205,16 @@ function Login() {
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
       <div className="flex flex-col md:flex-row w-full h-full max-w-none bg-white">
-        <div className="w-full md:w-1/2 h-1/2 md:h-full">
+        <div className=" relative w-full md:w-1/2 h-1/2 md:h-full">
           <img
-            src={Auth}
+            src={lefBg}
             alt="Tablet in hand"
             className="w-full h-full object-cover"
           />
+          <img
+          className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+          src={news}>
+          </img>
         </div>
 
         <div className="flex flex-col w-full md:w-1/2 px-8 md:px-48 py-6 md:py-16 h-full justify-center">
@@ -234,7 +251,7 @@ function Login() {
 
             <button
               type="submit"
-              className={`mt-4 w-full bg-[#4D49F6] text-white py-2 rounded-full text-sm font-semibold shadow-lg ${
+              className={`mt-4 w-full bg-[#4D49F6] text-white py-[15px] rounded-full text-sm font-semibold shadow-lg ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={loading}

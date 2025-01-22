@@ -225,6 +225,8 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerResetState, submitRegistration } from "../redux/slices/authSlice";
 import Auth from "../assets/auth.jpg";
+import lefBg from "../assets/bg-left.png"
+import news from "../assets/news.png"
 import Google from "../assets/google.jpg";
 import India from "../assets/indiaflag.jpg";
 import USFlag from "../assets/us.jpg";
@@ -244,7 +246,7 @@ function Registration() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
-
+  const { loading } = useSelector((state) => state.auth);
   const response = useSelector((state) => state.auth);
   const countryFlags = {
     "+91": { code: "+91", flag: India },
@@ -317,13 +319,17 @@ console.log("response",response)
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
       <div className="flex flex-col md:flex-row w-full h-full max-w-none bg-white">
-        <div className="w-full md:w-1/2 h-1/2 md:h-full">
-          <img
-            src={Auth}
-            alt="Tablet in hand"
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <div className=" relative w-full md:w-1/2 h-1/2 md:h-full">
+                  <img
+                    src={lefBg}
+                    alt="Tablet in hand"
+                    className="w-full h-full object-cover"
+                  />
+                  <img
+                  className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+                  src={news}>
+                  </img>
+                </div>
 
         <div className="flex flex-col w-full md:w-1/2 px-8 md:px-48 py-6 md:py-16 h-full justify-center">
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-8 text-center">
@@ -419,12 +425,27 @@ console.log("response",response)
 
             <button
               type="submit"
-              className="mt-4 w-full bg-[#4D49F6] text-white py-2 rounded-full text-sm font-semibold shadow-lg"
+              style={{boxShadow: '0px 24px 42.42px -8.48px #4D49F63D '             }}
+              
+              className={`mt-4 w-full bg-[#4D49F6] text-white py-[15px] rounded-full text-sm font-semibold shadow-lg ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={loading}
             >
-              CREATE ACCOUNT
+              {loading ? "Logging In..." : "CREATE ACCOUNT"}
             </button>
+            {/* <button
+              type="submit"
+              style={{boxShadow: '0px 24px 42.42px -8.48px #4D49F63D '             }}
+              className={`mt-4 w-full bg-[#4D49F6] text-white py-[15px] rounded-full text-sm font-semibold shadow-lg ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={loading}
+            >
+              {loading ? "Logging In..." : "CREATE ACCOUNT"}
+            </button> */}
 
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-2 mx-auto">
               <input
                 type="checkbox"
                 checked={termsAccepted}

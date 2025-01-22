@@ -26,18 +26,21 @@ import ProtectedRoute from "./components/common/ProtectedRoutes";
 import { loadStripe } from "@stripe/stripe-js";
 import { ToastContainer } from "react-toastify";
 import TopicUnlocked from "./pages/TopicUnlocked";
+import { Questionnair } from "./pages/Questionnair";
+import { SecondaryQuestionnaire } from "./pages/SecondaryQuestionnaire";
 
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
 ); // Replace with your Stripe publishable key
 
 const App = () => {
+  
   const location = useLocation();
   const validRoutes = Object.values(routes); // Extract the valid route paths from the routes object
   const isValidRoute = validRoutes.includes(location.pathname); // Check if the current location matches any of the valid routes
 
   // Determine if we should show the Sidebar (exclude login and registration routes)
-  const isNoSidebar = [routes.login, routes.registration].includes(
+  const isNoSidebar = [routes.login, routes.registration, routes.primary_questionnaire, routes.secondary_questionnaire].includes(
     location.pathname
   );
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
@@ -53,12 +56,21 @@ const App = () => {
           <Routes>
             {/* Public Routes */}
             <Route path={routes.login} Component={Login} />
-            <Route path={routes.registration} Component={Registration} />
+            <Route path={routes.registration} Component={Registration } />
 
             {/* Protected Routes */}
+            
             <Route
               path={routes.root}
               element={<ProtectedRoute Component={Dashboard} />}
+            />
+            <Route
+              path={routes.primary_questionnaire}
+              element={<ProtectedRoute Component={Questionnair} />}
+            />
+            <Route
+              path={routes.secondary_questionnaire}
+              element={<ProtectedRoute Component={SecondaryQuestionnaire} />}
             />
             <Route
               path={routes.package}

@@ -10,6 +10,7 @@ const RootLayout = ({ children }) => {
   const handleRoute = () => {
     navigate('/package');
   };
+  console.log("user [ayment ", userData?.user?.user?.paymentStatus )
 
   return (
     <>

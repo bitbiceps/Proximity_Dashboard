@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/sidebar/logo.svg";
 import { NavLink } from "react-router-dom";
 import { routes, sideBarTabs } from "../../utils";
@@ -12,6 +12,8 @@ import Divider from "../common/Divider";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getAllTopics } from "../../redux/slices/generatedSlice";
+import axios from "axios";
+import { baseURL } from "../../axios/instance";
 const DesktopSidebar = ({ logout, user,articles, topics }) => {
   const [active, setActive] = useState(); // Track the active state of the sidebar
   const isHovered = true;
@@ -19,8 +21,32 @@ const DesktopSidebar = ({ logout, user,articles, topics }) => {
   const location = useLocation();
   const current = location.state?.current;
   const dispatch = useDispatch();
-
-
+  const [userData, setUserData] = useState();
+  const fetchUser = async (userId) => {
+    try {
+      const response = await axios.get(`${baseURL}/user/details?user=${userId}`, {
+        
+          headers: {
+            "Content-Type": "application/json", // Ensure content type is JSON
+          },
+        })
+        const userDataToSend = response.data.user;
+        setUserData(userDataToSend)
+        console.log("userrrrrrrrrrrr from sidebarrrrrrrrrr", userDataToSend)
+      }catch(error){
+        console.log("error", error)
+      }
+  }
+  useEffect(() => {
+    fetchUser(user.user._id)
+  },[])
+  const lastSet = userData?.questionnaire?.industryContextAndInsights
+  const questionsArray = lastSet && Object.keys(lastSet).map((key) => ({
+            number: parseInt(key),
+            ...lastSet[key],
+          }));
+  const isLastQuestion = userData?.questionnaire?.industryContextAndInsights[questionsArray.length]?.answer?.trim().length
+  console.log("lastQuestion ", isLastQuestion , questionsArray?.length)
   const finalData =
     user?.user?.user?.articles?.length > 0
       ? user?.user?.user?.articles
@@ -31,11 +57,9 @@ const DesktopSidebar = ({ logout, user,articles, topics }) => {
     {
       name: sideBarTabs?.topicGenerator,
       to:
-        topics?.length > 0
+         isLastQuestion
           ? routes?.topic_unlocked
-          : user?.user?.topics?.length > 0
-          ? routes?.topic_unlocked
-          : routes.fill_questionnaire,
+          : routes.secondary_questionnaire,
       img: topicGeneratorIcon,
     },
     {

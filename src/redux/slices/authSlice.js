@@ -35,6 +35,22 @@ export const updatedArticles = createAsyncThunk(
   }
 );
 
+//for future use 
+export const updateTopic = createAsyncThunk(
+  "auth/updateTopic",
+  async ({ userId, answers }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${baseURL}/topic/generate`, { // use update topic url 
+        userId,
+        answers,
+      });
+      return response.data; // Assume the API returns updated user data
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to update topic");
+    }
+  }
+);
+
 // Registration async thunk
 export const submitRegistration = createAsyncThunk(
   "auth/submitRegistration",
@@ -72,6 +88,16 @@ const authSlice = createSlice({
     registerResetState: (state) => {
       state.registerUser = null;
     },
+    // not in use 
+    updateUserQuestionnaire(state, action) {
+      if (state.user?.user) {
+        state.user.user.questionnaire = action.payload;
+      }
+    },
+    //not in use
+    setUser(state, action) {
+      state.user = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -94,6 +120,21 @@ const authSlice = createSlice({
         state.updatedArticles = action.payload;
       })
 
+      // handle topic data  not in use 
+      .addCase(updateTopic.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateTopic.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = { ...state.user, ...action.payload }; // Update user with the latest data
+        state.error = null;
+      })
+      .addCase(updateTopic.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
       // Handle registration action
       .addCase(submitRegistration.pending, (state) => {
         state.loading = true;
@@ -111,6 +152,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetState, registerResetState } = authSlice.actions;
+export const { resetState, registerResetState, updateUserQuestionnaire, setUser } = authSlice.actions;
 
 export default authSlice.reducer;
