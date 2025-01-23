@@ -55,12 +55,10 @@ const DesktopSidebar = ({ logout, user,articles, topics }) => {
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
     { name: sideBarTabs.package, to: routes.package, img: packageIcon },
     {
-      name: sideBarTabs?.topicGenerator,
+      name: sideBarTabs?.topicGenerator,  // if lastquestion true check topic length 
       to:
-         isLastQuestion
-          ? routes?.topic_unlocked
-          : routes.secondary_questionnaire,
-      img: topicGeneratorIcon,
+         isLastQuestion ?  (topics?.length > 0 ? routes?.topic_unlocked : routes.secondary_questionnaire ): (routes.secondary_questionnaire),
+        img: topicGeneratorIcon,
     },
     {
       name: sideBarTabs.articles_unlocked,
