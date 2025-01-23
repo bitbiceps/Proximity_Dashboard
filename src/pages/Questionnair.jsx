@@ -116,14 +116,14 @@ export const Questionnair = () => {
         exit="exit"
         variants={animationVariants}
         transition={{ duration: 1, ease: "easeInOut" }} // Adjust animation duration
-        className=""
+         className="my-[40px]"
       >
       <div className="lg:w-[40%] md:w-[50%] w-[80%] lg:h-[20vh] h-[40vh] bg-[#D9D9D9] mx-auto lg:mt-[50px] mt-[50px]">
        
       </div>
       <div className="flex flex-row lg:w-[70%] md:w-[70%] w-[80%] mx-auto mt-[74px]">
         <div className="flex justify-start items-start">
-          <div className="flex flex-row gap-[1px] text-[#02A6F2] font-sans font-medium text-[36px] items-center justify-center">
+          <div className="flex flex-row gap-[1px] text-[#02A6F2] font-sans font-medium  text-[20px] lg:text-[36px] items-center justify-center">
           {currentQuestion.number}. 
             <span className="ml-[-5px]">
               <MdKeyboardArrowRight />
@@ -133,8 +133,8 @@ export const Questionnair = () => {
             </span>
           </div>
         </div>
-        <div className="w-full ml-[46px]">
-          <div className="text-[32px] text-[#201446] font-medium">
+        <div className="w-full ml-[10px] lg:ml-[46px]">
+          <div className="text-[18px] lg:text-[32px] text-[#201446] font-medium">
           {currentQuestion.question}
           </div>
           <div className="mt-[54px]">
@@ -143,7 +143,7 @@ export const Questionnair = () => {
               placeholder="Type your answer here..."
               value={answers[currentQuestion.number] || ""}
               onChange={handleAnswerChange}
-              className="flex w-full placeholder:text-[24px] placeholder:font-normal focus:outline-none text-[24px] placeholder:text-gray-400 border-b-[1px] border-[#878787] pb-2"
+              className="flex w-full  placeholder:text-[13px] lg:placeholder:text-[24px] placeholder:font-normal focus:outline-none text-[16px] lg:text-[24px] placeholder:text-gray-400 border-b-[1px] border-[#878787] pb-2"
             ></textarea>
             <div className="flex flex-row gap-[32px] mt-[77px]">
             <button
