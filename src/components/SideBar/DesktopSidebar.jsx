@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { getAllTopics } from "../../redux/slices/generatedSlice";
 import axios from "axios";
 import { baseURL } from "../../axios/instance";
-const DesktopSidebar = ({ logout, user,articles, topics }) => {
+const DesktopSidebar = ({ logout, user, articles, topics }) => {
   const [active, setActive] = useState(); // Track the active state of the sidebar
   const isHovered = true;
   const transition = "transition-all duration-200 ease-in-out";
@@ -24,29 +24,41 @@ const DesktopSidebar = ({ logout, user,articles, topics }) => {
   const [userData, setUserData] = useState();
   const fetchUser = async (userId) => {
     try {
-      const response = await axios.get(`${baseURL}/user/details?user=${userId}`, {
-        
-          headers: {
-            "Content-Type": "application/json", // Ensure content type is JSON
-          },
-        })
+      if (userId) {
+        const response = await axios.get(
+          `${baseURL}/user/details?user=${userId}`,
+          {
+            headers: {
+              "Content-Type": "application/json", // Ensure content type is JSON
+            },
+          }
+        );
         const userDataToSend = response.data.user;
-        setUserData(userDataToSend)
-        console.log("userrrrrrrrrrrr from sidebarrrrrrrrrr", userDataToSend)
-      }catch(error){
-        console.log("error", error)
+        setUserData(userDataToSend);
       }
-  }
+      console.log("userrrrrrrrrrrr from sidebarrrrrrrrrr", userDataToSend);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   useEffect(() => {
-    fetchUser(user.user._id)
-  },[])
-  const lastSet = userData?.questionnaire?.industryContextAndInsights
-  const questionsArray = lastSet && Object.keys(lastSet).map((key) => ({
-            number: parseInt(key),
-            ...lastSet[key],
-          }));
-  const isLastQuestion = userData?.questionnaire?.industryContextAndInsights[questionsArray.length]?.answer?.trim().length
-  console.log("lastQuestion ", isLastQuestion , questionsArray?.length)
+    if (user && user.user) {
+      fetchUser(user.user._id || null);
+    }
+  }, [user]); // Add user as a dependency to run when user data changes.
+
+  const lastSet = userData?.questionnaire?.industryContextAndInsights;
+  const questionsArray =
+    lastSet &&
+    Object.keys(lastSet).map((key) => ({
+      number: parseInt(key),
+      ...lastSet[key],
+    }));
+  const isLastQuestion =
+    userData?.questionnaire?.industryContextAndInsights[
+      questionsArray.length
+    ]?.answer?.trim().length;
+  console.log("lastQuestion ", isLastQuestion, questionsArray?.length);
   const finalData =
     user?.user?.user?.articles?.length > 0
       ? user?.user?.user?.articles
@@ -55,10 +67,13 @@ const DesktopSidebar = ({ logout, user,articles, topics }) => {
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
     { name: sideBarTabs.package, to: routes.package, img: packageIcon },
     {
-      name: sideBarTabs?.topicGenerator,  // if lastquestion true check topic length 
-      to:
-         isLastQuestion ?  (topics?.length > 0 ? routes?.topic_unlocked : routes.secondary_questionnaire ): (routes.secondary_questionnaire),
-        img: topicGeneratorIcon,
+      name: sideBarTabs?.topicGenerator, // if lastquestion true check topic length
+      to: isLastQuestion
+        ? topics?.length > 0
+          ? routes?.topic_unlocked
+          : routes.secondary_questionnaire
+        : routes.secondary_questionnaire,
+      img: topicGeneratorIcon,
     },
     {
       name: sideBarTabs.articles_unlocked,
@@ -92,8 +107,8 @@ const DesktopSidebar = ({ logout, user,articles, topics }) => {
                 key={item.name + index + "Top Nav"}
                 to={item.to}
                 onClick={() => {
-                  handleGeneration()
-                  setActive(item.name)
+                  handleGeneration();
+                  setActive(item.name);
                 }} // Set active on click
                 className={`${transition} flex items-center w-full h-[60px] gap-6 ${
                   active == item.name && "mb-4"
