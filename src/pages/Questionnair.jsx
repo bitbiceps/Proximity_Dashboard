@@ -1,6 +1,6 @@
 
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import QuestionnaireLayout from "../layouts/QuestionnaireLayout";
@@ -8,20 +8,14 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { baseURL } from "../axios/instance";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Textanimation } from "../components/common/Textanimation";
+
 export const Questionnair = () => {
+ 
   const navigate = useNavigate()
   const user = useSelector((state) => state.auth.user);
   const primaryQuestions = user?.user?.questionnaire?.basicInformation;
-
-  if (!primaryQuestions) {
-    return (
-      <QuestionnaireLayout>
-        <div className="text-center text-xl font-semibold mt-10">
-          Loading questionnaire...
-        </div>
-      </QuestionnaireLayout>
-    );
-  }
+  
 
   // Convert `primary` questions into an array of objects with a number
   const questionsArray = Object.keys(primaryQuestions).map((key) => ({
@@ -37,6 +31,14 @@ export const Questionnair = () => {
 
   const isFirstQuestion = currentQuestionIndex === 0;
   const isLastQuestion = currentQuestionIndex === questionsArray.length - 1;
+
+  const textareaRef = useRef(null); // Create a ref for the textarea
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus(); // Focus the textarea when the component mounts or updates
+    }
+  }, [currentQuestionIndex]); // Run this effect when the question index changes
 
   const handleNext = () => {
     if (!isLastQuestion) {
@@ -83,9 +85,9 @@ export const Questionnair = () => {
   
       if (response.status === 200) {
        
-        navigate("/package", {
+        navigate("/", {
           replace: true,
-          state: { current: "Package" },
+          
         });
       } else {
         alert("Error submitting the questionnaire: " + response.data.message);
@@ -95,10 +97,30 @@ export const Questionnair = () => {
       alert("An error occurred while submitting the questionnaire. Please try again.");
     }
   };
-  
-
   const isNextDisabled =
     !answers[currentQuestion.number] || answers[currentQuestion.number].trim() === "";
+
+  // handling the enter key 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter" && !e.shiftKey && !isNextDisabled) {
+        e.preventDefault(); // Prevent newline in textarea
+        if (isLastQuestion) {
+          handleSubmit();
+        } else {
+          handleNext();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+   
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isNextDisabled, isLastQuestion, answers[currentQuestion.number]]);
+   // end 
+  
 
   // Framer Motion animation variants
   const animationVariants = {
@@ -139,6 +161,7 @@ export const Questionnair = () => {
           </div>
           <div className="mt-[54px]">
             <textarea
+             ref={textareaRef}
               rows={1}
               placeholder="Type your answer here..."
               value={answers[currentQuestion.number] || ""}

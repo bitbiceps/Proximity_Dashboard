@@ -63,7 +63,7 @@ const TopicUnlocked = () => {
   // Render Topic Cards
   return (
     <RootLayout>
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8 px-8 md:px-0">
+      <div className="min-h-[calc(100vh-140px)] bg-gray-100 flex flex-col items-center py-8 px-8 md:px-0">
         <div className="w-full h-full items-center flex flex-wrap gap-4">
           {topicsData.map((item) => (
             <TopicCard
@@ -85,3 +85,7 @@ const TopicUnlocked = () => {
 };
 
 export default TopicUnlocked;
+
+
+// please verify for your title for this article
+// text to add 

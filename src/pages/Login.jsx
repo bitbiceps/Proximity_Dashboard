@@ -18,6 +18,19 @@ function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 4660);
+  
+      return () => clearTimeout(timer);
+    }, []);
+  
+    // if (isLoading) {
+    //   return <Textanimation />;
+    // }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,12 +60,13 @@ function Login() {
       const allQuestionsFilled = primaryQuestions[questionsArray.length ].answer.trim().length > 0 
       console.log("lenght of primary question ", primaryQuestions[questionsArray.length].answer.trim().length , allQuestionsFilled)
     if (allQuestionsFilled) {
-      navigate("/package", {
+      navigate("/", {
         replace: true,
-        state: { current: "Package" },
+        
       });
     } else {
-      navigate("/primary-questionnaire", { replace: true });
+      
+      navigate("/loading", { replace: true });
     }
     }
   }, [user, navigate]);

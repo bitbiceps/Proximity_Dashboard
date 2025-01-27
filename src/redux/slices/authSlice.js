@@ -2,6 +2,28 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseURL } from "../../axios/instance";
 
+//fetch user 
+export const fetchUser = async (userId) => {
+  try {
+    if (userId) {
+      const response = await axios.get(`${baseURL}/user/details?user=${userId}`, {
+        headers: {
+          "Content-Type": "application/json", // Ensure content type is JSON
+        },
+      });
+      const dataToTransfer =  response.data.user; // Return the fetched user data
+      console.log("responseeeeeeeeeeeeeeee", dataToTransfer);
+      return dataToTransfer;
+    } else {
+      throw new Error("User ID is required");
+    }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw error; // Re-throw error for external handling
+  }
+};
+
+
 // Login async thunk
 export const loginUser = createAsyncThunk(
   "auth/loginUser",

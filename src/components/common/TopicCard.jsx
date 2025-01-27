@@ -27,7 +27,12 @@ export const TopicCard = ({
       {/* <div className="mt-[14px] text-[20px] text-[#201446] leading-[26px] font-semibold text-center">
         {head}
       </div> */}
-      <div className="mt-[14px] text-[14px] leading-[20px] text-[#202224] font-normal text-start">
+      <div className="mt-[14px] flex justify-center items-center text-[14px] leading-[20px] text-[#202224] font-normal text-start">
+        {status === 'pending' && (
+          
+          <div className="text-center cursor-pointer">Click to verify for your title for this article</div>
+          
+        )}
         {/* <TruncatedText content={content} maxLength={100} /> */}
         {status === "review" && (
           <div className="text-yellow-500 font-medium mt-2 text-center">

@@ -28,6 +28,9 @@ import { ToastContainer } from "react-toastify";
 import TopicUnlocked from "./pages/TopicUnlocked";
 import { Questionnair } from "./pages/Questionnair";
 import { SecondaryQuestionnaire } from "./pages/SecondaryQuestionnaire";
+import { Textanimation } from "./components/common/Textanimation";
+import Loading from "./components/common/Loading";
+import { LoadingPage } from "./pages/LoadingPage";
 
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
@@ -40,7 +43,7 @@ const App = () => {
   const isValidRoute = validRoutes.includes(location.pathname); // Check if the current location matches any of the valid routes
 
   // Determine if we should show the Sidebar (exclude login and registration routes)
-  const isNoSidebar = [routes.login, routes.registration, routes.primary_questionnaire, routes.secondary_questionnaire].includes(
+  const isNoSidebar = [routes.login, routes.registration, routes.primary_questionnaire, routes.secondary_questionnaire, routes.loading].includes(
     location.pathname
   );
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
@@ -67,6 +70,10 @@ const App = () => {
             <Route
               path={routes.primary_questionnaire}
               element={<ProtectedRoute Component={Questionnair} />}
+            />
+            <Route
+              path={routes.loading}
+              element={<ProtectedRoute Component={LoadingPage} />}
             />
             <Route
               path={routes.secondary_questionnaire}

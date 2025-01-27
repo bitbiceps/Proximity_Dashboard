@@ -36,7 +36,7 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
         const userDataToSend = response.data.user;
         setUserData(userDataToSend);
       }
-      console.log("userrrrrrrrrrrr from sidebarrrrrrrrrr", userDataToSend);
+      // console.log("userrrrrrrrrrrr from sidebarrrrrrrrrr", userDataToSend);
     } catch (error) {
       console.log("error", error);
     }

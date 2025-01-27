@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -25,10 +25,10 @@ export const SecondaryQuestionnaire = () => {
 
   const { expertiseAndSkills, challengesAndGaps, impactAndAchievements, industryContextAndInsights } = questionnaire;
   const allQuestions = [
-    { section: "expertiseAndSkills", questions: expertiseAndSkills },
-    { section: "challengesAndGaps", questions: challengesAndGaps },
-    { section: "impactAndAchievements", questions: impactAndAchievements },
-    { section: "industryContextAndInsights", questions: industryContextAndInsights },
+    { name: "Expertise And Skills" , section: "expertiseAndSkills", questions: expertiseAndSkills },
+    { name: "Challenges And Gaps" , section: "challengesAndGaps", questions: challengesAndGaps },
+    { name: "Impact And Achievments" , section: "impactAndAchievements", questions: impactAndAchievements },
+    { name: "Industry Context And Insights" , section: "industryContextAndInsights", questions: industryContextAndInsights },
   ];
 
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
@@ -58,6 +58,14 @@ export const SecondaryQuestionnaire = () => {
   const isLastQuestion =
     currentSectionIndex === allQuestions.length - 1 &&
     currentQuestionIndex === Object.keys(currentSection.questions).length - 1;
+
+    const textareaRef = useRef(null); // Create a ref for the textarea
+    
+      useEffect(() => {
+        if (textareaRef.current) {
+          textareaRef.current.focus(); // Focus the textarea when the component mounts or updates
+        }
+      }, [currentQuestionIndex]); // Run this effect when the question index changes
 
   const handleNext = () => {
     
@@ -173,6 +181,25 @@ export const SecondaryQuestionnaire = () => {
   const currentAnswer = answers[currentSection.section]?.[currentQuestionKey];
   const isNextDisabled = !currentAnswer?.trim(); // Disable if no answer or only whitespace
 
+  useEffect(() => {
+      const handleKeyDown = (e) => {
+        if (e.key === "Enter" && !e.shiftKey && !isNextDisabled) {
+          e.preventDefault(); // Prevent newline in textarea
+          if (isLastQuestion) {
+            handleSubmit();
+          } else {
+            handleNext();
+          }
+        }
+      };
+  
+      window.addEventListener("keydown", handleKeyDown);
+     
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }, [isNextDisabled, isLastQuestion, answers[currentQuestion.number]]);
+
   return (
     <QuestionnaireLayout>
       <motion.div
@@ -184,7 +211,9 @@ export const SecondaryQuestionnaire = () => {
         transition={{ duration: 1, ease: "easeInOut" }}
         className="my-[40px]"
       >
+       
         <div className="lg:w-[40%] md:w-[50%] w-[80%] lg:h-[20vh] h-[40vh] bg-[#D9D9D9] mx-auto lg:mt-[50px] mt-[50px] "></div>
+        <div className="w-full flex justify-center items-center text-[18px] lg:text-[28px] font-semibold mt-[30px]">{currentSectionIndex + 1}. {currentSection.name}</div>
         <div className="flex flex-row lg:w-[70%] md:w-[70%] w-[90%] mx-auto mt-[74px]">
           <div className="flex justify-start items-start">
             <div className="flex flex-row gap-[1px] text-[#02A6F2] font-sans font-medium text-[20px] lg:text-[36px] items-center justify-center">
@@ -201,6 +230,7 @@ export const SecondaryQuestionnaire = () => {
             <div className="text-[18px] lg:text-[32px] text-[#201446] font-medium">{currentQuestion.question}</div>
             <div className="mt-[54px]">
               <textarea
+                ref={textareaRef}
                 rows={1}
                 placeholder="Type your answer here..."
                 value={answers[currentSection.section]?.[currentQuestionKey] || ""}

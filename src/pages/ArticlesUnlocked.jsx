@@ -43,6 +43,7 @@ const ArticlesUnlocked = () => {
   console.log("dfgh", submittedTopics, allTopics);
   return (
     <RootLayout>
+      
       <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
         {submittedTopics?.length > 0 ? (
           /* Render Articles Cards */

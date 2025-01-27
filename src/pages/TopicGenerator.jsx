@@ -7,14 +7,14 @@ import Loading from "../components/common/Loading";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-const TopicGenerator = ({topicId}) => {
+const TopicGenerator = ({ topicId }) => {
   const article = useSelector(
     ({ articles: { currentSelectedArticle } }) => currentSelectedArticle
   );
   const currentSelectedTopic = useSelector(
     ({ topics: { currentSelectedTopic } }) => currentSelectedTopic
   );
-  console.log("selected id ", currentSelectedTopic)  
+  console.log("selected id ", currentSelectedTopic)
   const articles = useSelector(({ articles: { articles } }) => articles);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,23 +28,23 @@ const TopicGenerator = ({topicId}) => {
   const [parentId, setParentId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const [suggestion, setSuggestion] = useState(""); // State for modal input
-  
+
   //get topic if no topic then questionare 
   const fetchGeneratedTopic = useCallback(async () => {
     try {
       const url = `${baseURL}/topic?userId=${user.userId}`; // Use the full backend URL
       console.log("Request URL:", url);
-  
+
       const { data } = await axios.get(url);
-  
+
       console.log("Fetched topics:", data);
 
     } catch (err) {
       console.error("Error fetching topics:", err);
     }
   }, [user]);
-  
-   useEffect(() => {
+
+  useEffect(() => {
     fetchGeneratedTopic();
   }, [fetchGeneratedTopic]);
   //fetch topic 
@@ -52,22 +52,22 @@ const TopicGenerator = ({topicId}) => {
     try {
       const url = `${baseURL}/topic/get?topicId=${currentSelectedTopic}`; // Use the full backend URL
       console.log("article to be fetiched :", currentSelectedTopic);
-  
+
       const { data } = await axios.get(url);
-  
+
       console.log("Fetched topics based on aritcles :", data.topic.topics);
       setParentId(data.topic._id);
-          if (Array.isArray(data?.topic?.topics)) {
-            setTopics(data?.topic?.topics);
-          } else {
-            toast.error("Topics are not available or response is malformed");
-          }
-        } catch (error) {
-          toast.error(error.message || "Something went wrong!");
-        }
+      if (Array.isArray(data?.topic?.topics)) {
+        setTopics(data?.topic?.topics);
+      } else {
+        toast.error("Topics are not available or response is malformed");
+      }
+    } catch (error) {
+      toast.error(error.message || "Something went wrong!");
+    }
   }, [user]);
-  
-   useEffect(() => {
+
+  useEffect(() => {
     fetchTopicById();
   }, [fetchTopicById]);
 
@@ -168,8 +168,8 @@ const TopicGenerator = ({topicId}) => {
   return (
     <RootLayout>
       {topics ? (
-        <div className="min-h-screen flex flex-col items-center py-8">
-          <div className="flex flex-col items-center mb-6">
+        <div className="min-h-fit flex flex-col items-center py-8">
+          {/* <div className="flex flex-col items-center mb-6">
             <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -189,7 +189,7 @@ const TopicGenerator = ({topicId}) => {
             <button className="text-orange-500 font-medium">
               Upload Photo
             </button>
-          </div>
+          </div> */}
           <div className="w-full max-w-3xl p-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-4">
               Generated Titles
@@ -206,11 +206,10 @@ const TopicGenerator = ({topicId}) => {
                   <div className="space-x-2">
                     <button
                       onClick={() => handleVerify(title._id, index)}
-                      className={`px-6 py-2 text-sm font-medium rounded-sm ${
-                        title.verifyRequested
+                      className={`px-6 py-2 text-sm font-medium rounded-sm ${title.verifyRequested
                           ? "bg-green-500 text-white"
                           : "bg-[#4D49F6] text-white"
-                      }`}
+                        }`}
                     >
                       {title.verifyRequested ? "Verified" : "Verify"}
                     </button>
@@ -249,31 +248,35 @@ const TopicGenerator = ({topicId}) => {
           onClick={() => setIsModalOpen(false)} // Close modal on overlay click
         >
           <div
-            className="relative bg-white p-6 rounded-lg w-full max-w-md"
+            className="relative bg-white p-10 rounded-lg w-[70vw] h-[50vh] "
             onClick={(e) => e.stopPropagation()} // Prevent modal close on click inside
           >
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+            {/* <h2 className="text-xl font-bold text-gray-800 mb-4">
               Suggest a New Topic
-            </h2>
+            </h2> */}
             <textarea
               value={suggestion}
               onChange={(e) => setSuggestion(e.target.value)}
               placeholder="Enter your suggestion here..."
-              className="w-full h-32 p-2 border border-gray-300 rounded-md"
+              className="w-full h-[80%]  p-2 border border-gray-300 focus:outline-none bg-[#4D49F60F] border-dashed rounded-md"
             ></textarea>
-            <div className="mt-4 flex justify-end space-x-4">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-200 rounded-lg"
-              >
-                Cancel
-              </button>
-              <button
+            <div className="mt-4 flex justify-center w-full space-x-4">
+
+              {/* <button
                 onClick={() => handleSuggestionSubmit(parentId)}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                className="px-[40px] py-[8px] bg-[#4D49F6]  text-white rounded-lg"
               >
-                Submit
+                SUBMIT
+              </button> */}
+
+
+              <button onClick={() => handleSuggestionSubmit(parentId)} className="inline-flex h-12 hover:animate-shimmer items-center justify-center rounded-md px-[35px] bg-[linear-gradient(110deg,#4D49F6,45%,#4D49F690,55%,#4D49F6)] bg-[length:250%_100%] font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                SUBMIT
               </button>
+
+
+
+
             </div>
           </div>
         </div>
