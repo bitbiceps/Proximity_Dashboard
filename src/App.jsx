@@ -31,6 +31,7 @@ import { SecondaryQuestionnaire } from "./pages/SecondaryQuestionnaire";
 import { Textanimation } from "./components/common/Textanimation";
 import Loading from "./components/common/Loading";
 import { LoadingPage } from "./pages/LoadingPage";
+import { TextGenerating } from "./pages/TextGenerating";
 
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
@@ -66,6 +67,10 @@ const App = () => {
             <Route
               path={routes.root}
               element={<ProtectedRoute Component={Dashboard} />}
+            />
+            <Route
+              path={routes.text}
+              element={<ProtectedRoute Component={TextGenerating} />}
             />
             <Route
               path={routes.primary_questionnaire}

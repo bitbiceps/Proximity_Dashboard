@@ -8,6 +8,7 @@ import {
 } from "../redux/slices/generatedSlice";
 import { toast } from "react-toastify"; // Import toast
 import "react-toastify/dist/ReactToastify.css"; // Import CSS for Toast
+import { TextGenerating } from "./TextGenerating";
 const GeneratedArticle = () => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
@@ -38,11 +39,13 @@ const GeneratedArticle = () => {
   };
   if (articleloading) {
     return (
-      <RootLayout>
-        <div className="flex items-center justify-center h-screen">
-          <div className="text-xl font-semibold text-gray-600">Loading...</div>
+     
+       <RootLayout>
+         <div className="flex items-center justify-center h-screen w-full">
+          <TextGenerating/>
         </div>
-      </RootLayout>
+       </RootLayout>
+      
     );
   }
   return (

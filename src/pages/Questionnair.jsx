@@ -140,9 +140,9 @@ export const Questionnair = () => {
         transition={{ duration: 1, ease: "easeInOut" }} // Adjust animation duration
          className="my-[40px]"
       >
-      <div className="lg:w-[40%] md:w-[50%] w-[80%] lg:h-[20vh] h-[40vh] bg-[#D9D9D9] mx-auto lg:mt-[50px] mt-[50px]">
+      {/* <div className="lg:w-[40%] md:w-[50%] w-[80%] lg:h-[20vh] h-[40vh] bg-[#D9D9D9] mx-auto lg:mt-[50px] mt-[50px]">
        
-      </div>
+      </div> */}
       <div className="flex flex-row lg:w-[70%] md:w-[70%] w-[80%] mx-auto mt-[74px]">
         <div className="flex justify-start items-start">
           <div className="flex flex-row gap-[1px] text-[#02A6F2] font-sans font-medium  text-[20px] lg:text-[36px] items-center justify-center">

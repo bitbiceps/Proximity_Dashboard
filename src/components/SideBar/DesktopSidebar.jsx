@@ -58,7 +58,7 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
     userData?.questionnaire?.industryContextAndInsights[
       questionsArray.length
     ]?.answer?.trim().length;
-  console.log("lastQuestion ", isLastQuestion, questionsArray?.length);
+  console.log("lastQuestion frommmmm desto[p side barrrrrrr ", isLastQuestion, questionsArray?.length, topics.length, articles);
   const finalData =
     user?.user?.user?.articles?.length > 0
       ? user?.user?.user?.articles

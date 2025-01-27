@@ -20,7 +20,7 @@
 //   };
 
 //   useEffect(() => {
-    
+
 //     getUserData();
 //   }, []);
 //   return (
@@ -86,7 +86,7 @@
 //                 />
 //               </div>
 //             </div>
-            
+
 
 //             <div className="grid grid-cols-2  px-16 gap-16">
 //               <div>
@@ -182,8 +182,8 @@ const Profile = () => {
           </div>
 
           <form className="mt-8 space-y-6">
-            <div className="grid grid-cols-2 px-16 gap-16">
-              <div>
+            <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
+              <div className="">
                 <label className="block text-sm text-gray-600">First Name</label>
                 <input
                   type="text"
@@ -200,7 +200,7 @@ const Profile = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 px-16 gap-16">
+            <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
               <div>
                 <label className="block text-sm text-gray-600">Email</label>
                 <input
@@ -219,7 +219,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 px-16 gap-16">
+            <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
               <div>
                 <label className="block text-sm text-gray-600">Date of Birth</label>
                 <input
@@ -227,7 +227,7 @@ const Profile = () => {
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <div className="mr-48">
+              <div className="lg:mr-48">
                 <label className="block text-sm text-gray-600">Gender</label>
                 <select className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500">
                   <option>Male</option>
@@ -237,28 +237,51 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="flex flex-col justify-center items-center">
-              <div className="mt-4 text-lg font-medium text-gray-700">
+           
+              <div className="mt-4 flex w-full justify-center text-lg font-medium text-gray-700">
                 Basic Information
               </div>
               <div>
                 {baseQuestions ? (
                   <>
-                    <div className="text-gray-600 text-[16px]">
-                      1.) Field of Industry: <span>{baseQuestions[1].answer}</span>
+                    <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
+                      <div>
+                        <label className="block text-sm text-gray-600">Field of Industry:</label>
+                        <input
+                          type="text"
+                          placeholder="Enter your field of industry"
+                          value={baseQuestions[1].answer}
+                          className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm text-gray-600"> Role/Job Title:</label>
+                        <input
+                          type="text"
+                          placeholder="Enter your job title"
+                          value={baseQuestions[2].answer}
+                          className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
                     </div>
-                    <div className="text-gray-600 text-[16px]">
-                      2.) Role/Job Title: <span>{baseQuestions[2].answer}</span>
-                    </div>
-                    <div className="text-gray-600 text-[16px]">
-                      3.)  Areas of Expertise: <span>{baseQuestions[3].answer}</span>
+                    <div className="grid grid-cols-2 mt-6 lg:px-16 px-0 gap-2 lg:gap-16">
+                      <div>
+                        <label className="block text-sm text-gray-600">Areas of Expertise:</label>
+                        <input
+                          type="text"
+                          placeholder="Enter your area of expertise"
+                          value={baseQuestions[3].answer}
+                          className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+
                     </div>
                   </>
                 ) : (
                   <div>Loading basic information...</div>
                 )}
               </div>
-            </div>
+            
 
             <div className="px-[400px] py-4">
               <button
