@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { baseURL } from "../axios/instance";
 const RootLayout = ({ children }) => {
+  const [userData, setUserData] = useState()
+  
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const pay = useSelector((state) => state.payment)
@@ -21,6 +23,9 @@ const RootLayout = ({ children }) => {
           }
         );
         const userDataToSend = response.data.user;
+
+        console.log("userrrrrrrrr frommmm rooot", userDataToSend.profileImage.filepath)
+        setUserData(userDataToSend)
         // setUserData(userDataToSend);
         const primaryQuestions = userDataToSend?.questionnaire?.basicInformation;
         console.log("klsdjflskdfsjlkfj ", primaryQuestions, userDataToSend, userDataToSend?.user?.user)
@@ -53,7 +58,7 @@ const RootLayout = ({ children }) => {
 
   return (
     <>
-      <Header />
+      <Header userData={userData}/>
       {user?.user?.user?.paymentStatus === true ? (
         <div className="bg-blue-50 lg:p-4">{children}</div>
       ) : (

@@ -168,7 +168,7 @@ const TopicGenerator = ({ topicId }) => {
   return (
     <RootLayout>
       {topics ? (
-        <div className="min-h-fit flex flex-col items-center py-8">
+        <div className="min-h-[calc(100vh-150px)] flex flex-col items-center py-8">
           {/* <div className="flex flex-col items-center mb-6">
             <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-2">
               <svg

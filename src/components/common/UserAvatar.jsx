@@ -3,10 +3,11 @@ import { CiCircleChevDown } from "react-icons/ci";
 
 
 const UserAvatar = ({ user }) => {
+    console.log("user avtar from userrrrrrrr", user.avatar)
     return (
         <div className='hidden sm:flex items-center justify-center w-fit h-fit gap-2'>
-            <div className='rounded-full overflow-hidden'>
-                <img src={user.avatar} alt="Aatar" />
+            <div className='rounded-full w-[50px] h-[50px] justify-center items-center'>
+                <img className="w-full h-full object-cover rounded-full" src = {user.avatar} alt="Aatar" />
             </div>
             <div>
                 <p className='text-[16px] font-semibold'>{user.name}</p>

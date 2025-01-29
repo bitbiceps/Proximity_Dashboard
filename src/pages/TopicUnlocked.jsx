@@ -41,6 +41,18 @@ const TopicUnlocked = () => {
     fetchGeneratedTopic();
   }, [fetchGeneratedTopic]);
 
+    // Effect to reload page when switching tabs
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        window.location.reload();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
   // Early return if no topics are available
   if (topicsData.length === 0) {
     return (
@@ -76,8 +88,11 @@ const TopicUnlocked = () => {
                 dispatch(setCurrentSelectedTopic(item._id));
                 navigate(routes.topic_generator);
               }}
+              
             />
+          
           ))}
+          
         </div>
       </div>
     </RootLayout>

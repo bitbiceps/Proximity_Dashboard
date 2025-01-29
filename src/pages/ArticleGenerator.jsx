@@ -83,7 +83,9 @@ const ArticleGenerator = () => {
                 content={item.content}
               />
             ))}
+            
           </div>
+          
         </div>
       </div>
     </RootLayout>
