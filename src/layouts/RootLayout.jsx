@@ -24,7 +24,7 @@ const RootLayout = ({ children }) => {
         );
         const userDataToSend = response.data.user;
 
-        console.log("userrrrrrrrr frommmm rooot", userDataToSend.profileImage.filepath)
+        console.log("userrrrrrrrr frommmm rooot", userDataToSend.profileImage)
         setUserData(userDataToSend)
         // setUserData(userDataToSend);
         const primaryQuestions = userDataToSend?.questionnaire?.basicInformation;

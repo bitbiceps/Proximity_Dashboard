@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/slices/authSlice";
 export const SecondaryQuestionnaire = () => {
+
   const user = useSelector((state) => state.auth.user);
   const questionnaire = user?.user?.questionnaire;
   const navigate = useNavigate();
@@ -131,47 +132,6 @@ export const SecondaryQuestionnaire = () => {
     }
   };
   console.log("iserrrrrrrrrrrrrrrrrr", user?.user)
-  const handleSubmit = async () => {
-    const payload = {
-      user: user?.user?._id,
-      expertiseAndSkills: answers.expertiseAndSkills,
-      challengesAndGaps: answers.challengesAndGaps,
-      impactAndAchievements: answers.impactAndAchievements,
-      industryContextAndInsights: answers.industryContextAndInsights,
-    };
-     const TopicPayload = {
-      expertiseAndSkills: answers.expertiseAndSkills,
-      challengesAndGaps: answers.challengesAndGaps,
-      impactAndAchievements: answers.impactAndAchievements,
-      industryContextAndInsights: answers.industryContextAndInsights,
-    }
-
-    console.log("Payload being sent:", payload);
-    // console.log("iserrrrrrrrrrrrrrrrrr", user)
-    try {
-      const response = await axios.post(`${baseURL}/user/secondary-questionaire`, payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status === 200) {
-        // console.log(response.data.user , "responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-        // console.log("iserrrrrrrrrrrrrrrrrr", response.data)
-        // dispatch(setUser(response?.data?.user));
-        await handleTopicCreation(user?.user?._id);
-        navigate("/topic_unlocked", {
-          replace: true,
-         
-        });
-        console.log("Successfully submitted:", response.data);
-      } else {
-        console.error("Error submitting questionnaire:", response.data);
-      }
-    } catch (error) {
-      console.error("Error submitting questionnaire:", error);
-    }
-  };
 
   const animationVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -179,11 +139,94 @@ export const SecondaryQuestionnaire = () => {
     exit: { opacity: 0, y: -20 },
   };
   const currentAnswer = answers[currentSection.section]?.[currentQuestionKey];
-  const isNextDisabled = !currentAnswer?.trim(); // Disable if no answer or only whitespace
+  let isNextDisabled = !currentAnswer?.trim(); // Disable if no answer or only whitespace
+  console.log(isNextDisabled, "issss nexxt dissablleeeee")
 
+  // const handleSubmit = async () => {
+    
+  //   const payload = {
+  //     user: user?.user?._id,
+  //     expertiseAndSkills: answers.expertiseAndSkills,
+  //     challengesAndGaps: answers.challengesAndGaps,
+  //     impactAndAchievements: answers.impactAndAchievements,
+  //     industryContextAndInsights: answers.industryContextAndInsights,
+  //   };
+  //    const TopicPayload = {
+  //     expertiseAndSkills: answers.expertiseAndSkills,
+  //     challengesAndGaps: answers.challengesAndGaps,
+  //     impactAndAchievements: answers.impactAndAchievements,
+  //     industryContextAndInsights: answers.industryContextAndInsights,
+  //   }
+
+  //   console.log("Payload being sent:", payload);
+  //   // console.log("iserrrrrrrrrrrrrrrrrr", user)
+  //   try {
+  //     isNextDisabled = true;
+  //     const response = await axios.post(`${baseURL}/user/secondary-questionaire`, payload, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+
+  //     if (response.status === 200) {
+  //       // console.log(response.data.user , "responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+  //       // console.log("iserrrrrrrrrrrrrrrrrr", response.data)
+  //       // dispatch(setUser(response?.data?.user));
+  //       await handleTopicCreation(user?.user?._id);
+  //       navigate("/topic_unlocked", {
+  //         replace: true,
+         
+  //       });
+  //       console.log("Successfully submitted:", response.data);
+
+  //     } else {
+  //       console.error("Error submitting questionnaire:", response.data);
+  //       isNextDisabled = false
+  //     }
+  //   } catch (error) {
+  //     console.error("Error submitting questionnaire:", error);
+  //     isNextDisabled = false
+  //   }
+  // };
+
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false); // Track submit status
+
+  const handleSubmit = async () => {
+    if (isSubmitDisabled) return; // Prevent multiple clicks
+  
+    setIsSubmitDisabled(true); // Disable submit button immediately
+  
+    const payload = {
+      user: user?.user?._id,
+      expertiseAndSkills: answers.expertiseAndSkills,
+      challengesAndGaps: answers.challengesAndGaps,
+      impactAndAchievements: answers.impactAndAchievements,
+      industryContextAndInsights: answers.industryContextAndInsights,
+    };
+  
+    try {
+      const response = await axios.post(`${baseURL}/user/secondary-questionaire`, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      if (response.status === 200) {
+        await handleTopicCreation(user?.user?._id);
+        navigate("/topic_unlocked", { replace: true });
+        console.log("Successfully submitted:", response.data);
+      } else {
+        console.error("Error submitting questionnaire:", response.data);
+        setIsSubmitDisabled(false); // Re-enable button on failure
+      }
+    } catch (error) {
+      console.error("Error submitting questionnaire:", error);
+      setIsSubmitDisabled(false); // Re-enable button on failure
+    }
+  };
+  
+  
   useEffect(() => {
       const handleKeyDown = (e) => {
-        if (e.key === "Enter" && !e.shiftKey && !isNextDisabled) {
+        if (e.key === "Enter" && !e.shiftKey && !isNextDisabled && !isLastQuestion) {
           e.preventDefault(); // Prevent newline in textarea
           if (isLastQuestion) {
             handleSubmit();
@@ -249,15 +292,18 @@ export const SecondaryQuestionnaire = () => {
                 >
                   Back
                 </button>
+                
                 <button
-                onClick={isLastQuestion ? handleSubmit : handleNext}
-                disabled={isNextDisabled}
-                className={`py-[8px] px-[32px] rounded-[4px] text-white ${
-                  isNextDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-[#8A62F6]"
-                }`}
-              >
-                {isLastQuestion ? "Submit" : "Next"}
-              </button>
+                  onClick={isLastQuestion ? handleSubmit : handleNext}
+                  disabled={isNextDisabled || (isLastQuestion && isSubmitDisabled)}
+                  className={`py-[8px] px-[32px] rounded-[4px] text-white ${
+                    isNextDisabled || (isLastQuestion && isSubmitDisabled) ? "bg-gray-400 cursor-not-allowed" : "bg-[#8A62F6]"
+                  }`}
+                >
+                  {isLastQuestion ? "Submit" : "Next"}
+                </button>
+
+                  
               </div>
             </div>
           </div>
@@ -266,6 +312,21 @@ export const SecondaryQuestionnaire = () => {
     </QuestionnaireLayout>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // import React, { useState } from "react";
 // import { useSelector } from "react-redux";

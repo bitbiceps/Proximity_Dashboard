@@ -39,9 +39,22 @@ function Dashboard() {
     initialDashboardCallback();
   }, []);
 
+  // // Effect to reload page when switching tabs
+  //     useEffect(() => {
+  //       const handleVisibilityChange = () => {
+  //         if (document.visibilityState === "visible") {
+  //           window.location.reload();
+  //           // navigate("/articles_unlocked")
+  //         }
+  //       };
+    
+  //       document.addEventListener("visibilitychange", handleVisibilityChange);
+  //       return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //     }, []);
+
   return (
     <RootLayout>
-      <div className="min-h-[calc(100vh-150px)] bg-gray-100 py-4 px-8">
+      <div className="min-h-[calc(100vh-140px)] flex flex-col justify-between bg-gray-100 py-4 px-8">
         <header className="text-center bg-blue-50 p-4 rounded-md shadow-md w-full lg:w-[72vw] mx-auto">
           <h1 className="text-[24px] font-bold text-app-black-1">
             Welcome Back, {response?.user?.user?.fullName}!
@@ -75,7 +88,7 @@ function Dashboard() {
           </div>
         </section> */}
 
-        <section className="mt-3 overflow-x-hidden">
+        <section className="mt-auto overflow-x-hidden">
           <div className="flex items-center justify-between mb-4 w-full lg:w-[95%]">
             <h2 className="text-[28px] lg:text-[28px] font-medium">Blogs</h2>
 

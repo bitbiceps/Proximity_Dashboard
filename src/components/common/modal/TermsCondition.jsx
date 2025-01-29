@@ -31,7 +31,7 @@ const TermsCondition = () => {
       dispatch(verifyRequestArticle({ articleId }));
       if (articleVerify?.message === "Article submitted for review") {
         toast.success("Article submitted for review");
-        navigate("/articles_unlocked", { replace: true });
+        navigate("/", { replace: true });
       }
       dispatch(resetState());
 
