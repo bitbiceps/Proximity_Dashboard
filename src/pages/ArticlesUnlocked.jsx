@@ -40,13 +40,13 @@ const ArticlesUnlocked = () => {
   // const { specificArticle, articleVerify, articleUpdate, loading, error } =
   //   useSelector((state) => state.generated);
   // console.log("articles", specificArticle);
-  // console.log("topiccccccc", submittedTopics[0]?.articleId, allTopics);
+  console.log("topiccccccc", submittedTopics, allTopics);
   // Effect to reload page when switching tabs
     useEffect(() => {
       const handleVisibilityChange = () => {
         if (document.visibilityState === "visible") {
           window.location.reload();
-          navigate("/articles_unlocked")
+          // navigate("/articles_unlocked")
         }
       };
   
