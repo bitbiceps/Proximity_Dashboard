@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerResetState, submitRegistration } from "../redux/slices/authSlice";
+import {
+  registerResetState,
+  submitRegistration,
+} from "../redux/slices/authSlice";
 import Auth from "../assets/auth.jpg";
-import lefBg from "../assets/bg-left.png"
-import news from "../assets/news.png"
+import lefBg from "../assets/bg-left.png";
+import news from "../assets/news.png";
 import Google from "../assets/google.jpg";
 import India from "../assets/indiaflag.jpg";
 import USFlag from "../assets/us.jpg";
@@ -15,6 +18,14 @@ import "react-toastify/dist/ReactToastify.css";
 function Registration() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const emails = [
+    "tanvi.kapila@saimanshetty.com",
+    "saanidhya@saimanshetty.com",
+    "harsh@saimanshetty.com",
+    "saiman@saimanshetty.com",
+    "vinay.m@saimanshetty.com",
+  ];
 
   const [countryCode, setCountryCode] = useState("+91");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -31,7 +42,7 @@ function Registration() {
     "+44": { code: "+44", flag: India },
     "+61": { code: "+61", flag: USFlag },
   };
-console.log("response",response)
+  console.log("response", response);
   const handleCountryChange = (code) => {
     setCountryCode(code);
     setIsDropdownOpen(false);
@@ -65,16 +76,19 @@ console.log("response",response)
     event.preventDefault();
     if (!validateInputs()) return;
 
-    const formData = {
-      fullName,
-      email,
-      password,
-      phoneNumber: `${countryCode}${phoneNumber}`,
-      termsAccepted,
-    };
+    if (emails.includes(email)) {
+      const formData = {
+        fullName,
+        email,
+        password,
+        phoneNumber: `${countryCode}${phoneNumber}`,
+        termsAccepted,
+      };
 
-    dispatch(submitRegistration(formData));
-    console.log("Dispatched:", formData);
+      dispatch(submitRegistration(formData));
+    } else {
+      toast.error("Email is not eligible");
+    }
   };
 
   useEffect(() => {
@@ -82,31 +96,30 @@ console.log("response",response)
       response?.registerUser &&
       response?.registerUser?.message === "User registered successfully"
     ) {
-      console.log("firsts",response?.user?.message)
+      console.log("firsts", response?.user?.message);
       toast.success("Registration successfull redirecting...");
       navigate("/login", { replace: true });
-      dispatch(registerResetState())
-    }
-    else if(response?.error?.message==="Email is already registered")
-      toast.error("Email is already registered")
-    else if(response?.error?.message==="Phone number is already registered")
-      toast.error("Phone number is already registered")
+      dispatch(registerResetState());
+    } else if (response?.error?.message === "Email is already registered")
+      toast.error("Email is already registered");
+    else if (response?.error?.message === "Phone number is already registered")
+      toast.error("Phone number is already registered");
   }, [response, navigate]);
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
       <div className="flex flex-col md:flex-row w-full h-full max-w-none bg-white">
         <div className=" relative w-full md:w-1/2 h-1/2 md:h-full">
-                  <img
-                    src={lefBg}
-                    alt="Tablet in hand"
-                    className="w-full h-full object-cover"
-                  />
-                  <img
-                  className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
-                  src={news}>
-                  </img>
-                </div>
+          <img
+            src={lefBg}
+            alt="Tablet in hand"
+            className="w-full h-full object-cover"
+          />
+          <img
+            className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+            src={news}
+          ></img>
+        </div>
 
         <div className="flex flex-col w-full md:w-1/2 px-8 md:px-48 py-6 md:py-16 h-full justify-center">
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-8 text-center">
@@ -202,8 +215,7 @@ console.log("response",response)
 
             <button
               type="submit"
-              style={{boxShadow: '0px 24px 42.42px -8.48px #4D49F63D '             }}
-              
+              style={{ boxShadow: "0px 24px 42.42px -8.48px #4D49F63D " }}
               className={`mt-4 w-full bg-[#4D49F6] text-white py-[15px] rounded-full text-sm font-semibold shadow-lg ${
                 loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
