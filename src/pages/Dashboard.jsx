@@ -41,7 +41,7 @@ function Dashboard() {
 
   return (
     <RootLayout>
-      <div className="min-h-screen bg-gray-100 py-4 px-8">
+      <div className="min-h-[calc(100vh-150px)] bg-gray-100 py-4 px-8">
         <header className="text-center bg-blue-50 p-4 rounded-md shadow-md w-full lg:w-[72vw] mx-auto">
           <h1 className="text-[24px] font-bold text-app-black-1">
             Welcome Back, {response?.user?.user?.fullName}!
@@ -57,7 +57,7 @@ function Dashboard() {
           </Link>
         </header>
 
-        <section className="mt-8">
+        {/* <section className="mt-8">
           <h2 className="text-[16px] lg:text-[24px] font-medium mb-4 text-app-black-1">
             AI Tools
           </h2>
@@ -73,11 +73,11 @@ function Dashboard() {
                 />
               ))}
           </div>
-        </section>
+        </section> */}
 
-        <section className="mt-8 overflow-x-hidden">
+        <section className="mt-3 overflow-x-hidden">
           <div className="flex items-center justify-between mb-4 w-full lg:w-[95%]">
-            <h2 className="text-[28px] lg:text-[32px] font-medium">Blogs</h2>
+            <h2 className="text-[28px] lg:text-[28px] font-medium">Blogs</h2>
 
             <div className="flex w-fit transition-colors duration-300 justify-center">
               <div ref={prevRef} className="cursor-pointer">
@@ -146,7 +146,7 @@ function Dashboard() {
                   <SwiperSlide key={index} className="z-10">
                     <div
                       style={{ backgroundImage: `url(${person})` }}
-                      className="bg-cover bg-center overflow-hidden rounded-2xl shadow-md w-[100%] h-[350px] lg:h-[400px] xl:w-[350px] xl:h-[350px] mx-auto"
+                      className="bg-cover bg-center overflow-hidden rounded-2xl shadow-md w-[100%] h-[350px] lg:h-[300px] xl:w-[350px] xl:h-[300px] mx-auto"
                     >
                       <div className="h-full flex w-full p-4 flex-col items-start justify-end">
                         <div className="w-full h-fit flex items-start gap-4">
@@ -253,7 +253,7 @@ export default Dashboard;
 //           </Link>
 //         </header>
 
-//         <section className="mt-8">
+//         {/* <section className="mt-8">
 //           <h2 className="text-[28px] lg:text-[32px] font-medium mb-4 text-app-black-1">
 //             AI Tools
 //           </h2>
@@ -269,7 +269,7 @@ export default Dashboard;
 //                 />
 //               ))}
 //           </div>
-//         </section>
+//         </section> */}
 
 //         <section className="mt-8 overflow-x-hidden">
 //           <div className="flex items-center justify-between mb-4 w-full lg:w-[95%]">

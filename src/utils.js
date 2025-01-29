@@ -20,6 +20,7 @@ export const routes = {
   primary_questionnaire: '/primary-questionnaire',
   secondary_questionnaire: '/secondary-questionnaire',
   loading: "/loading",
+  text: '/text',
   // payment:"/payment"
 };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useEffect, useState } from "react";
 import { ArticlesCard } from "../components/common/ArticlesCard";
 import article from "../assets/article-image.png";
 import RootLayout from "../layouts/RootLayout";
@@ -19,7 +19,7 @@ const ArticlesUnlocked = () => {
     articleGenerate,
     allTopics,
   } = useSelector((state) => state.generated);
-
+  // const [submittedTopics , setSubmitTopics] = useState()
   //   //   useSelector((state) => state.generated);
   // const { user } = useSelector((state) => state.auth);
   // const {}
@@ -40,11 +40,23 @@ const ArticlesUnlocked = () => {
   // const { specificArticle, articleVerify, articleUpdate, loading, error } =
   //   useSelector((state) => state.generated);
   // console.log("articles", specificArticle);
-  console.log("dfgh", submittedTopics, allTopics);
+  // console.log("topiccccccc", submittedTopics[0]?.articleId, allTopics);
+  // Effect to reload page when switching tabs
+    useEffect(() => {
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === "visible") {
+          window.location.reload();
+          navigate("/articles_unlocked")
+        }
+      };
+  
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+    }, []);
   return (
     <RootLayout>
       
-      <div className="min-h-screen bg-gray-100 flex flex-col items-center py-8">
+      <div className="min-h-[calc(100vh-150px)] bg-gray-100 flex flex-col items-center py-8">
         {submittedTopics?.length > 0 ? (
           /* Render Articles Cards */
           <div className=" w-full flex gap-[20px] relative z-[10] flex-wrap  px-8 md:px-0">
@@ -52,6 +64,7 @@ const ArticlesUnlocked = () => {
               <ArticlesCard
                 key={index}
                 image={article}
+                data={item}
                 head={item.finalTopic}
                 content={item.finalTopic} // Assuming finalTopic is the content as well
                 articleStatus={item.articleStatus}
@@ -61,7 +74,9 @@ const ArticlesUnlocked = () => {
                   navigate(routes.generated_article);
                 }}
               />
+            
             ))}
+            
           </div>
         ) : (
           /* Interactive Message */

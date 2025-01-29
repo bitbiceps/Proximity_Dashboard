@@ -21,7 +21,7 @@ import { resetPaymentState } from "../../redux/slices/paymentSlice";
 import { NavLink, useNavigate } from "react-router-dom";
 import { cookieAccessKeys } from "../../utils";
 import Cookies from "js-cookie";
-const Header = () => {
+const Header = ({userData}) => {
   const [search, setSearch] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
@@ -82,15 +82,16 @@ const Header = () => {
           user={{
             name: `${response?.user?.user?.fullName}`,
             role: "User",
-            avatar,
+            avatar: userData?.profileImage?.filepath || avatar,
           }}
         />
+        
+        </motion.button>
         <CgMenuRight
           onClick={toogleMobileSidebar}
           className="md:hidden"
           size={30}
         />
-        </motion.button>
         {/* <Dropdown label="Select Language" onSelect={handleCountrySelect} options={langOptions} selected={selected} /> */}
 
       </div>
