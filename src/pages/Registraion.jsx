@@ -76,7 +76,7 @@ function Registration() {
     event.preventDefault();
     if (!validateInputs()) return;
 
-    if (emails.includes(email)) {
+    if (emails.includes(email.toLocaleLowerCase())) {
       const formData = {
         fullName,
         email,
