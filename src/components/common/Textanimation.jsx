@@ -79,7 +79,7 @@ export const Textanimation = () => {
             <br/>
           Let Us Know You Better
         </h1>
-        <p className="mt-4 font-normal text-base text-neutral-500 max-w-lg text-center mx-auto">
+        <p className="mt-4 font-normal text-base lg:text-xl xl:text-2xl text-neutral-500 max-w-lg text-center mx-auto">
           Fill a basic Questionnaire form!!
         </p>
         {/* <button className='py-[10px] px-[20px] mt-[30px] rounded-[8px] text'>Quetionnaire</button> */}

@@ -28,8 +28,6 @@ import { ToastContainer } from "react-toastify";
 import TopicUnlocked from "./pages/TopicUnlocked";
 import { Questionnair } from "./pages/Questionnair";
 import { SecondaryQuestionnaire } from "./pages/SecondaryQuestionnaire";
-import { Textanimation } from "./components/common/Textanimation";
-import Loading from "./components/common/Loading";
 import { LoadingPage } from "./pages/LoadingPage";
 import { TextGenerating } from "./pages/TextGenerating";
 
