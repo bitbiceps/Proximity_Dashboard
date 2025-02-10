@@ -8,12 +8,13 @@ import { baseURL } from "../axios/instance";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/slices/authSlice";
-export const SecondaryQuestionnaire = () => {
 
+export const SecondaryQuestionnaire = () => {
   const user = useSelector((state) => state.auth.user);
   const questionnaire = user?.user?.questionnaire;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   if (!questionnaire) {
     return (
       <QuestionnaireLayout>
@@ -24,12 +25,34 @@ export const SecondaryQuestionnaire = () => {
     );
   }
 
-  const { expertiseAndSkills, challengesAndGaps, impactAndAchievements, industryContextAndInsights } = questionnaire;
+  const {
+    expertiseAndSkills,
+    challengesAndGaps,
+    impactAndAchievements,
+    industryContextAndInsights,
+  } = questionnaire;
+
   const allQuestions = [
-    { name: "Expertise And Skills" , section: "expertiseAndSkills", questions: expertiseAndSkills },
-    { name: "Challenges And Gaps" , section: "challengesAndGaps", questions: challengesAndGaps },
-    { name: "Impact And Achievments" , section: "impactAndAchievements", questions: impactAndAchievements },
-    { name: "Industry Context And Insights" , section: "industryContextAndInsights", questions: industryContextAndInsights },
+    {
+      name: "Expertise And Skills",
+      section: "expertiseAndSkills",
+      questions: expertiseAndSkills,
+    },
+    {
+      name: "Challenges And Gaps",
+      section: "challengesAndGaps",
+      questions: challengesAndGaps,
+    },
+    {
+      name: "Impact And Achievements",
+      section: "impactAndAchievements",
+      questions: impactAndAchievements,
+    },
+    {
+      name: "Industry Context And Insights",
+      section: "industryContextAndInsights",
+      questions: industryContextAndInsights,
+    },
   ];
 
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
@@ -42,6 +65,9 @@ export const SecondaryQuestionnaire = () => {
   });
   const [questNumber, setQuestNumber] = useState(0);
   const [animationKey, setAnimationKey] = useState(0);
+  const [isNextDisabled, setIsNextDisabled] = useState(true); // Track the next button state
+
+  const textareaRef = useRef(null); // Create a ref for the textarea
 
   const calculateQuestNumber = (sectionIndex, questionIndex) => {
     let totalQuestions = 0;
@@ -52,31 +78,43 @@ export const SecondaryQuestionnaire = () => {
   };
 
   const currentSection = allQuestions[currentSectionIndex];
-  const currentQuestionKey = Object.keys(currentSection.questions)[currentQuestionIndex];
+  const currentQuestionKey = Object.keys(currentSection.questions)[
+    currentQuestionIndex
+  ];
   const currentQuestion = currentSection.questions[currentQuestionKey];
 
-  const isFirstQuestion = currentSectionIndex === 0 && currentQuestionIndex === 0;
+  const isFirstQuestion =
+    currentSectionIndex === 0 && currentQuestionIndex === 0;
   const isLastQuestion =
     currentSectionIndex === allQuestions.length - 1 &&
     currentQuestionIndex === Object.keys(currentSection.questions).length - 1;
 
-    const textareaRef = useRef(null); // Create a ref for the textarea
-    
-      useEffect(() => {
-        if (textareaRef.current) {
-          textareaRef.current.focus(); // Focus the textarea when the component mounts or updates
-        }
-      }, [currentQuestionIndex]); // Run this effect when the question index changes
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus(); // Focus the textarea when the component mounts or updates
+    }
+  }, [currentQuestionIndex]); // Run this effect when the question index changes
+
+  useEffect(() => {
+    // Update isNextDisabled based on whether the current question has been answered
+    setIsNextDisabled(
+      !answers[currentSection.section]?.[currentQuestionKey]?.trim()
+    );
+  }, [answers, currentSection.section, currentQuestionKey]);
 
   const handleNext = () => {
-    
-    if (currentQuestionIndex < Object.keys(currentSection.questions).length - 1) {
+    if (
+      currentQuestionIndex <
+      Object.keys(currentSection.questions).length - 1
+    ) {
       setCurrentQuestionIndex((prev) => prev + 1);
       setQuestNumber((prev) => prev + 1);
     } else if (currentSectionIndex < allQuestions.length - 1) {
       setCurrentSectionIndex((prev) => prev + 1);
       setCurrentQuestionIndex(0);
-      setQuestNumber((prev) => calculateQuestNumber(currentSectionIndex + 1, 0));
+      setQuestNumber((prev) =>
+        calculateQuestNumber(currentSectionIndex + 1, 0)
+      );
     }
     setAnimationKey((prev) => prev + 1);
   };
@@ -86,11 +124,16 @@ export const SecondaryQuestionnaire = () => {
       setCurrentQuestionIndex((prev) => prev - 1);
       setQuestNumber((prev) => prev - 1);
     } else if (currentSectionIndex > 0) {
-      const previousSectionQuestions = Object.keys(allQuestions[currentSectionIndex - 1].questions).length;
+      const previousSectionQuestions = Object.keys(
+        allQuestions[currentSectionIndex - 1].questions
+      ).length;
       setCurrentSectionIndex((prev) => prev - 1);
       setCurrentQuestionIndex(previousSectionQuestions - 1);
       setQuestNumber((prev) =>
-        calculateQuestNumber(currentSectionIndex - 1, previousSectionQuestions - 1)
+        calculateQuestNumber(
+          currentSectionIndex - 1,
+          previousSectionQuestions - 1
+        )
       );
     }
     setAnimationKey((prev) => prev + 1);
@@ -112,8 +155,6 @@ export const SecondaryQuestionnaire = () => {
       numberOfArticles: 2,
       userId,
     };
-    console.log("Topic creation payload:", topicPayload);
-
     try {
       const topicResponse = await axios.post(
         `${baseURL}/topic/generate`,
@@ -124,11 +165,11 @@ export const SecondaryQuestionnaire = () => {
           },
         }
       );
-
-      console.log("Topic creation response:", topicResponse.data);
     } catch (error) {
       console.error("Error generating topics:", error);
-      toast.error("An error occurred while generating topics. Please try again.");
+      toast.error(
+        "An error occurred while generating topics. Please try again."
+      );
     }
   };
 
@@ -140,16 +181,14 @@ export const SecondaryQuestionnaire = () => {
   };
 
   const currentAnswer = answers[currentSection.section]?.[currentQuestionKey];
-  let isNextDisabled = !currentAnswer?.trim(); // Disable if no answer or only whitespace
-
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false); // Track submit status
 
   const handleSubmit = async () => {
     if (isSubmitDisabled) return; // Prevent multiple clicks
-  
+
     setIsSubmitDisabled(true); // Disable submit button immediately
-  
+
     const payload = {
       user: user?.user?._id,
       expertiseAndSkills: answers.expertiseAndSkills,
@@ -157,45 +196,50 @@ export const SecondaryQuestionnaire = () => {
       impactAndAchievements: answers.impactAndAchievements,
       industryContextAndInsights: answers.industryContextAndInsights,
     };
-  
+
     try {
-      const response = await axios.post(`${baseURL}/user/secondary-questionaire`, payload, {
-        headers: { "Content-Type": "application/json" },
-      });
-  
+      const response = await axios.post(
+        `${baseURL}/user/secondary-questionaire`,
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
       if (response.status === 200) {
         await handleTopicCreation(user?.user?._id);
         navigate("/topic_unlocked", { replace: true });
-        console.log("Successfully submitted:", response.data);
       } else {
-        console.error("Error submitting questionnaire:", response.data);
         setIsSubmitDisabled(false); // Re-enable button on failure
       }
     } catch (error) {
-      console.error("Error submitting questionnaire:", error);
       setIsSubmitDisabled(false); // Re-enable button on failure
     }
   };
-  
-  
+
   useEffect(() => {
-      const handleKeyDown = (e) => {
-        if (e.key === "Enter" && !e.shiftKey && !isNextDisabled && !isLastQuestion) {
-          e.preventDefault(); // Prevent newline in textarea
-          if (isLastQuestion) {
-            handleSubmit();
-          } else {
-            handleNext();
-          }
+    const handleKeyDown = (e) => {
+      if (
+        e.key === "Enter" &&
+        !e.shiftKey &&
+        !isNextDisabled && // This is now safe to access
+        !isLastQuestion
+      ) {
+        e.preventDefault(); // Prevent newline in textarea
+        if (isLastQuestion) {
+          handleSubmit();
+        } else {
+          handleNext();
         }
-      };
-  
-      window.addEventListener("keydown", handleKeyDown);
-     
-      return () => {
-        window.removeEventListener("keydown", handleKeyDown);
-      };
-    }, [isNextDisabled, isLastQuestion, answers[currentQuestion.number]]);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isNextDisabled, isLastQuestion, answers[currentQuestion.number]]);
 
   return (
     <QuestionnaireLayout>
@@ -208,9 +252,9 @@ export const SecondaryQuestionnaire = () => {
         transition={{ duration: 0.5, ease: "easeInOut" }}
         className="my-[40px]"
       >
-       
-        {/* <div className="lg:w-[40%] md:w-[50%] w-[80%] lg:h-[20vh] h-[40vh] bg-[#D9D9D9] mx-auto lg:mt-[50px] mt-[50px] "></div> */}
-        <div className=" lg:w-[70%] md:w-[70%] w-[90%] mx-auto flex justify-start items-center text-[18px] lg:text-[28px] font-semibold mt-[30px] text-[#8A62F6]">{currentSection.name}</div>
+        <div className=" lg:w-[70%] md:w-[70%] w-[90%] mx-auto flex justify-start items-center text-[18px] lg:text-[28px] font-semibold mt-[30px] text-[#8A62F6]">
+          {currentSection.name}
+        </div>
         <div className="flex flex-row lg:w-[70%] md:w-[70%] w-[90%] mx-auto mt-[74px]">
           <div className="flex justify-start items-start">
             <div className="flex flex-row gap-[1px] text-[#02A6F2] font-sans font-medium text-[20px] lg:text-[36px] items-center justify-center">
@@ -224,13 +268,24 @@ export const SecondaryQuestionnaire = () => {
             </div>
           </div>
           <div className="w-full ml-[10px] lg:ml-[46px]">
-            <div className="text-[18px] lg:text-[32px] text-[#201446] font-medium">{currentQuestion.question}</div>
+            <div className="text-[18px] lg:text-[32px] text-[#201446] font-medium">
+              {currentQuestion.question}
+            </div>
+            {!currentQuestion.mandatory && (
+              <div className="mt-2 bg-orange-500 w-fit">
+                <p className="text-sm">
+                  * Please enter none if no relevant answer available
+                </p>
+              </div>
+            )}
             <div className="mt-[54px]">
               <textarea
                 ref={textareaRef}
                 rows={1}
                 placeholder="Type your answer here..."
-                value={answers[currentSection.section]?.[currentQuestionKey] || ""}
+                value={
+                  answers[currentSection.section]?.[currentQuestionKey] || ""
+                }
                 onChange={handleAnswerChange}
                 className="flex w-full placeholder:text-[13px] lg:placeholder:text-[24px] placeholder:font-normal focus:outline-none text-[16px] lg:text-[24px] placeholder:text-gray-400 border-b-[1px] border-[#878787] pb-2"
               ></textarea>
@@ -246,18 +301,29 @@ export const SecondaryQuestionnaire = () => {
                 >
                   Back
                 </button>
-                
-                <button
-                  onClick={isLastQuestion ? handleSubmit : handleNext}
-                  disabled={isNextDisabled || (isLastQuestion && isSubmitDisabled)}
-                  className={`py-[8px] px-[32px] rounded-[4px] text-white ${
-                    isNextDisabled || (isLastQuestion && isSubmitDisabled) ? "bg-gray-400 cursor-not-allowed" : "bg-[#8A62F6]"
-                  }`}
-                >
-                  {isLastQuestion ? "Submit" : "Next"}
-                </button>
 
-                  
+                {currentQuestion.mandatory ? (
+                  <button
+                    onClick={isLastQuestion ? handleSubmit : handleNext}
+                    disabled={
+                      isNextDisabled || (isLastQuestion && isSubmitDisabled)
+                    }
+                    className={`py-[8px] px-[32px] rounded-[4px] text-white ${
+                      isNextDisabled || (isLastQuestion && isSubmitDisabled)
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-[#8A62F6]"
+                    }`}
+                  >
+                    {isLastQuestion ? "Submit" : "Next"}
+                  </button>
+                ) : (
+                  <button
+                    onClick={isLastQuestion ? handleSubmit : handleNext}
+                    className={`py-[8px] px-[32px] rounded-[4px] text-white bg-[#8A62F6]`}
+                  >
+                    {isLastQuestion ? "Submit" : "Next"}
+                  </button>
+                )}
               </div>
             </div>
           </div>
