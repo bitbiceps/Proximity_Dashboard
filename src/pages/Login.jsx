@@ -44,7 +44,7 @@ function Login() {
           navigate("/",{replace:true})
           return
         }
-        navigate(routes.primary_questionnaire,{replace:true})
+        navigate(routes.loading,{replace:true})
       }
     } catch (error) {
       console.log(error.message)

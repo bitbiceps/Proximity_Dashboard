@@ -346,11 +346,6 @@ const Profile = () => {
                 </select>
               </div>
             </div>
-
-
-            <div className="mt-4 flex w-full justify-center text-lg font-medium text-gray-700">
-              Basic Information
-            </div>
             <div>
               {baseQuestions ? (
                 <>
