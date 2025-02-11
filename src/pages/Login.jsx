@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../redux/slices/authSlice";
+import { loginUser, setUser } from "../redux/slices/authSlice";
 import Auth from "../assets/auth.jpg";
-import lefBg from "../assets/bg-left.png"
-import news from "../assets/news.png"
+import lefBg from "../assets/bg-left.png";
+import news from "../assets/news.png";
 import Google from "../assets/google.jpg";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
-import { cookieAccessKeys } from "../utils";
+import { cookieAccessKeys, routes } from "../utils";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import requests from "../axios/instance";
 
 function Login() {
   const dispatch = useDispatch();
@@ -19,66 +20,70 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 4660);
-  
-      return () => clearTimeout(timer);
-    }, []);
-  
-    // if (isLoading) {
-    //   return <Textanimation />;
-    // }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    dispatch(loginUser({ email, password }));
-  };
-
-  const handleLoginSuccess = useCallback(() => {
-    if (user && user.message === "Login successful") {
-      // Set Access Token in cookies
-      Cookies.set(
-        cookieAccessKeys?.tokens?.accessToken,
-        user.tokens[cookieAccessKeys?.tokens?.accessToken]
-      );
-
-      // Set Refresh Token in cookies
-      Cookies.set(
-        cookieAccessKeys?.tokens?.refreshToken,
-        user.tokens[cookieAccessKeys?.tokens?.refreshToken]
-      );
-
-      toast.success("Login successful!");
-      const primaryQuestions = user?.user?.questionnaire?.basicInformation;
-      const questionsArray = Object.keys(primaryQuestions).map((key) => ({
-        number: parseInt(key),
-        ...primaryQuestions[key],
-      }));
-      const allQuestionsFilled = primaryQuestions[questionsArray.length ].answer.trim().length > 0 
-      console.log("lenght of primary question ", primaryQuestions[questionsArray.length].answer.trim().length , allQuestionsFilled)
-    if (allQuestionsFilled) {
-      navigate("/", {
-        replace: true,
-        
-      });
-    } else {
-      
-      navigate("/loading", { replace: true });
-    }
-    }
-  }, [user, navigate]);
 
   useEffect(() => {
-    handleLoginSuccess();
-    if (error) {
-      toast.error(
-        typeof error === "string" ? error : error.message || "An error occurred"
-      );
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 4660);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await requests.login({ email, password });
+      if (response.status === 200) {
+        toast.success(response.data.message);
+        dispatch(setUser(response.data));
+        Cookies.set(
+          cookieAccessKeys?.tokens?.accessToken,
+          response.data.tokens[cookieAccessKeys?.tokens?.accessToken]
+        );
+        if(response.data.user.questionnaire.basicInformation[1].answer) {
+          navigate("/",{replace:true})
+          return
+        }
+        navigate(routes.primary_questionnaire,{replace:true})
+      }
+    } catch (error) {
+      console.log(error.message)
+      toast.error(error.message);
     }
-  }, [handleLoginSuccess, error]);
+  };
+
+  // const handleLoginSuccess = useCallback(() => {
+  //   if (user && user.message === "Login successful") {
+  //     // Set Access Token in cookies
+
+  //     toast.success("Login successful!");
+  //     const primaryQuestions = user?.user?.questionnaire?.basicInformation;
+  //     const questionsArray = Object.keys(primaryQuestions).map((key) => ({
+  //       number: parseInt(key),
+  //       ...primaryQuestions[key],
+  //     }));
+  //     const allQuestionsFilled = primaryQuestions[questionsArray.length ].answer.trim().length > 0
+  //     console.log("lenght of primary question ", primaryQuestions[questionsArray.length].answer.trim().length , allQuestionsFilled)
+  //   if (allQuestionsFilled) {
+  //     navigate("/", {
+  //       replace: true,
+
+  //     });
+  //   } else {
+
+  //     navigate("/", { replace: true });
+  //   }
+  //   }
+  // }, [user, navigate]);
+
+  // useEffect(() => {
+  //   handleLoginSuccess();
+  //   if (error) {
+  //     toast.error(
+  //       typeof error === "string" ? error : error.message || "An error occurred"
+  //     );
+  //   }
+  // }, [handleLoginSuccess, error]);
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">
@@ -90,9 +95,9 @@ function Login() {
             className="w-full h-full object-cover"
           />
           <img
-          className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
-          src={news}>
-          </img>
+            className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+            src={news}
+          ></img>
         </div>
 
         <div className="flex flex-col w-full md:w-1/2 px-8 md:px-48 py-6 md:py-16 h-full justify-center">

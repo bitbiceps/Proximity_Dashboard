@@ -27,11 +27,22 @@ const addTopic = async (payload) => {
   return await api.post(apiRoutes.create_topic, payload);
 };
 
+const checkAuth = async (payload) => {
+  return await api.post(apiRoutes.check_auth,payload)
+}
+
+const login = async (payload) => {
+  return await api.post(apiRoutes.login,payload)
+}
+
+
 const requests = {
   submitQuestionnaire,
   getTopics,
   addTopic,
   getAllTopic,
+  checkAuth,
+  login
 };
 
 export default requests;

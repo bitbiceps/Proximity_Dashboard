@@ -33,7 +33,6 @@ export const loginUser = createAsyncThunk(
         `${baseURL}/api/auth/login`,
         credentials
       );
-      console.log("logres",response)
       return response.data; // assuming the response contains user data
     } catch (error) {
       return rejectWithValue(error.response?.data || "Login failed");
@@ -44,7 +43,6 @@ export const loginUser = createAsyncThunk(
 export const updatedArticles = createAsyncThunk(
   "auth/updatedArticles",
   async (userId, { rejectWithValue }) => {
-    console.log("djfbhdbfhdbfhdb", userId);
     try {
       const response = await axios.get(`${baseURL}/api/auth/updated/${userId}`);
       console.log("upddddddddddddd", response);
