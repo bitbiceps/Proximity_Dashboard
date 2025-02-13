@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store";
@@ -30,6 +30,8 @@ import { Questionnair } from "./pages/Questionnair";
 import { SecondaryQuestionnaire } from "./pages/SecondaryQuestionnaire";
 import { LoadingPage } from "./pages/LoadingPage";
 import { TextGenerating } from "./pages/TextGenerating";
+import { io } from "socket.io-client";
+import { baseURL } from "./axios/instance";
 
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
@@ -49,6 +51,16 @@ const App = () => {
     routes.loading,
   ].includes(location.pathname);
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
+
+  useEffect(() => {
+    const socket = io(baseURL);
+
+
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   return (
     <Provider store={store}>
       <div className="antialiased flex h-screen">

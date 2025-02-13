@@ -67,7 +67,6 @@ export const Questionnair = () => {
       user: user.user._id, // Add the user ID to the payload
       ...answers, // Include the answers from the state
     };
-    console.log("Payload being sent: ", JSON.stringify(payload));
     
     try {
       // Directly send the payload as the request body
@@ -81,7 +80,6 @@ export const Questionnair = () => {
         }
       );
   
-      console.log("Response:", response.data);
   
       if (response.status === 200) {
        

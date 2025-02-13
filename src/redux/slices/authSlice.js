@@ -12,13 +12,11 @@ export const fetchUser = async (userId) => {
         },
       });
       const dataToTransfer =  response.data.user; // Return the fetched user data
-      console.log("responseeeeeeeeeeeeeeee", dataToTransfer);
       return dataToTransfer;
     } else {
       throw new Error("User ID is required");
     }
   } catch (error) {
-    console.error("Error fetching user:", error);
     throw error; // Re-throw error for external handling
   }
 };
@@ -45,8 +43,6 @@ export const updatedArticles = createAsyncThunk(
   async (userId, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${baseURL}/api/auth/updated/${userId}`);
-      console.log("upddddddddddddd", response);
-      console.log("saveRes", response.data);
 
       return response.data; // assuming the response contains user data
     } catch (error) {
@@ -80,7 +76,6 @@ export const submitRegistration = createAsyncThunk(
         `${baseURL}/api/auth/register`,
         formData
       );
-      console.log("sign", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Registration failed");

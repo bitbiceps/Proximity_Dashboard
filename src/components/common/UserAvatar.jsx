@@ -14,7 +14,7 @@ const UserAvatar = () => {
           alt="Avatar"
         />
       ) : (
-        <div class="relative group">
+        <div className="relative group">
           <FaUser className="size-6 group-hover:hidden" />
           <FaRegUser className="size-6 group-hover:block hidden" />
         </div>

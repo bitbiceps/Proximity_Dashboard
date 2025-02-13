@@ -25,7 +25,6 @@ const GeneratedArticle = () => {
   const currentArticle = useSelector(
     (state) => state.articles.currentSelectedArticle
   );
-  console.log("articleGenerated", articleGenerate?._id, currentArticle?._id);
   useEffect(() => {
     if (
       articleUpdate?.message ===
@@ -36,13 +35,10 @@ const GeneratedArticle = () => {
   }, [articleUpdate]);
 
   const handleUpdate = (articleId) => {
-    console.log("adsssssss", articleId);
     dispatch(updateRequestArticle({ articleId }));
   };
-  console.log("showModal", showModal);
   const handleVerify = () => {
     setShowModal(true);
-    console.log("reseeeeeeee");
   };
 
   //image update of article 
@@ -85,7 +81,6 @@ const GeneratedArticle = () => {
     formData.append("file", selectedFile);
     formData.append("article", articleGenerate?._id);
   
-    console.log("FormData before upload:", formData, selectedFile, articleGenerate?._id);
   
     try {
       const response = await axios.post(
@@ -99,7 +94,6 @@ const GeneratedArticle = () => {
       );
   
       setUploadMessage(response.data.message); // Display success message
-      console.log("Response from file upload:", response);
       if(response){
         toast.success("Article pic uploaded!!",{
           theme: "light",
@@ -108,7 +102,6 @@ const GeneratedArticle = () => {
       }
     } catch (error) {
       setUploadMessage("Error uploading file: " + (error.response?.data || error.message));
-      console.log("Error in file upload:", error);
     }
   };
   

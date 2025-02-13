@@ -3,16 +3,11 @@ import RootLayout from "../layouts/RootLayout";
 import TitleSuggestions from "./TitleSuggestions";
 
 function PopupSearch() {
-  const [inputValue, setInputValue] = useState("");
   const titles = [
     "Lorem ipsum heading",
     "Lorem ipsum heading",
     "Lorem ipsum heading",
   ];
-
-  const handleSubmit = () => {
-    console.log("Submitted: ", inputValue);
-  };
 
   return (
     <RootLayout>

@@ -32,9 +32,9 @@ const Header = ({userData}) => {
   ];
   const [selected, setSelected] = useState(langOptions[0]);
   const response = useSelector((state) => state.auth);
-  const handleCountrySelect = (country) => {
-    console.log("Selected Country:", country.name);
-  };
+  // const handleCountrySelect = (country) => {
+  //   console.log("Selected Country:", country.name);
+  // };
 
    const logout = () => {
       Cookies.remove(cookieAccessKeys?.tokens?.accessToken);

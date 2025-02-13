@@ -17,16 +17,13 @@ const TermsCondition = () => {
   const navigate = useNavigate();
   const { articleVerify, articleUpdate, loading, error, articleGenerate } =
     useSelector((state) => state.generated);
-  // console.log("r", articleVerify.message);
-  console.log("articleGenerate",articleGenerate,articleVerify)
-  const articles = useSelector(({ articles: { articles } }) => articles);
-  const currentArticle = useSelector(
-    (state) => state.articles.currentSelectedArticle
-  );
+  // const articles = useSelector(({ articles: { articles } }) => articles);
+  // const currentArticle = useSelector(
+  //   (state) => state.articles.currentSelectedArticle
+  // );
 
 
   const handleAgree = (articleId) => {
-    console.log("artaa", articleId);
     if (isChecked) {
       dispatch(verifyRequestArticle({ articleId }));
       if (articleVerify?.message === "Article submitted for review") {
@@ -35,7 +32,6 @@ const TermsCondition = () => {
       }
       dispatch(resetState());
 
-      console.log("staterest");
     } else {
       alert("Please accept the terms and conditions to proceed.");
     }
@@ -98,7 +94,7 @@ const TermsCondition = () => {
                 : "bg-gray-400 cursor-not-allowed"
             }`}
             onClick={() => {
-              console.log(handleAgree(articleGenerate._id))
+              handleAgree(articleGenerate._id)
             }}
             disabled={!isChecked}
           >

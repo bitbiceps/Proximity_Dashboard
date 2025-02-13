@@ -20,15 +20,14 @@ const topicsSlice = createSlice({
       state.topics = action.payload;
     },
     setCurrentSelectedTopic: (state, action) => {
-
       state.currentSelectedTopic = action.payload;
-      console.log("selected topic id " ,state.currentSelectedTopic)
     },
   },
 });
 
 // Export the actions
-export const { setTopics, setCurrentSelectedTopic, resetStateTopic } = topicsSlice.actions;
+export const { setTopics, setCurrentSelectedTopic, resetStateTopic } =
+  topicsSlice.actions;
 
 // Export the reducer
 export default topicsSlice.reducer;

@@ -8,30 +8,25 @@ export const ArticlesCard = ({
   content,
   articleStatus,
   onClick,
-  data
+  data,
 }) => {
   const [articleImage, setArticleImage] = useState();
   const isDisabled =
     articleStatus === "review" || articleStatus === "completed";
-    console.log("dataaaa of the aritchelleeleel", data.articleId)
-    const fetchArticle = async () => {
-      try {
-        const response = await axios.post(
-          `${baseURL}/article/get`,
-          {
-            "articleId": data.articleId
-          }
-        )
-        const imageUrl = response.data.article.profileImage.filepath ;
-        console.log("aritcle image", imageUrl       )
-        setArticleImage(imageUrl)
-      }catch(error){
-        console.log("error in fetching article data", error)
-      }
+  const fetchArticle = async () => {
+    try {
+      const response = await axios.post(`${baseURL}/article/get`, {
+        articleId: data.articleId,
+      });
+      const imageUrl = response.data.article.profileImage.filepath;
+      setArticleImage(imageUrl);
+    } catch (error) {
+      throw error;
     }
-    useEffect(() => {
-      fetchArticle()
-    },[])
+  };
+  useEffect(() => {
+    fetchArticle();
+  }, []);
   return (
     <div
       onClick={isDisabled ? null : onClick} // Disable click if in review
@@ -44,7 +39,11 @@ export const ArticlesCard = ({
       } w-[300px] rounded-[12px]`}
     >
       <div>
-        <img src={articleImage ? articleImage : image} alt="Article" className="w-full h-[250px] object-cover rounded-md" />
+        <img
+          src={articleImage ? articleImage : image}
+          alt="Article"
+          className="w-full h-[250px] object-cover rounded-md"
+        />
       </div>
       <div
         className={`mt-[14px] ${

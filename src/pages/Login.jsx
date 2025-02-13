@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, setUser } from "../redux/slices/authSlice";
-import Auth from "../assets/auth.jpg";
+import {  setUser } from "../redux/slices/authSlice";
 import lefBg from "../assets/bg-left.png";
 import news from "../assets/news.png";
 import Google from "../assets/google.jpg";
@@ -47,43 +46,9 @@ function Login() {
         navigate(routes.loading,{replace:true})
       }
     } catch (error) {
-      console.log(error.message)
       toast.error(error.message);
     }
   };
-
-  // const handleLoginSuccess = useCallback(() => {
-  //   if (user && user.message === "Login successful") {
-  //     // Set Access Token in cookies
-
-  //     toast.success("Login successful!");
-  //     const primaryQuestions = user?.user?.questionnaire?.basicInformation;
-  //     const questionsArray = Object.keys(primaryQuestions).map((key) => ({
-  //       number: parseInt(key),
-  //       ...primaryQuestions[key],
-  //     }));
-  //     const allQuestionsFilled = primaryQuestions[questionsArray.length ].answer.trim().length > 0
-  //     console.log("lenght of primary question ", primaryQuestions[questionsArray.length].answer.trim().length , allQuestionsFilled)
-  //   if (allQuestionsFilled) {
-  //     navigate("/", {
-  //       replace: true,
-
-  //     });
-  //   } else {
-
-  //     navigate("/", { replace: true });
-  //   }
-  //   }
-  // }, [user, navigate]);
-
-  // useEffect(() => {
-  //   handleLoginSuccess();
-  //   if (error) {
-  //     toast.error(
-  //       typeof error === "string" ? error : error.message || "An error occurred"
-  //     );
-  //   }
-  // }, [handleLoginSuccess, error]);
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-50">

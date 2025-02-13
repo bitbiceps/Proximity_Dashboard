@@ -172,7 +172,6 @@ const Profile = () => {
             jobTitle: basicInformation[2]?.answer || "",
             areasOfExpertise: basicInformation[3]?.answer || "",
           });
-          console.log("basivcccccc questions sss", baseQuestions)
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
@@ -216,7 +215,6 @@ const Profile = () => {
     formData.append("file", selectedFile);
     formData.append("user", userId);
   
-    console.log("FormData before upload:", formData, selectedFile, userId);
   
     try {
       const response = await axios.post(
@@ -230,7 +228,6 @@ const Profile = () => {
       );
   
       setUploadMessage(response.data.message); // Display success message
-      console.log("Response from file upload:", response);
       if(response){
         toast.success("Profile pic uploaded!!",{
           theme: "light",
@@ -239,7 +236,6 @@ const Profile = () => {
       }
     } catch (error) {
       setUploadMessage("Error uploading file: " + (error.response?.data || error.message));
-      console.log("Error in file upload:", error);
     }
   };
   

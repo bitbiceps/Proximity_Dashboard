@@ -51,7 +51,6 @@ const PaymentForm = ({ amount, userId, planId }) => {
         createPaymentIntent({ userId, amount, planId })
       );
       const clientSecret = result.payload?.clientSecret;
-      console.log("cliccccccc", clientSecret, result);
       // Confirm the payment with the retrieved client secret
       const { error, paymentIntent } = await stripe.confirmCardPayment(
         clientSecret,
@@ -61,7 +60,6 @@ const PaymentForm = ({ amount, userId, planId }) => {
           },
         }
       );
-      console.log("paymentIntent", paymentIntent);
       if (error) {
         setPaymentStatus(`Payment failed: ${error.message}`);
       } else if (paymentIntent.status === "succeeded") {
@@ -200,12 +198,10 @@ export const PricingCard = ({
   excluded,
   active,
 }) => {
-  console.log("id", "category", id);
   const [showModal, setShowModal] = useState(false); // State to control modal visibility
   const { user, loading, error, registerUser } = useSelector(
     (state) => state.auth
   );
-  console.log("userDataaass", user);
   const handleOpenModal = () => setShowModal(true); // Open the modal
   const handleCloseModal = () => setShowModal(false); // Close the modal
   return (

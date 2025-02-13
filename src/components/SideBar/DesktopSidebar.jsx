@@ -36,9 +36,7 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
         const userDataToSend = response.data.user;
         setUserData(userDataToSend);
       }
-      // console.log("userrrrrrrrrrrr from sidebarrrrrrrrrr", userDataToSend);
     } catch (error) {
-      console.log("error", error);
     }
   };
   useEffect(() => {
@@ -58,11 +56,6 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
     userData?.questionnaire?.industryContextAndInsights[
       questionsArray.length
     ]?.answer?.trim().length;
-  console.log("lastQuestion frommmmm desto[p side barrrrrrr ", isLastQuestion, questionsArray?.length, topics.length, articles);
-  const finalData =
-    user?.user?.user?.articles?.length > 0
-      ? user?.user?.user?.articles
-      : articles;
   const navItems1 = [
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
     { name: sideBarTabs.package, to: routes.package, img: packageIcon },

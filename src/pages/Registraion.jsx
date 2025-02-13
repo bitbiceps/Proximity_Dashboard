@@ -4,7 +4,6 @@ import {
   registerResetState,
   submitRegistration,
 } from "../redux/slices/authSlice";
-import Auth from "../assets/auth.jpg";
 import lefBg from "../assets/bg-left.png";
 import news from "../assets/news.png";
 import Google from "../assets/google.jpg";
@@ -43,7 +42,6 @@ function Registration() {
     "+44": { code: "+44", flag: India },
     "+61": { code: "+61", flag: USFlag },
   };
-  console.log("response", response);
   const handleCountryChange = (code) => {
     setCountryCode(code);
     setIsDropdownOpen(false);
@@ -97,7 +95,6 @@ function Registration() {
       response?.registerUser &&
       response?.registerUser?.message === "User registered successfully"
     ) {
-      console.log("firsts", response?.user?.message);
       toast.success("Registration successfull redirecting...");
       navigate("/login", { replace: true });
       dispatch(registerResetState());

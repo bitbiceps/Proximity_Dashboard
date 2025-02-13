@@ -73,7 +73,6 @@ const Package = () => {
   const { user, loading, error, registerUser } = useSelector(
     (state) => state.auth
   );
-  // console.log("userssssssss",user.user.planId)
   const cardId = user.user.paymentStatus === true ? user.user.planId : null;
   return (
     <RootLayout2>

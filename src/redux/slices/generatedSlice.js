@@ -5,7 +5,6 @@ import { article } from "framer-motion/client";
 export const updateRequestArticle = createAsyncThunk(
   "generated/updateRequestArticle",
   async ({ articleId }, { rejectWithValue }) => {
-    console.log("userIIdsdsdsII", { articleId });
     try {
       const response = await fetch(`${baseURL}/article/request-update`, {
         method: "PUT",
@@ -18,7 +17,6 @@ export const updateRequestArticle = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log("data", data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -28,7 +26,6 @@ export const updateRequestArticle = createAsyncThunk(
 export const verifyRequestArticle = createAsyncThunk(
   "generated/verifyRequestArticle",
   async ({ articleId }, { rejectWithValue }) => {
-    console.log("userIIdsdsdsII", { articleId });
     try {
       const response = await fetch(`${baseURL}/article/submit`, {
         method: "PUT",
@@ -41,7 +38,6 @@ export const verifyRequestArticle = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log("dataverify", data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -51,7 +47,6 @@ export const verifyRequestArticle = createAsyncThunk(
 export const generateArticles = createAsyncThunk(
   "generated/generateArticles",
   async ({_id,userId}, { rejectWithValue }) => {
-    console.log("topicIddd", { _id, userId});
     try {
       const response = await fetch(`${baseURL}/article/create-article`, {
         method: "POST",
@@ -60,7 +55,6 @@ export const generateArticles = createAsyncThunk(
       });
 
       const data = await response.json();
-      console.log("generateArticles", data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -79,7 +73,6 @@ export const getAllTopics = createAsyncThunk(
       });
 
       const data = await response.json();
-      console.log("generateArticles", data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -118,7 +111,6 @@ const generatedSlice = createSlice({
       })
       .addCase(updateRequestArticle.fulfilled, (state, action) => {
         state.loading = false;
-        console.log("acttttt", action.payload);
         state.articleUpdate = action.payload;
       })
       .addCase(updateRequestArticle.rejected, (state, action) => {
@@ -131,7 +123,6 @@ const generatedSlice = createSlice({
       })
       .addCase(verifyRequestArticle.fulfilled, (state, action) => {
         state.loading = false;
-        console.log("verify", action.payload);
         state.articleVerify = action.payload;
         state.specificArticle = action.payload;
       })
@@ -145,12 +136,10 @@ const generatedSlice = createSlice({
       })
       .addCase(generateArticles.fulfilled, (state, action) => {
         state.articleloading = false;
-        console.log("genertaed", action.payload);
         state.articleGenerate = action.payload;
       })
 
       .addCase(getAllTopics.fulfilled, (state, action) => {
-        console.log("getAll Topics", action.payload);
         state.allTopics = action.payload;
       });
   },

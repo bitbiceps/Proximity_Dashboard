@@ -11,36 +11,20 @@ const ArticlesUnlocked = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
-    specificArticle,
-    articleVerify,
-    articleUpdate,
-    loading,
-    error,
-    articleGenerate,
+    // specificArticle,
+    // articleVerify,
+    // articleUpdate,
+    // loading,
+    // error,
+    // articleGenerate,
     allTopics,
   } = useSelector((state) => state.generated);
-  // const [submittedTopics , setSubmitTopics] = useState()
-  //   //   useSelector((state) => state.generated);
-  // const { user } = useSelector((state) => state.auth);
-  // const {}
 
   // Filter topics based on the conditions
   const submittedTopics = allTopics?.data?.filter(
     (topic) => topic.status === "completed" && topic.finalTopic
   );
-  // console.log("unlocked", user.user, "uuuuuuu", updatedArticles);
-  // const final =
-  //   updatedArticles?.articles?.articles?.length > 0
-  //     ? updatedArticles.articles.articles
-  //     : user?.user?.articles?.length > 0
-  //     ? user?.user?.articles
-  //     : articles;
-  // console.log("final", final);
-  // already commented
-  // const { specificArticle, articleVerify, articleUpdate, loading, error } =
-  //   useSelector((state) => state.generated);
-  // console.log("articles", specificArticle);
-  console.log("topiccccccc", submittedTopics, allTopics);
+
   // Effect to reload page when switching tabs
     useEffect(() => {
       const handleVisibilityChange = () => {

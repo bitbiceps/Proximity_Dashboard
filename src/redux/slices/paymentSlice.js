@@ -4,7 +4,6 @@ import { baseURL } from "../../axios/instance";
 export const createPaymentIntent = createAsyncThunk(
   "payment/createPaymentIntent",
   async ({ userId, amount, planId }, { rejectWithValue }) => {
-    console.log("userIIII", userId, amount);
     try {
       const response = await fetch(`${baseURL}/pay/create-payment-intent`, {
         method: "POST",
@@ -17,7 +16,6 @@ export const createPaymentIntent = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log("data", data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);

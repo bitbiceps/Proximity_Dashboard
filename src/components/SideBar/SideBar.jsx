@@ -34,7 +34,6 @@ const Sidebar = () => {
 
       // Directly use the fetched data without restructuring
       setTopicsData(data.data); // Set the raw data directly
-      console.log("toppiccccccccdataaaaaaaaaaa ", data.data)
       // Store raw topic data in Redux as well (if needed)
       // dispatch(setTopics(data.data));
     } catch (err) {

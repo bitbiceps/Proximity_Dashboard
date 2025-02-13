@@ -4,7 +4,7 @@ import { IoIosNotifications, IoMdNotificationsOutline } from "react-icons/io";
 const Notifications = () => {
   return (
     <div className="relative inline-block">
-      <div class="relative group cursor-pointer ">
+      <div className="relative group cursor-pointer ">
         <IoIosNotifications className="size-9 group-hover:hidden" />
         <IoMdNotificationsOutline className="size-9 group-hover:block hidden" />
       </div>

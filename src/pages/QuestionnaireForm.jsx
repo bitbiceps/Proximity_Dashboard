@@ -205,22 +205,15 @@ const QuestionnaireForm = () => {
 
     setLoading(true);
     try {
-      console.log("Submitting questionnaire data:", {
-        ...answers,
-        userId,
-        numberOfArticles: 2,
-      });
       const { data } = await requests.submitQuestionnaire({
         ...answers,
         userId,
         numberOfArticles: 2,
       });
-      console.log("Received data:", data);
       if (data) {
         dispatch(setArticles(data?.articles));
         toast.success(data?.message);
         navigate(routes.topic_unlocked, { replace: true });
-        console.log("data from questionare ", data)
       }
     } catch (error) {
       toast.error(error.message);

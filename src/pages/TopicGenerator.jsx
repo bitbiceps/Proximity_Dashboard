@@ -1,61 +1,29 @@
 import React, { useCallback, useEffect, useState } from "react";
 import RootLayout from "../layouts/RootLayout";
 import { useSelector } from "react-redux";
-import requests, { baseURL } from "../axios/instance";
+import { baseURL } from "../axios/instance";
 import { toast } from "react-toastify";
 import Loading from "../components/common/Loading";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 const TopicGenerator = ({ topicId }) => {
-  const article = useSelector(
-    ({ articles: { currentSelectedArticle } }) => currentSelectedArticle
-  );
   const currentSelectedTopic = useSelector(
     ({ topics: { currentSelectedTopic } }) => currentSelectedTopic
   );
-  console.log("selected id ", currentSelectedTopic)
-  const articles = useSelector(({ articles: { articles } }) => articles);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector(
-    (state) => state.auth
-  );
-
-
+  const { user } = useSelector((state) => state.auth);
 
   const [topics, setTopics] = useState([]);
   const [parentId, setParentId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const [suggestion, setSuggestion] = useState(""); // State for modal input
 
-  //get topic if no topic then questionare 
-  const fetchGeneratedTopic = useCallback(async () => {
-    try {
-      const url = `${baseURL}/topic?userId=${user.userId}`; // Use the full backend URL
-      console.log("Request URL:", url);
-
-      const { data } = await axios.get(url);
-
-      console.log("Fetched topics:", data);
-
-    } catch (err) {
-      console.error("Error fetching topics:", err);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    fetchGeneratedTopic();
-  }, [fetchGeneratedTopic]);
-  //fetch topic 
   const fetchTopicById = useCallback(async () => {
     try {
       const url = `${baseURL}/topic/get?topicId=${currentSelectedTopic}`; // Use the full backend URL
-      console.log("article to be fetiched :", currentSelectedTopic);
 
       const { data } = await axios.get(url);
 
-      console.log("Fetched topics based on aritcles :", data.topic.topics);
       setParentId(data.topic._id);
       if (Array.isArray(data?.topic?.topics)) {
         setTopics(data?.topic?.topics);
@@ -71,28 +39,6 @@ const TopicGenerator = ({ topicId }) => {
     fetchTopicById();
   }, [fetchTopicById]);
 
-  // const fetchTopics = useCallback(async () => {
-  //   try {
-  //     console.log("fetch", article._id)
-  //     console.log("topics ", article.topics)
-  //     const { data } = await requests.getTopics({ params: { topicId: article._id } });
-  //     console.log("article._id:", article._id);
-  //     console.log("data for topic generation", data)
-  //     setParentId(data.topic._id);
-  //     if (Array.isArray(data?.topic?.topics)) {
-  //       setTopics(data?.topic?.topics);
-  //     } else {
-  //       toast.error("Topics are not available or response is malformed");
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message || "Something went wrong!");
-  //   }
-  // }, [article]);
-
-  // useEffect(() => {
-  //   fetchTopics();
-  // }, [fetchTopics]);
-
   const handleVerify = async (topicId, index) => {
     try {
       const response = await axios.put(`${baseURL}/topic/request-verify`, {
@@ -104,26 +50,23 @@ const TopicGenerator = ({ topicId }) => {
         updatedTopics[index].verifyRequested = true;
         setTopics(updatedTopics);
       }
-      console.log("verify", response.data);
     } catch (error) {
       console.error("Error verifying topic:", error);
     }
   };
 
   const handleUpdate = async (topicId, index) => {
-    console.log(topics)
-    console.log("Inside udpate")
     try {
-      const response = await axios.put(
-        `${baseURL}/topic/request-update`,
-        { topicId, index }
-      );
+      const response = await axios.put(`${baseURL}/topic/request-update`, {
+        topicId,
+        index,
+      });
       if (response.status === 200) {
         setTopics(response?.data?.data?.topics);
-        toast.success("Topic updated successfuly")
+        toast.success("Topic updated successfuly");
       }
     } catch (error) {
-      toast.error("You can only update once")
+      toast.error("You can only update once");
       console.error("Error verifying topic:", error);
     }
   };
@@ -133,7 +76,6 @@ const TopicGenerator = ({ topicId }) => {
       const response = await axios.put(`${baseURL}/topic/submit`, {
         _id,
       });
-      console.log("response", response);
       if (response.data.message === "Topic submitted successfully") {
         navigate("/topic_unlocked");
       }
@@ -144,13 +86,10 @@ const TopicGenerator = ({ topicId }) => {
 
   const handleSuggestionSubmit = async (topicId) => {
     if (suggestion.trim()) {
-      const response = await axios.put(
-        `${baseURL}/topic/add-suggestion`,
-        {
-          topicId,
-          suggestion,
-        }
-      );
+      const response = await axios.put(`${baseURL}/topic/add-suggestion`, {
+        topicId,
+        suggestion,
+      });
       // toast.success("Suggestion submitted successfully!");
       setSuggestion(""); // Clear the input
 
@@ -159,7 +98,6 @@ const TopicGenerator = ({ topicId }) => {
       if (response.data.message == "Suggestion updated successfully") {
         toast.success("Suggestion submitted successfully!");
       }
-      console.log("ress", response.data);
     } else {
       toast.error("Please enter a suggestion.");
     }
@@ -206,10 +144,11 @@ const TopicGenerator = ({ topicId }) => {
                   <div className="space-x-2">
                     <button
                       onClick={() => handleVerify(title._id, index)}
-                      className={`px-6 py-2 text-sm font-medium rounded-sm ${title.verifyRequested
+                      className={`px-6 py-2 text-sm font-medium rounded-sm ${
+                        title.verifyRequested
                           ? "bg-green-500 text-white"
                           : "bg-[#4D49F6] text-white"
-                        }`}
+                      }`}
                     >
                       {title.verifyRequested ? "Verified" : "Verify"}
                     </button>
@@ -261,7 +200,6 @@ const TopicGenerator = ({ topicId }) => {
               className="w-full h-[80%]  p-2 border border-gray-300 focus:outline-none bg-[#4D49F60F] border-dashed rounded-md"
             ></textarea>
             <div className="mt-4 flex justify-center w-full space-x-4">
-
               {/* <button
                 onClick={() => handleSuggestionSubmit(parentId)}
                 className="px-[40px] py-[8px] bg-[#4D49F6]  text-white rounded-lg"
@@ -269,14 +207,12 @@ const TopicGenerator = ({ topicId }) => {
                 SUBMIT
               </button> */}
 
-
-              <button onClick={() => handleSuggestionSubmit(parentId)} className="inline-flex h-12 hover:animate-shimmer items-center justify-center rounded-md px-[35px] bg-[linear-gradient(110deg,#4D49F6,45%,#4D49F690,55%,#4D49F6)] bg-[length:250%_100%] font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+              <button
+                onClick={() => handleSuggestionSubmit(parentId)}
+                className="inline-flex h-12 hover:animate-shimmer items-center justify-center rounded-md px-[35px] bg-[linear-gradient(110deg,#4D49F6,45%,#4D49F690,55%,#4D49F6)] bg-[length:250%_100%] font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+              >
                 SUBMIT
               </button>
-
-
-
-
             </div>
           </div>
         </div>

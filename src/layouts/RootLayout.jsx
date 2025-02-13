@@ -24,28 +24,23 @@ const RootLayout = ({ children }) => {
         );
         const userDataToSend = response.data.user;
 
-        console.log("userrrrrrrrr frommmm rooot", userDataToSend.profileImage)
         setUserData(userDataToSend)
         // setUserData(userDataToSend);
         const primaryQuestions = userDataToSend?.questionnaire?.basicInformation;
-        console.log("klsdjflskdfsjlkfj ", primaryQuestions, userDataToSend, userDataToSend?.user?.user)
         const questionsArray = Object.keys(primaryQuestions).map((key) => ({
           number: parseInt(key),
           ...primaryQuestions[key],
         }));
         const allQuestionsFilled = primaryQuestions[questionsArray.length].answer.trim().length > 0
-        console.log("lenght of primary question ", primaryQuestions[questionsArray.length].answer.trim().length, allQuestionsFilled)
         if (!allQuestionsFilled) {
           navigate("/primary-questionnaire", { replace: true });
         }
       }
-      // console.log("userrrrrrrrrrrr from sidebarrrrrrrrrr", userDataToSend);
     } catch (error) {
       console.log("error", error);
     }
   };
 
-  console.log(user.user.user._id, "userrrrrrrrrrrrrrrrrfrommmmmmmmmmmmm")
   // check again 
   useEffect(() => {
     fetchUser(user?.user?.user?._id)
@@ -53,7 +48,6 @@ const RootLayout = ({ children }) => {
   const handleRoute = () => {
     navigate('/package');
   };
-  console.log("user [ayment ", user?.user?.user?.paymentStatus)
 
 
   return (
