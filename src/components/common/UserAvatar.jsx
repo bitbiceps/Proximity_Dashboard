@@ -1,22 +1,24 @@
 import React from "react";
 import { CiCircleChevDown } from "react-icons/ci";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaRegUser } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 const UserAvatar = () => {
   const user = useSelector((state) => state?.auth?.user?.user);
-  console.log(user, "From Avatar");
   return (
     <div className="hidden sm:flex items-center justify-center w-fit h-fit gap-2">
-      {/* {user?.profileImage?.filepath ? (
+      {user?.profileImage?.filepath ? (
         <img
           className="w-[50px] h-[50px] object-contain rounded-full"
           src={user?.profileImage?.filepath}
-          alt="Aatar"
+          alt="Avatar"
         />
-      ) : ( */}
-        <FaUser />
-      {/* // )} */}
+      ) : (
+        <div class="relative group">
+          <FaUser className="size-6 group-hover:hidden" />
+          <FaRegUser className="size-6 group-hover:block hidden" />
+        </div>
+      )}
       <div>
         {user.fullName && (
           <p className="text-[16px] font-semibold">

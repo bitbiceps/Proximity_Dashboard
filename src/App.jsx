@@ -36,15 +36,18 @@ const stripePromise = loadStripe(
 ); // Replace with your Stripe publishable key
 
 const App = () => {
-  
   const location = useLocation();
   const validRoutes = Object.values(routes); // Extract the valid route paths from the routes object
   const isValidRoute = validRoutes.includes(location.pathname); // Check if the current location matches any of the valid routes
 
   // Determine if we should show the Sidebar (exclude login and registration routes)
-  const isNoSidebar = [routes.login, routes.registration, routes.primary_questionnaire, routes.secondary_questionnaire, routes.loading].includes(
-    location.pathname
-  );
+  const isNoSidebar = [
+    routes.login,
+    routes.registration,
+    routes.primary_questionnaire,
+    routes.secondary_questionnaire,
+    routes.loading,
+  ].includes(location.pathname);
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
   return (
     <Provider store={store}>
@@ -58,10 +61,10 @@ const App = () => {
           <Routes>
             {/* Public Routes */}
             <Route path={routes.login} Component={Login} />
-            <Route path={routes.registration} Component={Registration } />
+            <Route path={routes.registration} Component={Registration} />
 
             {/* Protected Routes */}
-            
+
             <Route
               path={routes.root}
               element={<ProtectedRoute Component={Dashboard} />}
