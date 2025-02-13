@@ -17,10 +17,10 @@ export const routes = {
   title_suggestions: "/title_suggestions",
   generated_article: "/generated_article",
   popup_search: "/popup_search",
-  primary_questionnaire: '/primary-questionnaire',
-  secondary_questionnaire: '/secondary-questionnaire',
+  primary_questionnaire: "/primary-questionnaire",
+  secondary_questionnaire: "/secondary-questionnaire",
   loading: "/loading",
-  text: '/text',
+  text: "/text",
   // payment:"/payment"
 };
 
@@ -31,7 +31,7 @@ export const sideBarTabs = {
   articleWriter: "Article Writer",
   profile: "Profile",
   logout: "Logout",
-  articles_unlocked:"Articles Unlocked"
+  articles_unlocked: "Articles Unlocked",
 };
 
 export const cookieAccessKeys = {
@@ -41,3 +41,6 @@ export const cookieAccessKeys = {
   },
 };
 
+export const socketEvents = {
+  TEST__BROADCAST: "TEST__BROADCAST",
+};

@@ -9,7 +9,7 @@ import TopicGenerator from "./pages/TopicGenerator";
 import ArticleGenerator from "./pages/ArticleGenerator";
 import Login from "./pages/Login";
 import Registration from "./pages/Registraion";
-import { routes } from "./utils";
+import { routes, socketEvents } from "./utils";
 import { Pricing } from "./pages/Pricing";
 import Profile from "./pages/Profile";
 import ErrorPage from "./pages/ErrorPage";
@@ -21,8 +21,6 @@ import GeneratedArticle from "./pages/GeneratedArticle";
 import PRServices from "./pages/PRServices";
 import PopupSearch from "./pages/PopupSearch";
 import ProtectedRoute from "./components/common/ProtectedRoutes";
-// import PaymentForm from "./pages/PaymentForm";
-// import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { ToastContainer } from "react-toastify";
 import TopicUnlocked from "./pages/TopicUnlocked";
@@ -55,13 +53,18 @@ const App = () => {
   useEffect(() => {
     const socket = io(baseURL);
 
+    // Listen for the broadcast notification from the server
+    socket.on(socketEvents.TEST__BROADCAST, (data) => {
+      console.log(data.message); // Do something with the message, e.g., show notification
+    });
 
-
+    // Cleanup by disconnecting the socket when the component unmounts
     return () => {
       socket.disconnect();
     };
   }, []);
-  return (
+
+return (
     <Provider store={store}>
       <div className="antialiased flex h-screen">
         {!isNoSidebar && !isErrorRoute && (
