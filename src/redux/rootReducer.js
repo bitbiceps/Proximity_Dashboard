@@ -4,7 +4,8 @@ import authReducer from "./slices/authSlice";
 import paymentReducer from "./slices/paymentSlice";
 import articleReducer from "./slices/articleSlice";
 import generatedReducer from "./slices/generatedSlice";
-import topicReducer from "./slices/topicSlice"
+import topicReducer from "./slices/topicSlice";
+import notificationsReducer from "./slices/notificationSlice";
 const rootReducer = combineReducers({
   sidebar: sidebarReducer,
   auth: authReducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   articles: articleReducer,
   generated: generatedReducer,
   topics: topicReducer,
+  notifications: notificationsReducer,
 });
 
 export default rootReducer;

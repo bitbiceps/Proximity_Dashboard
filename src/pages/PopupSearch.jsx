@@ -54,7 +54,7 @@ function PopupSearch() {
             ))}
           </div>
 
-          <div className="flex justify-between items-center mt-6 px-40 mt-16">
+          <div className="flex justify-between items-center mt-6 px-40">
             <button className="px-4 py-2  border border-[#00CDE2] rounded-lg hover:bg-blue-50">
               Have Another Suggestion
             </button>

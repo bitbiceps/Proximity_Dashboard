@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import store from "./redux/store";
 import Sidebar from "./components/SideBar/SideBar";
 import Dashboard from "./pages/Dashboard";
@@ -29,7 +29,9 @@ import { SecondaryQuestionnaire } from "./pages/SecondaryQuestionnaire";
 import { LoadingPage } from "./pages/LoadingPage";
 import { TextGenerating } from "./pages/TextGenerating";
 import { io } from "socket.io-client";
+import { addNotification } from "./redux/slices/notificationSlice";
 import { baseURL } from "./axios/instance";
+
 
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
@@ -49,23 +51,25 @@ const App = () => {
     routes.loading,
   ].includes(location.pathname);
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
+  const dispatch = useDispatch()
 
-  useEffect(() => {
-    const socket = io(baseURL);
 
-    // Listen for the broadcast notification from the server
-    socket.on(socketEvents.TEST__BROADCAST, (data) => {
-      console.log(data.message); // Do something with the message, e.g., show notification
-    });
 
-    // Cleanup by disconnecting the socket when the component unmounts
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
-return (
-    <Provider store={store}>
+    useEffect(() => {
+      const socket = io(baseURL);
+  
+      // Listen for the broadcast notification from the server
+      socket.on(socketEvents.TEST__BROADCAST, (data) => {
+        console.log(data.message,"SOCKET")
+        dispatch(addNotification(data))
+      });
+  
+      // Cleanup by disconnecting the socket when the component unmounts
+      return () => {
+        socket.disconnect();
+      };
+    }, []);
+  return (
       <div className="antialiased flex h-screen">
         {!isNoSidebar && !isErrorRoute && (
           <div className="relative w-fit h-screen">
@@ -192,7 +196,7 @@ return (
         </main>
         <ToastContainer />
       </div>
-    </Provider>
+    
   );
 };
 
