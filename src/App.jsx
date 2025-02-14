@@ -31,6 +31,7 @@ import { TextGenerating } from "./pages/TextGenerating";
 import { io } from "socket.io-client";
 import { addNotification } from "./redux/slices/notificationSlice";
 import { baseURL } from "./axios/instance";
+import EmailVerification from "./pages/EmailVerification";
 
 
 const stripePromise = loadStripe(
@@ -99,6 +100,10 @@ const App = () => {
             <Route
               path={routes.loading}
               element={<ProtectedRoute Component={LoadingPage} />}
+            />
+            <Route
+              path={routes.email_verfication}
+              element={<EmailVerification/>}
             />
             <Route
               path={routes.secondary_questionnaire}

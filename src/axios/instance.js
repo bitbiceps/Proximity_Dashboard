@@ -28,13 +28,16 @@ const addTopic = async (payload) => {
 };
 
 const checkAuth = async (payload) => {
-  return await api.post(apiRoutes.check_auth,payload)
-}
+  return await api.post(apiRoutes.check_auth, payload);
+};
 
 const login = async (payload) => {
-  return await api.post(apiRoutes.login,payload)
-}
+  return await api.post(apiRoutes.login, payload);
+};
 
+const verifyUserRegistration = async (payload) => {
+  return await api.get(apiRoutes.email_verify(payload));
+};
 
 const requests = {
   submitQuestionnaire,
@@ -42,7 +45,8 @@ const requests = {
   addTopic,
   getAllTopic,
   checkAuth,
-  login
+  login,
+  verifyUserRegistration,
 };
 
 export default requests;

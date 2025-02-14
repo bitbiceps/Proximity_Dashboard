@@ -21,6 +21,7 @@ export const routes = {
   secondary_questionnaire: "/secondary-questionnaire",
   loading: "/loading",
   text: "/text",
+  email_verfication: "/verify/:token",
   // payment:"/payment"
 };
 
