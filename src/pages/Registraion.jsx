@@ -25,6 +25,7 @@ function Registration() {
     "saiman@saimanshetty.com",
     "vinay.m@saimanshetty.com",
     "yogesh.y@saimanshetty.com",
+    "vinaymaheshwari35@gmail.com"
   ];
 
   const [countryCode, setCountryCode] = useState("+91");
