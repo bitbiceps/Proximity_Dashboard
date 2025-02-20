@@ -25,7 +25,9 @@ function Registration() {
     "saiman@saimanshetty.com",
     "vinay.m@saimanshetty.com",
     "yogesh.y@saimanshetty.com",
-    "vinaymaheshwari35@gmail.com"
+    "vinaymaheshwari35@gmail.com",
+    "kamran@saimanshetty.com",
+    "omkar@saimanshetty.com",
   ];
 
   const [countryCode, setCountryCode] = useState("+91");
