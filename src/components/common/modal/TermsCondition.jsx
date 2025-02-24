@@ -1,42 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  resetState,
-  verifyRequestArticle,
-} from "../../../redux/slices/generatedSlice";
-import { toast } from "react-toastify"; // Import toast
-import "react-toastify/dist/ReactToastify.css"; // Import CSS for Toast
+import React from "react";
+import { useDispatch } from "react-redux";
+import { verifyRequestArticle } from "../../../redux/slices/generatedSlice";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const TermsCondition = () => {
-  const [isChecked, setIsChecked] = useState(false);
+const TermsCondition = ({
+  handleTermsChange,
+  handleCompanyNameChange,
+  handleAuthorNameChange,
+  termsAndCondition,
+  companyName,
+  authorName,
+}) => {
   const dispatch = useDispatch();
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
   const navigate = useNavigate();
-  const { articleVerify, articleUpdate, loading, error, articleGenerate } =
-    useSelector((state) => state.generated);
-  // const articles = useSelector(({ articles: { articles } }) => articles);
-  // const currentArticle = useSelector(
-  //   (state) => state.articles.currentSelectedArticle
-  // );
-
 
   const handleAgree = (articleId) => {
-    if (isChecked) {
-      dispatch(verifyRequestArticle({ articleId }));
+    if (isTermsChecked && isCompanyNameChecked && isAuthorNameChecked) {
+      dispatch(
+        verifyRequestArticle({
+          articleId,
+          termsAndCondition,
+          companyName,
+          authorName,
+        })
+      );
       if (articleVerify?.message === "Article submitted for review") {
         toast.success("Article submitted for review");
         navigate("/", { replace: true });
       }
       dispatch(resetState());
-
     } else {
-      alert("Please accept the terms and conditions to proceed.");
+      alert("Please accept all terms and conditions to proceed.");
     }
   };
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       {/* Modal Container */}
@@ -70,14 +67,14 @@ const TermsCondition = () => {
           </p>
         </div>
 
-        {/* Checkbox */}
-        <div className="flex items-center">
+        {/* Checkbox for Terms */}
+        <div className="flex items-center mb-2">
           <input
             type="checkbox"
             id="terms"
             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            checked={isChecked}
-            onChange={handleCheckboxChange}
+            checked={isTermsChecked}
+            onChange={handleTermsChange}
           />
           <label htmlFor="terms" className="ml-3 text-sm text-gray-700">
             I confirm that I have read and accept the terms and conditions and
@@ -85,18 +82,45 @@ const TermsCondition = () => {
           </label>
         </div>
 
+        {/* Checkbox for Company Name */}
+        <div className="flex items-center mb-2">
+          <input
+            type="checkbox"
+            id="companyName"
+            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            checked={isCompanyNameChecked}
+            onChange={handleCompanyNameChange}
+          />
+          <label htmlFor="companyName" className="ml-3 text-sm text-gray-700">
+            Include company name in generated articles if needed.
+          </label>
+        </div>
+
+        {/* Checkbox for Author Name */}
+        <div className="flex items-center mb-2">
+          <input
+            type="checkbox"
+            id="authorName"
+            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+            checked={isAuthorNameChecked}
+            onChange={handleAuthorNameChange}
+          />
+          <label htmlFor="authorName" className="ml-3 text-sm text-gray-700">
+            Include author name i:e; your name in the generated articles if
+            needed
+          </label>
+        </div>
+
         {/* Footer */}
         <div className="flex justify-end mt-6">
           <button
             className={`px-8 py-3 text-white font-semibold rounded-lg ${
-              isChecked
+              isTermsChecked && isCompanyNameChecked && isAuthorNameChecked
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
-            onClick={() => {
-              handleAgree(articleGenerate._id)
-            }}
-            disabled={!isChecked}
+            onClick={() => handleAgree(articleGenerate._id)}
+            disabled={!termsAndCondition || !companyName || !authorName}
           >
             Agree
           </button>
