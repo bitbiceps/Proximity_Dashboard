@@ -18,8 +18,13 @@ export const ArticlesCard = ({
       const response = await axios.post(`${baseURL}/article/get`, {
         articleId: data.articleId,
       });
-      const imageUrl = response.data.article.profileImage.filepath;
-      setArticleImage(imageUrl);
+
+      if (
+        response.data.article.profileImage &&
+        response.data.article.profileImage.filepath
+      ) {
+        setArticleImage(response.data.article.profileImage.filepath);
+      }
     } catch (error) {
       throw error;
     }

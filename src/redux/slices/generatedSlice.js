@@ -25,12 +25,25 @@ export const updateRequestArticle = createAsyncThunk(
 );
 export const verifyRequestArticle = createAsyncThunk(
   "generated/verifyRequestArticle",
-  async ({ articleId }, { rejectWithValue }) => {
+  async (
+    {
+      articleId,
+      termsAndCondition, // You should pass the boolean values here
+      companyName, // Similarly for the company name
+      authorName, // And the author name
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await fetch(`${baseURL}/article/submit`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ articleId }),
+        body: JSON.stringify({
+          articleId,
+          termsAndCondition, // You should pass the boolean values here
+          companyName, // Similarly for the company name
+          authorName, // And the author name
+        }),
       });
 
       if (!response.ok) {
@@ -46,12 +59,12 @@ export const verifyRequestArticle = createAsyncThunk(
 );
 export const generateArticles = createAsyncThunk(
   "generated/generateArticles",
-  async ({_id,userId}, { rejectWithValue }) => {
+  async ({ _id, userId }, { rejectWithValue }) => {
     try {
       const response = await fetch(`${baseURL}/article/create-article`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ _id ,userId}),
+        body: JSON.stringify({ _id, userId }),
       });
 
       const data = await response.json();

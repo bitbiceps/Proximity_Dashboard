@@ -1,6 +1,9 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { verifyRequestArticle } from "../../../redux/slices/generatedSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  resetState,
+  verifyRequestArticle,
+} from "../../../redux/slices/generatedSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -15,25 +18,42 @@ const TermsCondition = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleAgree = (articleId) => {
-    if (isTermsChecked && isCompanyNameChecked && isAuthorNameChecked) {
-      dispatch(
-        verifyRequestArticle({
-          articleId,
-          termsAndCondition,
-          companyName,
-          authorName,
-        })
-      );
-      if (articleVerify?.message === "Article submitted for review") {
-        toast.success("Article submitted for review");
-        navigate("/", { replace: true });
+  const { articleVerify, articleGenerate } = useSelector(
+    (state) => state.generated
+  );
+
+  const handleAgree = async (articleId) => {
+    try {
+      if (termsAndCondition) {
+        // Dispatch the verifyRequestArticle action
+        dispatch(
+          verifyRequestArticle({
+            articleId,
+            termsAndCondition, // You should pass the boolean values here
+            companyName, // Similarly for the company name
+            authorName, // And the author name
+          })
+        );
+
+        // Check if the article was successfully submitted for review
+        if (articleVerify?.message === "Article submitted for review") {
+          toast.success("Article submitted for review");
+          navigate("/", { replace: true });
+        }
+
+        // Reset state after dispatch
+        dispatch(resetState);
+      } else {
+        alert("Please accept all terms and conditions to proceed.");
       }
-      dispatch(resetState());
-    } else {
-      alert("Please accept all terms and conditions to proceed.");
+    } catch (error) {
+      console.error("Error during article verification:", error);
+      toast.error(
+        "An error occurred while submitting the article. Please try again."
+      );
     }
   };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       {/* Modal Container */}
@@ -73,7 +93,7 @@ const TermsCondition = ({
             type="checkbox"
             id="terms"
             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            checked={isTermsChecked}
+            checked={termsAndCondition}
             onChange={handleTermsChange}
           />
           <label htmlFor="terms" className="ml-3 text-sm text-gray-700">
@@ -88,7 +108,7 @@ const TermsCondition = ({
             type="checkbox"
             id="companyName"
             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            checked={isCompanyNameChecked}
+            checked={companyName}
             onChange={handleCompanyNameChange}
           />
           <label htmlFor="companyName" className="ml-3 text-sm text-gray-700">
@@ -102,7 +122,7 @@ const TermsCondition = ({
             type="checkbox"
             id="authorName"
             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-            checked={isAuthorNameChecked}
+            checked={authorName}
             onChange={handleAuthorNameChange}
           />
           <label htmlFor="authorName" className="ml-3 text-sm text-gray-700">
@@ -115,12 +135,12 @@ const TermsCondition = ({
         <div className="flex justify-end mt-6">
           <button
             className={`px-8 py-3 text-white font-semibold rounded-lg ${
-              isTermsChecked && isCompanyNameChecked && isAuthorNameChecked
+              termsAndCondition
                 ? "bg-blue-600 hover:bg-blue-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
             onClick={() => handleAgree(articleGenerate._id)}
-            disabled={!termsAndCondition || !companyName || !authorName}
+            disabled={!termsAndCondition}
           >
             Agree
           </button>
