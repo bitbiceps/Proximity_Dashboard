@@ -7,12 +7,14 @@ import {
 import lefBg from "../assets/bg-left.png";
 import news from "../assets/news.png";
 import Google from "../assets/google.jpg";
-import India from "../assets/indiaflag.jpg";
-import USFlag from "../assets/us.jpg";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import parsePhoneNumberFromString from "libphonenumber-js";
+
 
 function Registration() {
   const dispatch = useDispatch();
@@ -30,25 +32,22 @@ function Registration() {
     "omkar@saimanshetty.com",
   ];
 
-  const [countryCode, setCountryCode] = useState("+91");
+  const [countryCode, setCountryCode] = useState("in");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const { loading } = useSelector((state) => state.auth);
   const response = useSelector((state) => state.auth);
-  const countryFlags = {
-    "+91": { code: "+91", flag: India },
-    "+1": { code: "+1", flag: USFlag },
-    "+44": { code: "+44", flag: India },
-    "+61": { code: "+61", flag: USFlag },
-  };
-  const handleCountryChange = (code) => {
-    setCountryCode(code);
-    setIsDropdownOpen(false);
-  };
+
+  const validatePhonenumber = () => {
+    const parsedNumber = parsePhoneNumberFromString(`+${phoneNumber}`, countryCode);
+    if (!parsedNumber || !parsedNumber.isValid()) {
+      return false
+    } 
+    return true;
+  }
 
   const validateInputs = () => {
     if (!fullName) {
@@ -59,12 +58,12 @@ function Registration() {
       toast.error("Please enter a valid email address!");
       return false;
     }
-    if (!password || password.length < 5) {
-      toast.error("Password must be at least 6 characters long!");
+    if (!validatePhonenumber()) {
+      toast.error("Phone number is not valid");
       return false;
     }
-    if (!phoneNumber || phoneNumber.length !== 10) {
-      toast.error("Phone number must be exactly 10 digits!");
+    if (!password || password.length < 5) {
+      toast.error("Password must be at least 6 characters long!");
       return false;
     }
     if (!termsAccepted) {
@@ -83,7 +82,7 @@ function Registration() {
         fullName,
         email,
         password,
-        phoneNumber: `${countryCode}${phoneNumber}`,
+        phoneNumber: `${phoneNumber}`,
         termsAccepted,
       };
 
@@ -170,50 +169,20 @@ function Registration() {
               <label className="block text-sm text-gray-500 mb-1">
                 Phone Number
               </label>
-              <div className="flex items-center border-b-2 border-gray-300 pb-1">
-                <div className="relative flex items-center">
-                  <div
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="cursor-pointer text-sm font-medium"
-                  >
-                    <img
-                      src={countryFlags[countryCode].flag}
-                      alt="Country Flag"
-                      className="w-5 h-5 mr-2"
-                    />
-                  </div>
-                  {isDropdownOpen && (
-                    <div className="absolute top-full left-0 bg-white border shadow-lg w-[70px] z-10 mt-1">
-                      {Object.entries(countryFlags).map(
-                        ([code, { flag, code: countryCode }]) => (
-                          <div
-                            key={code}
-                            className="flex items-center p-1 hover:bg-gray-100 cursor-pointer"
-                            onClick={() => handleCountryChange(code)}
-                          >
-                            <img
-                              src={flag}
-                              alt={countryCode}
-                              className="w-5 h-5 mr-2"
-                            />
-                            <span className="text-xs">{countryCode}</span>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  )}
-                </div>
-                <span className="border-r-2 h-4 mx-2"></span>
-                <input
-                  type="tel"
-                  placeholder="9999999999"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="w-full focus:outline-none text-sm text-gray-800"
-                />
-              </div>
+              <PhoneInput
+                country={countryCode}
+                value={phoneNumber}
+                onChange={(value, country) => {
+                  setPhoneNumber(value);
+                  setCountryCode(country?.countryCode || "");
+                }}               
+                enableSearch={true}
+                disableDropdown={false}
+                containerClass="w-full"
+                inputClass="!w-full !text-sm !border-0 !border-b-2 !border-gray-300 !bg-transparent focus:!border-blue-500 focus:!outline-none" // Removes border, adds underline
+                buttonClass="!bg-transparent !border-0"
+              />
             </div>
-
             <button
               type="submit"
               style={{ boxShadow: "0px 24px 42.42px -8.48px #4D49F63D " }}

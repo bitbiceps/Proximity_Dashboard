@@ -21,6 +21,9 @@ import { resetPaymentState } from "../../redux/slices/paymentSlice";
 import { NavLink, useNavigate } from "react-router-dom";
 import { cookieAccessKeys } from "../../utils";
 import Cookies from "js-cookie";
+import { FaUserAlt } from "react-icons/fa";
+import { MdOutlineLogout } from "react-icons/md";
+
 const Header = ({userData}) => {
   const [search, setSearch] = useState("");
   const [isVisible, setIsVisible] = useState(false);
@@ -48,9 +51,10 @@ const Header = ({userData}) => {
     };
 
     const navItems2 = [
-      { name: 'Profile', to: routes.profile, img: profileIcon },
-      { name: 'Logout', img: logoutIcon, callBack: logout },
+      { name: 'Profile', to: routes.profile, icon :FaUserAlt },
+      { name: 'Logout', icon: MdOutlineLogout, callBack: logout },
     ];
+
   const dispatch = useDispatch();
 
   const toogleMobileSidebar = () => {
@@ -101,7 +105,7 @@ const Header = ({userData}) => {
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
-            className="absolute right-[50px] bottom-[-150px] h-[160px] w-[160px] bg-gray-100 shadow-lg rounded-[8px] flex flex-col items-center justify-center gap-6"
+            className="absolute right-[50px] bottom-[-95px] h-[120px] w-[160px] bg-gray-100 shadow-lg rounded-[8px] flex flex-col items-center justify-center gap-3"
           >
             {navItems2.map((item, index) => (
               <motion.div
@@ -112,7 +116,7 @@ const Header = ({userData}) => {
                 if (item.callBack) item.callBack();
               }} // Set active on click
               >
-                <NavLink className="flex items-center w-full gap-4 justify-center " to={item.to}><img src={item.img}></img> <div className="text-[24px]">{item.name}</div></NavLink>
+                <NavLink className="flex items-center w-full gap-4 py-2 justify-center hover:bg-gray-200 hover:text-app-blue-1 text-app-grey-1 " to={item.to}><item.icon size={22} className=""/><div className="text-[18px]">{item.name}</div></NavLink>
               </motion.div>
             ))}
           </motion.div>
