@@ -39,11 +39,14 @@ const Notifications = () => {
 
       {/* Notification Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white border shadow-lg rounded-lg z-50">
+        <div className="absolute right-0 mt-2 w-64 bg-white border shadow-xl rounded-lg z-50">
           {notifications.length > 0 ? (
-            <ul className="max-h-60 overflow-y-auto">
+            <ul className="max-h-60 overflow-y-auto scrollbar-hide">
               {notifications.map((note, index) => (
-                <li key={index} className="px-4 py-2 border-b last:border-none hover:bg-gray-100">
+                <li
+                  key={index}
+                  className="px-4 py-3 border-b last:border-none transition-all duration-200 hover:bg-app-blue-1/10 hover:text-app-blue-1 cursor-pointer"
+                >
                   {note.message}
                 </li>
               ))}
