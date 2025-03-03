@@ -50,6 +50,7 @@ const App = () => {
     routes.primary_questionnaire,
     routes.secondary_questionnaire,
     routes.loading,
+    routes.generated_article
   ].includes(location.pathname);
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
   const dispatch = useDispatch()

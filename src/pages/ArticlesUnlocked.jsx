@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentSelectedArticle } from "../redux/slices/articleSlice";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../utils";
-import { generateArticles } from "../redux/slices/generatedSlice";
 const ArticlesUnlocked = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -54,8 +53,9 @@ const ArticlesUnlocked = () => {
                 articleStatus={item.articleStatus}
                 onClick={() => {
                   const { _id, userId } = item;
-                  dispatch(generateArticles({ _id, userId }));
-                  navigate(routes.generated_article);
+                  const url = `${routes.generated_article}?id=${_id}`;
+                  // dispatch(generateArticles({ _id, userId }));
+                  window.open(url, "_blank"); // Opens in a new tab
                 }}
               />
             

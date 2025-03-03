@@ -134,7 +134,7 @@
 // export default Profile;
 
 
-import React, { useEffect, useState , useCallback} from "react";
+import React, { useEffect, useState} from "react";
 import RootLayout from "../layouts/RootLayout";
 import { useSelector , useDispatch } from "react-redux";
 import { fetchUser , fetchUserData } from "../redux/slices/authSlice";
@@ -147,56 +147,9 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import parsePhoneNumberFromString from "libphonenumber-js";
 import Cropper from 'react-easy-crop'
+import { getCroppedImg } from "../utils";
 
 
-const getCroppedImg = async (imageSrc, crop, zoom) => {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.src = imageSrc;
-    image.crossOrigin = "anonymous";
-
-    image.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
-      canvas.width = crop.width;
-      canvas.height = crop.height;
-
-      // Create a circular clipping path
-      ctx.beginPath();
-      ctx.arc(
-        canvas.width / 2,
-        canvas.height / 2,
-        canvas.width / 2,
-        0,
-        2 * Math.PI
-      );
-      ctx.clip(); // Clip to circle
-
-      ctx.drawImage(
-        image,
-        crop.x,
-        crop.y,
-        crop.width,
-        crop.height,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          reject(new Error("Canvas is empty"));
-          return;
-        }
-        resolve(blob);
-      }, "image/png"); // Use PNG to preserve transparency
-    };
-
-    image.onerror = (err) => reject(new Error("Failed to load image: " + err.message));
-  });
-};
 
 
 
@@ -204,10 +157,11 @@ const Profile = () => {
   const [selectedFile, setSelectedFile] = useState(null); // State for the profile picture
   const [uploadMessage, setUploadMessage] = useState(""); // State for success/error message
   const userdata = useSelector((state) => state.auth); // Get user data from Redux
-  const profileImage = userdata?.user?.user?.profileImage?.filepath || '';
+  const [profileImage , setProfileImage] = useState(userdata?.user?.user?.profileImage?.filepath || '')
   const [previewURL, setPreviewURL] = useState(null);
   const [countryCode, setCountryCode] = useState("in");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const {fullName , email} = userdata?.user?.user
+  const [phoneNumber, setPhoneNumber] = useState(userdata?.user?.user?.phoneNumber || '');
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -216,26 +170,145 @@ const Profile = () => {
   const [showUpload , setShowUpload] = useState(false);
   const [fileName , setFileName] = useState('');
   const dispatch = useDispatch();
-
-
-
-
+  const [isEditing, setIsEditing] = useState(false);
   const userId = userdata?.user?.user?._id;
-  const [baseQuestions, setBaseQuestions] = useState({
+  const [firstName, ...lastNameParts] = fullName?.split(" ") || [];
+  const lastName = lastNameParts.join(" "); 
+  const [formTouched , setFormTouched] = useState(false);
+
+  const [userDetails , setUserDetails] = useState({
+    firstName: { label: "First Name", value: firstName },
+    lastName: { label: "Last Name", value: lastName },
+    email: { label: "Email", value: email },
+    phoneNumber: { label: "Phone Number", value: phoneNumber },
+    dob:{label : "Date of birth" , value : ""},
+    gender : {label : "Gender" , value : ""},
+    fieldOfIndustry: { label: "Field of Industry", value: "" },
+    jobTitle: { label: "Job Title", value: "" },
+    areasOfExpertise: { label: "Areas of Expertise", value: "" },
+  })
+
+  const [formData, setFormData] = useState({
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    phoneNumber: phoneNumber,
+    dateOfBirth: "",
+    gender: "",
     fieldOfIndustry: "",
     jobTitle: "",
     areasOfExpertise: "",
   });
 
+
+  const validateForm = () => {
+    let errorMessage = ""; 
+    let isValid = true; 
+    if (!formData.firstName.trim()) {
+      errorMessage = "First name is required";
+      isValid = false;
+    } else if (!formData.lastName.trim()) {
+      errorMessage = "Last name is required";
+      isValid = false;
+    } else if (!formData.email.trim()) {
+      errorMessage = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errorMessage = "Invalid email format";
+      isValid = false;
+    } else if (!formData.phoneNumber.trim()) {
+      errorMessage = "Phone number is required";
+      isValid = false;
+    }  else if (!formData.fieldOfIndustry.trim()) {
+      errorMessage = "Field of industry is required";
+      isValid = false;
+    } else if (!formData.jobTitle.trim()) {
+      errorMessage = "Job title is required";
+      isValid = false;
+    } else if (!formData.areasOfExpertise.trim()) {
+      errorMessage = "Areas of expertise is required";
+      isValid = false;
+    }
+
+    return { isValid, errorMessage };
+  };
+  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setBaseQuestions((prev) => ({ ...prev, [name]: value }));
+    setFormTouched(true);
+    setFormData({ ...formData, [name]: value });
   };
 
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if(formTouched){
+      await handleUserDetailsSubmit();
+    }
+    if(selectedFile){
+      await handleFileUpload();
+      setSelectedFile(null);
+      setPreviewURL("")
+    }
+    if(formTouched || selectedFile) {
+       await dispatch(fetchUserData(userId))
+    }
+    setIsEditing(false);
+    setFormTouched(false);
+    setSelectedFile(null);
+    setPreviewURL(null)
+  }
 
+  const handleUserDetailsSubmit = async () => {
+    const {isValid , errorMessage} = validateForm();
+    if (isValid) {
+      try {
+        const response = await axios.post(
+          `${baseURL}/user/update`,
+          {
+            user : userId,
+            fields : {
+              fullName : formData.firstName + " " + formData.lastName,
+              email : formData.email,
+              gender : formData.gender || null ,
+              dateOfBirth : formData.dateOfBirth || null,
+              phoneNumber : phoneNumber
+            },
+            basicQuestionnaire : [formData.fieldOfIndustry , formData.jobTitle, formData. areasOfExpertise]
+          },
+          {
+            headers: {
+              "Content-Type": "application/json", // Ensure JSON format
+            },
+          }
+        );
+        if(response){
+          toast.success("User Profile updated!!",{
+            theme: "light",
+            
+          })
+        }
+      } catch (error) {
+         toast.error('Error while uploading the user details')
+      }
+
+    } else {
+      toast.error(errorMessage);
+    }
+  };
+  
+  
   
 
+  const handlePhoneChange = (value, country) => {
+    setCountryCode(country?.countryCode || "");
+    setPhoneNumber(value)
+    setFormData({
+      ...formData,
+      phoneNumber: value,
+    });
+  };
 
   const validatePhonenumber = () => {
       const parsedNumber = parsePhoneNumberFromString(`+${phoneNumber}`, countryCode);
@@ -246,29 +319,65 @@ const Profile = () => {
   }
 
   const onCropComplete =(_, croppedAreaPixels) => {
-    console.log('pixels',croppedAreaPixels)
     setCroppedAreaPixels(croppedAreaPixels);
   };
+
+  const updateBaseQuestions = (user, baseQuestions) => {
+    const [firstName, ...lastNameParts] = fullName?.split(" ") || [];
+    const lastName = lastNameParts.join(" "); 
+    setUserDetails((prevDetails) => ({
+      ...prevDetails,
+      firstName: { ...prevDetails.firstName, value: firstName || "" },
+      lastName: { ...prevDetails.lastName, value: lastName || "" },
+      email: { ...prevDetails.email, value: user?.email || "" },
+      phoneNumber: { ...prevDetails.phoneNumber, value: user?.phoneNumber || "" },
+      dob: { ...prevDetails.dob, value: baseQuestions?.dateOfBirth || "" },
+      gender: { ...prevDetails.gender, value: baseQuestions?.gender || "" },
+      fieldOfIndustry: { ...prevDetails.fieldOfIndustry, value: baseQuestions?.fieldOfIndustry || "" },
+      jobTitle: { ...prevDetails.jobTitle, value: baseQuestions?.jobTitle || "" },
+      areasOfExpertise: { ...prevDetails.areasOfExpertise, value: baseQuestions?.areasOfExpertise || "" },
+    }));
+  
+    setFormData((prevDetails) => ({
+      ...prevDetails,
+      firstName: firstName || "",
+      lastName: lastName || "",
+      email: user?.email || "",
+      phoneNumber: user?.phoneNumber || "",
+      dateOfBirth: baseQuestions?.dateOfBirth || "",
+      gender: baseQuestions?.gender || "",
+      fieldOfIndustry: baseQuestions?.fieldOfIndustry || "",
+      jobTitle: baseQuestions?.jobTitle || "",
+      areasOfExpertise: baseQuestions?.areasOfExpertise || "",
+    }));
+  };
+  
+
 
 
   useEffect(() => {
     const getUserData = async () => {
-      if (userId) {
+      if (userdata) {
         try {
-          const user = await fetchUser(userId); // Fetch user data
+          const user = userdata?.user?.user
           const basicInformation = user?.questionnaire?.basicInformation || {};
-          setBaseQuestions({
+          const baseQuestions = {
             fieldOfIndustry: basicInformation[1]?.answer || "",
             jobTitle: basicInformation[2]?.answer || "",
             areasOfExpertise: basicInformation[3]?.answer || "",
-          });
+          };
+          updateBaseQuestions(user , baseQuestions);
+          setProfileImage(user?.profileImage?.filepath || '')
+
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
       }
     };
     getUserData();
-  }, [userId]);
+  }, [userdata]);
+
+  
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -286,9 +395,7 @@ const Profile = () => {
   };;
 
   // Handle profile picture upload
-  const handleFileUpload = async (e) => {
-    e.preventDefault();
-    setShowUpload(false);
+  const handleFileUpload = async () => {
     if (!selectedFile) {
       setUploadMessage("Please select a file before uploading.");
       toast.info("Please select a file before uploading.",{
@@ -311,7 +418,6 @@ const Profile = () => {
     formData.append("file", selectedFile);
     formData.append("user", userId);
   
-  
     try {
       const response = await axios.post(
         `${baseURL}/upload/profile`, // Your API endpoint
@@ -329,7 +435,6 @@ const Profile = () => {
           theme: "light",
           
         })
-        dispatch(fetchUserData(userId))
       }
     } catch (error) {
       setUploadMessage("Error uploading file: " + (error.response?.data || error.message));
@@ -349,7 +454,6 @@ const Profile = () => {
 
         setSelectedFile(() => croppedFile)
         setIsModalOpen(false)
-        setShowUpload(true);
         setPreviewURL(croppedImageUrl);
 
       } catch (error) {
@@ -357,8 +461,52 @@ const Profile = () => {
       }
     }
   };
-  
 
+  const UserDetailsComponent = () => {
+    return <>
+      <div className="px-1 md:px-5 py-6 rounded-xl bg-[#f3f4f6] shadow-md">
+        <div className="flex justify-end items-center mb-2">
+          <div
+            className="absolute h-10 w-10 top-2 right-3 cursor-pointer rounded-full text-xl text-gray-500 flex justify-center items-center hover:scale-110 transition-transform duration-300 ease-in-out hover:bg-gray-200"
+            onClick={() => setIsEditing(true)}
+          >
+            <FaPen />
+          </div>
+        </div>
+        <div className="flex flex-col mb-6 items-center">
+          <div className="w-28 h-28 bg-gray-300 rounded-full flex items-center justify-center relative overflow-hidden">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+              id="profile-upload"
+            />
+            <label htmlFor="profile-upload" className="cursor-pointer w-full h-full rounded-full group">
+              <div className="w-full h-full rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-gray-800/30">
+                <img className="w-full h-full object-cover rounded-full" src={profileImage || profile} />
+              </div>
+            </label>
+          </div>
+        </div>
+        <div className="">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:px-20 px-4 md:gap-y-2 md:gap-x-10 md:gap-y-6">
+            {Object.entries(userDetails).map(([key, details]) => (
+              <div key={key} className="mb-4 md:ps-10">
+                <label className="text-base md:text-base font-semibold text-gray-700 block">
+                  {details.label}
+                </label>
+                <div className="text-sm md:text-base lg:text-lg font-semibold text-gray-500">
+                  {details.value || 'N/A'}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  }
+  
 
   return (
     <RootLayout>
@@ -399,8 +547,12 @@ const Profile = () => {
           </div>
 
       )}
-        <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-5xl">
-              <div className="flex flex-col items-center">
+        <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-5xl relative">
+          {
+             !isEditing ? <>
+              <UserDetailsComponent/>
+             </> :<>
+          <div className="flex flex-col items-center">
                 <div className="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center relative">
                   <input
                     type="file"
@@ -417,30 +569,27 @@ const Profile = () => {
                     </label>
                   }
                 </div>
-                {
-                  showUpload && <button
-                    onClick={handleFileUpload}
-                    className="mt-4 bg-app-blue-1 text-white px-4 py-2 rounded-md hover:scale-105"
-                  >
-                    Upload
-                  </button>
-                }
-              </div>
-
+          </div>
           <form className="mt-8 space-y-6">
             <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
               <div className="">
                 <label className="block text-sm text-gray-600">First Name</label>
                 <input
+                  name="firstName"
+                  onChange={handleInputChange}
                   type="text"
                   placeholder="Enter your first name"
+                  value={formData.firstName}
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div>
                 <label className="block text-sm text-gray-600">Last Name</label>
                 <input
+                  name="lastName"
                   type="text"
+                  onChange={handleInputChange}
+                  value={formData.lastName}
                   placeholder="Enter your last name"
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -451,6 +600,9 @@ const Profile = () => {
                 <label className="block text-sm text-gray-600">Email</label>
                 <input
                   type="text"
+                  name="email"
+                  onChange={handleInputChange}
+                  value={formData.email}
                   placeholder="Enter your email"
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -460,10 +612,7 @@ const Profile = () => {
                 <PhoneInput
                 country={countryCode}
                 value={phoneNumber}
-                onChange={(value, country) => {
-                  setPhoneNumber(value);
-                  setCountryCode(country?.countryCode || "");
-                }}               
+                onChange={handlePhoneChange}               
                 enableSearch={true}
                 disableDropdown={false}
                 containerClass="w-full"
@@ -477,29 +626,30 @@ const Profile = () => {
               <div>
                 <label className="block text-sm text-gray-600">Date of Birth</label>
                 <input
+                  value={formData.dateOfBirth}
+                  onChange={handleInputChange}
+                  name="dateOfBirth"
                   type="date"
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <div className="lg:mr-48">
+              <div className="">
                 <label className="block text-sm text-gray-600">Gender</label>
-                <select className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500">
-                  <option>Male</option>
-                  <option>Female</option>
-                  <option>Other</option>
+                <select onChange={handleInputChange} value={formData.gender} name="gender" className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
             </div>
             <div>
-              {baseQuestions ? (
-                <>
                   <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
                     <div>
                       <label className="block text-sm text-gray-600">Field of Industry:</label>
                       <input
                         type="text"
                         name="fieldOfIndustry"
-                        value={baseQuestions.fieldOfIndustry}
+                        value={formData.fieldOfIndustry}
                         onChange={handleInputChange}
                         placeholder="Enter your field of industry"
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
@@ -510,7 +660,7 @@ const Profile = () => {
                       <input
                         type="text"
                         name="jobTitle"
-                        value={baseQuestions.jobTitle}
+                        value={formData.jobTitle}
                         onChange={handleInputChange}
                         placeholder="Enter your job title"
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
@@ -523,7 +673,7 @@ const Profile = () => {
                       <input
                         type="text"
                         name="areasOfExpertise"
-                        value={baseQuestions.areasOfExpertise}
+                        value={formData.areasOfExpertise}
                         onChange={handleInputChange}
                         placeholder="Enter your area of expertise"
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
@@ -531,22 +681,30 @@ const Profile = () => {
                     </div>
 
                   </div>
-                </>
-              ) : (
-                <div>Loading basic information...</div>
-              )}
+            </div>
+            <div className="flex justify-center gap-2">
+            <button
+                    className="text-white bg-gray-800 px-4 py-2 rounded-md hover:scale-105"
+                    onClick={() => { 
+                      setFormTouched(false)
+                      setIsEditing(false) 
+                      setSelectedFile(null)
+                      setPreviewURL("")
+                    }}
+                  >
+                    Cancel
+             </button>
+            <button
+                    className="bg-app-blue-1 text-white px-4 py-2 rounded-md hover:scale-105"
+                    onClick={handleSubmit}
+                  >
+                    Update
+             </button>
             </div>
 
-
-            {/* <div className="px-[400px] py-4">
-              <button
-                type="submit"
-                className="w-full bg-[#4D49F6] text-white py-3 rounded-md text-sm font-medium"
-              >
-                SUBMIT
-              </button>
-            </div> */}
           </form>
+             </> 
+          }
         </div>
       </div>
     </RootLayout>
