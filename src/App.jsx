@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { Provider, useDispatch } from "react-redux";
-import store from "./redux/store";
+import { useDispatch } from "react-redux";
 import Sidebar from "./components/SideBar/SideBar";
 import Dashboard from "./pages/Dashboard";
 import Package from "./pages/Package";
@@ -32,6 +31,7 @@ import { io } from "socket.io-client";
 import { addNotification } from "./redux/slices/notificationSlice";
 import { baseURL } from "./axios/instance";
 import EmailVerification from "./pages/EmailVerification";
+import ForgotPassword from "./pages/ForgotPassword";
 
 
 const stripePromise = loadStripe(
@@ -82,6 +82,8 @@ const App = () => {
             {/* Public Routes */}
             <Route path={routes.login} Component={Login} />
             <Route path={routes.registration} Component={Registration} />
+            <Route path={routes.forgot_password} Component={ForgotPassword} />
+
 
             {/* Protected Routes */}
 

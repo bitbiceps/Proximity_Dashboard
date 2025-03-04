@@ -21,6 +21,26 @@ export const fetchUser = async (userId) => {
   }
 };
 
+export const fetchUserData = createAsyncThunk(
+  "auth/fetchUserData",
+  async (userId, { rejectWithValue }) => {
+    try {
+      if (!userId) throw new Error("User ID is required");
+
+      const response = await axios.get(`${baseURL}/user/details?user=${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      return response.data
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to fetch user");
+    }
+  }
+);
+
+
 
 // Login async thunk
 export const loginUser = createAsyncThunk(
@@ -127,6 +147,20 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(fetchUserData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchUserData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

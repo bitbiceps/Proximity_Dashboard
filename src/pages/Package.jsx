@@ -78,7 +78,7 @@ const Package = () => {
     <RootLayout2>
       <div>
         <div className="text-center text-[32px] text-[#202224] font-bold my-[50px] ">
-          Tech PR Agency For Startups
+        PR for Immigration
         </div>
         <div className="flex flex-row flex-wrap gap-y-[50px] justify-center gap-[4%] mb-[100px] ">
           {priceData.map((data, index) => (

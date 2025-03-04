@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef , useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   resetState,
@@ -14,13 +14,31 @@ const TermsCondition = ({
   termsAndCondition,
   companyName,
   authorName,
+  setShowModal
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userdata = useSelector((state) => state.auth);
+  const username = userdata?.user?.user?.fullName
+  const containerRef = useRef(null)
+  
 
   const { articleVerify, articleGenerate } = useSelector(
     (state) => state.generated
   );
+
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setShowModal(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleAgree = async (articleId) => {
     try {
@@ -55,35 +73,34 @@ const TermsCondition = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center px-4 bg-black bg-opacity-50 z-50">
       {/* Modal Container */}
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-8">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-8"
+      ref={containerRef}
+      >
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Proximity Terms & Conditions</h2>
+          <h2 className="sm:text-2xl text-base font-bold">Proximity Terms & Conditions</h2>
         </div>
 
         {/* Content */}
         <div className="overflow-y-auto max-h-80 text-sm text-gray-600 mb-6">
           <p className="mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In bibendum
-            vitae nisi a aliquam. In in purus hendrerit, efficitur magna
-            sodales, dapibus dui. Praesent libero lacus, placerat quis elit in,
-            semper mollis elit. Donec ullamcorper aliquet rhoncus. In faucibus
-            efficitur eros ac elementum. Duis ut finibus libero. Nullam tempor
-            justo justo, id mattis arcu sollicitudin et.
           </p>
           <p className="mb-4">
-            Nam consectetur lacus eros, at pretium mi sagittis ac. Donec sed
-            euismod ante, nec tincidunt lectus. Duis tortor mi, scelerisque sit
-            amet libero ut, consequat vehicula metus. Sed eget sapien a mi
-            convallis auctor vel in felis. Sed sit amet massa sed urna pulvinar
-            fermentum id non mauris. Donec elementum in purus at fermentum.
+          By submitting content to Proximity, you, <strong>{username}</strong>, agree to these Terms and Conditions. 
+          You retain ownership of your work but grant Proximity a non-exclusive, worldwide license to publish,
+          distribute, and promote your content. Your submission must be original, free of plagiarism, and not 
+          infringe on any third-party rights. Proximity reserves the right to edit, modify, or reject content 
+          for clarity, accuracy, and compliance with guidelines. Content must not contain offensive, defamatory,
+          misleading, or illegal material. You are responsible for ensuring the accuracy of your content and must 
+          properly cite sources. Proximity is not liable for any inaccuracies, misinterpretations, or legal claims
+          arising from published content. We may remove content that violates these terms without prior notice. 
           </p>
           <p>
-            Fusce sollicitudin, erat at tempus eleifend, diam sapien tincidunt
-            ante, quis scelerisque nunc augue ornare purus. Fusce dignissim dui
-            lorem, et fringilla est varius vel.
+          Proximity aims to maintain a respectful, informative, and engaging environment for readers 
+          and contributors alike.Thank you for being a part of Proximity,
+          We appreciate your valuable contributions to our platform
           </p>
         </div>
 
@@ -134,13 +151,15 @@ const TermsCondition = ({
         {/* Footer */}
         <div className="flex justify-end mt-6">
           <button
-            className={`px-8 py-3 text-white font-semibold rounded-lg ${
-              termsAndCondition
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-            onClick={() => handleAgree(articleGenerate._id)}
-            disabled={!termsAndCondition}
+            className={`px-8 py-3 text-white font-semibold rounded-lg bg-blue-600 hover:bg-blue-700`}
+            onClick={() =>{
+              if(termsAndCondition){
+                handleAgree(articleGenerate._id)
+              }else {
+                toast.error('You must agree to the Terms & Conditions')
+              }
+            }
+          }
           >
             Agree
           </button>

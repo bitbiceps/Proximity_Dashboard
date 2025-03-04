@@ -8,6 +8,8 @@ import { baseURL } from "../axios/instance";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/slices/authSlice";
+import leftArrow from "../assets/arows/left.png"
+
 
 export const SecondaryQuestionnaire = () => {
   const user = useSelector((state) => state.auth.user);
@@ -89,11 +91,34 @@ export const SecondaryQuestionnaire = () => {
     currentSectionIndex === allQuestions.length - 1 &&
     currentQuestionIndex === Object.keys(currentSection.questions).length - 1;
 
+  
+  const setTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      const lineHeight = parseInt(getComputedStyle(textareaRef.current).lineHeight, 10) || 20;
+      const maxHeight = 5 * lineHeight; // Max height for 5 rows
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, maxHeight)}px`;
+    }
+  }
+
+
+  useEffect(() => {
+    if (user?.user?.id) {
+      const storedAnswers = localStorage.getItem(`ProximityDbSecQuesAns_${user.user.id}`);
+      if (storedAnswers) {
+        setAnswers(JSON.parse(storedAnswers));
+      }
+    }
+  }, []);
+
+  
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.focus(); // Focus the textarea when the component mounts or updates
+      textareaRef.current.focus();
+      setTextareaHeight();
     }
   }, [currentQuestionIndex]); // Run this effect when the question index changes
+
 
   useEffect(() => {
     // Update isNextDisabled based on whether the current question has been answered
@@ -145,15 +170,23 @@ export const SecondaryQuestionnaire = () => {
     setAnimationKey((prev) => prev + 1);
   };
 
+
   const handleAnswerChange = (e) => {
     const value = e.target.value;
-    setAnswers((prev) => ({
-      ...prev,
-      [currentSection.section]: {
-        ...prev[currentSection.section],
-        [currentQuestionKey]: value,
-      },
-    }));
+    setAnswers((prev) => {
+      const updatedAnswers = {
+        ...prev,
+        [currentSection.section]: {
+          ...prev[currentSection.section],
+          [currentQuestionKey]: value,
+        },
+      };
+
+      if (user?.user?.id) {
+        localStorage.setItem(`ProximityDbSecQuesAns_${user.user.id}`, JSON.stringify(updatedAnswers));
+      }
+      return updatedAnswers;
+    });
   };
 
   const handleTopicCreation = async (userId) => {
@@ -223,29 +256,42 @@ export const SecondaryQuestionnaire = () => {
     }
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (
-        e.key === "Enter" &&
-        !e.shiftKey &&
-        !isNextDisabled && // This is now safe to access
-        !isLastQuestion
-      ) {
-        e.preventDefault(); // Prevent newline in textarea
-        if (isLastQuestion) {
-          handleSubmit();
-        } else {
-          handleNext();
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const handleKeyDown = (e) => {
+  //     if (
+  //       e.key === "Enter" &&
+  //       !e.shiftKey &&
+  //       !isNextDisabled && // This is now safe to access
+  //       !isLastQuestion
+  //     ) {
+  //       if (isLastQuestion) {
+  //         handleSubmit();
+  //       } else {
+  //         handleNext();
+  //       }
+  //     }
+  //   };
 
-    window.addEventListener("keydown", handleKeyDown);
+  //   window.addEventListener("keydown", handleKeyDown);
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isNextDisabled, isLastQuestion, answers[currentQuestion.number]]);
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, [isNextDisabled, isLastQuestion, answers[currentQuestion.number]]);
+  
+
+  const handleBackBtn = () => {
+    navigate("/", { replace: true });
+  }
+
+  const wordCount = () => {
+    const answer =  (answers[currentSection.section]?.[currentQuestionKey] || "").trim()
+    let totalWord = 0 ;
+    if(answer){
+         totalWord = answer.split(/\s+/).length;
+    }
+    return totalWord
+  }
 
   return (
     <QuestionnaireLayout>
@@ -256,11 +302,23 @@ export const SecondaryQuestionnaire = () => {
         exit="exit"
         variants={animationVariants}
         transition={{ duration: 0.5, ease: "easeInOut" }}
-        className="my-[40px]"
+        className="mb-[40px] mt-[5px]"
       >
-        <div className=" lg:w-[70%] md:w-[70%] w-[90%] mx-auto flex justify-start items-center text-[18px] lg:text-[28px] font-semibold mt-[30px] text-[#8A62F6]">
+        <div className="lg:w-[70%] md:w-[70%] w-[90%] mx-auto flex flex-col justify-start  mt-[5px]">
+        <div 
+        className="flex items-center gap-2 text-[16px] lg:text-[24px] text-gray-600 border border-gray-400 w-fit px-2 py-2 rounded-md hover:scale-105 transition-all duration-300 cursor-pointer"
+        onClick={handleBackBtn}
+        >
+          <img className="w-8 h-8" src={leftArrow}/> 
+            <div className="font-semibold">
+              Back
+            </div>
+        </div>
+        <div className="flex justify-start items-center text-[18px] lg:text-[28px] font-semibold text-[#8A62F6] mt-[30px]">
           {currentSection.name}
         </div>
+        </div>
+
         <div className="flex flex-row lg:w-[70%] md:w-[70%] w-[90%] mx-auto mt-[74px]">
           <div className="flex justify-start items-start">
             <div className="flex flex-row gap-[1px] text-[#02A6F2] font-sans font-medium text-[20px] lg:text-[36px] items-center justify-center">
@@ -293,8 +351,17 @@ export const SecondaryQuestionnaire = () => {
                   answers[currentSection.section]?.[currentQuestionKey] || ""
                 }
                 onChange={handleAnswerChange}
+                onInput={(e) => {
+                  e.target.style.height = "auto";
+                  const maxHeight = 5 * parseInt(getComputedStyle(e.target).lineHeight); // Calculate max height for 5 rows
+                  e.target.style.height = `${Math.min(e.target.scrollHeight, maxHeight)}px`;
+                }}
+                        
                 className="flex w-full placeholder:text-[13px] lg:placeholder:text-[24px] placeholder:font-normal focus:outline-none text-[16px] lg:text-[24px] placeholder:text-gray-400 border-b-[1px] border-[#878787] pb-2"
               ></textarea>
+              <div className="flex w-full justify-end text-bold text-gray-600 pe-2 italic text-xl">
+                Count :   {wordCount()}
+              </div>
               <div className="flex flex-row gap-[32px] mt-[77px]">
                 <button
                   onClick={handleBack}

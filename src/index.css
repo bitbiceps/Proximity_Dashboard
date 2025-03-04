@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.reactEasyCrop_CropArea {
+    width: 12rem !important; /* Adjusted for mobile */
+    height: 12rem !important;
+    border-radius: 50% !important;
+  }
+  
+  @media (min-width: 640px) { /* sm breakpoint */
+    .reactEasyCrop_CropArea {
+      width: 20rem !important;
+      height: 20rem !important;
+    }
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }

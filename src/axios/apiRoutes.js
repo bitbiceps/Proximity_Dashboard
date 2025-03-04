@@ -7,6 +7,9 @@ const apiRoutes = {
   check_auth: "/api/auth/check-auth",
   login: "/api/auth/login",
   email_verify: (token) => `/api/auth/verify/${token}`,
+  reset_password : "/api/auth/reset-password",
+  verify_otp : "/api/auth/verify-otp",
+  change_password : "/api/auth/change-password"
 };
 
 export default apiRoutes;

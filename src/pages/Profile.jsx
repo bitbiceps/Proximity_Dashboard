@@ -134,65 +134,266 @@
 // export default Profile;
 
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import RootLayout from "../layouts/RootLayout";
-import { useSelector } from "react-redux";
-import { fetchUser } from "../redux/slices/authSlice";
+import { useSelector , useDispatch } from "react-redux";
+import { fetchUser , fetchUserData } from "../redux/slices/authSlice";
 import { baseURL } from "../axios/instance";
 import profile from "../assets/sidebar/profile.svg";
 import axios from "axios";
 import { FaPen } from "react-icons/fa";
 import { toast } from "react-toastify";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import parsePhoneNumberFromString from "libphonenumber-js";
+import Cropper from 'react-easy-crop'
+import { getCroppedImg } from "../utils";
+
+
+
+
 
 const Profile = () => {
   const [selectedFile, setSelectedFile] = useState(null); // State for the profile picture
   const [uploadMessage, setUploadMessage] = useState(""); // State for success/error message
   const userdata = useSelector((state) => state.auth); // Get user data from Redux
+  const [profileImage , setProfileImage] = useState(userdata?.user?.user?.profileImage?.filepath || '')
   const [previewURL, setPreviewURL] = useState(null);
+  const [countryCode, setCountryCode] = useState("in");
+  const {fullName , email} = userdata?.user?.user
+  const [phoneNumber, setPhoneNumber] = useState(userdata?.user?.user?.phoneNumber || '');
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [imageUrlCrop , setImageUrlCrop] = useState(null);
+  const [showUpload , setShowUpload] = useState(false);
+  const [fileName , setFileName] = useState('');
+  const dispatch = useDispatch();
+  const [isEditing, setIsEditing] = useState(false);
   const userId = userdata?.user?.user?._id;
-  const [baseQuestions, setBaseQuestions] = useState({
+  const [firstName, ...lastNameParts] = fullName?.split(" ") || [];
+  const lastName = lastNameParts.join(" "); 
+  const [formTouched , setFormTouched] = useState(false);
+
+  const [userDetails , setUserDetails] = useState({
+    firstName: { label: "First Name", value: firstName },
+    lastName: { label: "Last Name", value: lastName },
+    email: { label: "Email", value: email },
+    phoneNumber: { label: "Phone Number", value: phoneNumber },
+    dob:{label : "Date of birth" , value : ""},
+    gender : {label : "Gender" , value : ""},
+    fieldOfIndustry: { label: "Field of Industry", value: "" },
+    jobTitle: { label: "Job Title", value: "" },
+    areasOfExpertise: { label: "Areas of Expertise", value: "" },
+  })
+
+  const [formData, setFormData] = useState({
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    phoneNumber: phoneNumber,
+    dateOfBirth: "",
+    gender: "",
     fieldOfIndustry: "",
     jobTitle: "",
     areasOfExpertise: "",
   });
 
+
+  const validateForm = () => {
+    let errorMessage = ""; 
+    let isValid = true; 
+    if (!formData.firstName.trim()) {
+      errorMessage = "First name is required";
+      isValid = false;
+    } else if (!formData.lastName.trim()) {
+      errorMessage = "Last name is required";
+      isValid = false;
+    } else if (!formData.email.trim()) {
+      errorMessage = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errorMessage = "Invalid email format";
+      isValid = false;
+    } else if (!formData.phoneNumber.trim()) {
+      errorMessage = "Phone number is required";
+      isValid = false;
+    }  else if (!formData.fieldOfIndustry.trim()) {
+      errorMessage = "Field of industry is required";
+      isValid = false;
+    } else if (!formData.jobTitle.trim()) {
+      errorMessage = "Job title is required";
+      isValid = false;
+    } else if (!formData.areasOfExpertise.trim()) {
+      errorMessage = "Areas of expertise is required";
+      isValid = false;
+    }
+
+    return { isValid, errorMessage };
+  };
+  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setBaseQuestions((prev) => ({ ...prev, [name]: value }));
+    setFormTouched(true);
+    setFormData({ ...formData, [name]: value });
   };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if(formTouched){
+      await handleUserDetailsSubmit();
+    }
+    if(selectedFile){
+      await handleFileUpload();
+      setSelectedFile(null);
+      setPreviewURL("")
+    }
+    if(formTouched || selectedFile) {
+       await dispatch(fetchUserData(userId))
+    }
+    setIsEditing(false);
+    setFormTouched(false);
+    setSelectedFile(null);
+    setPreviewURL(null)
+  }
+
+  const handleUserDetailsSubmit = async () => {
+    const {isValid , errorMessage} = validateForm();
+    if (isValid) {
+      try {
+        const response = await axios.post(
+          `${baseURL}/user/update`,
+          {
+            user: userId,
+            fullName: formData.firstName + " " + formData.lastName,
+            email: formData.email,
+            gender: formData.gender || null,
+            dateOfBirth: formData.dateOfBirth || null,
+            phoneNumber: phoneNumber,
+            basicQuestionnaire: [formData.fieldOfIndustry, formData.jobTitle, formData.areasOfExpertise]
+          },
+          {
+            headers: {
+              "Content-Type": "application/json", // Ensure JSON format
+            },
+          }
+        );
+        if(response){
+          toast.success("User Profile updated!!",{
+            theme: "light",
+            
+          })
+        }
+      } catch (error) {
+         toast.error('Error while uploading the user details')
+      }
+
+    } else {
+      toast.error(errorMessage);
+    }
+  };
+  
+  
+  
+
+  const handlePhoneChange = (value, country) => {
+    setCountryCode(country?.countryCode || "");
+    setPhoneNumber(value)
+    setFormData({
+      ...formData,
+      phoneNumber: value,
+    });
+  };
+
+  const validatePhonenumber = () => {
+      const parsedNumber = parsePhoneNumberFromString(`+${phoneNumber}`, countryCode);
+      if (!parsedNumber || !parsedNumber.isValid()) {
+        return false
+      } 
+      return true;
+  }
+
+  const onCropComplete =(_, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const updateBaseQuestions = (user, baseQuestions) => {
+    const [firstName, ...lastNameParts] = fullName?.split(" ") || [];
+    const lastName = lastNameParts.join(" "); 
+    setUserDetails((prevDetails) => ({
+      ...prevDetails,
+      firstName: { ...prevDetails.firstName, value: firstName || "" },
+      lastName: { ...prevDetails.lastName, value: lastName || "" },
+      email: { ...prevDetails.email, value: user?.email || "" },
+      phoneNumber: { ...prevDetails.phoneNumber, value: user?.phoneNumber || "" },
+      dob: { ...prevDetails.dob, value: baseQuestions?.dateOfBirth || "" },
+      gender: { ...prevDetails.gender, value: baseQuestions?.gender || "" },
+      fieldOfIndustry: { ...prevDetails.fieldOfIndustry, value: baseQuestions?.fieldOfIndustry || "" },
+      jobTitle: { ...prevDetails.jobTitle, value: baseQuestions?.jobTitle || "" },
+      areasOfExpertise: { ...prevDetails.areasOfExpertise, value: baseQuestions?.areasOfExpertise || "" },
+    }));
+  
+    setFormData((prevDetails) => ({
+      ...prevDetails,
+      firstName: firstName || "",
+      lastName: lastName || "",
+      email: user?.email || "",
+      phoneNumber: user?.phoneNumber || "",
+      dateOfBirth: baseQuestions?.dateOfBirth || "",
+      gender: baseQuestions?.gender || "",
+      fieldOfIndustry: baseQuestions?.fieldOfIndustry || "",
+      jobTitle: baseQuestions?.jobTitle || "",
+      areasOfExpertise: baseQuestions?.areasOfExpertise || "",
+    }));
+  };
+  
+
+
 
   useEffect(() => {
     const getUserData = async () => {
-      if (userId) {
+      if (userdata) {
         try {
-          const user = await fetchUser(userId); // Fetch user data
+          const user = userdata?.user?.user
           const basicInformation = user?.questionnaire?.basicInformation || {};
-          setBaseQuestions({
+          const baseQuestions = {
             fieldOfIndustry: basicInformation[1]?.answer || "",
             jobTitle: basicInformation[2]?.answer || "",
             areasOfExpertise: basicInformation[3]?.answer || "",
-          });
+          };
+          updateBaseQuestions(user , baseQuestions);
+          setProfileImage(user?.profileImage?.filepath || '')
+
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
       }
     };
     getUserData();
-  }, [userId]);
+  }, [userdata]);
 
+  
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  }
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedFile(file);
-      setPreviewURL(URL.createObjectURL(file)); // Generate a preview URL
+      setImageUrlCrop(URL.createObjectURL(file));
+      const fileName = file.name
+      setFileName(fileName)
+      setIsModalOpen(true);
+      event.target.value = ""
     }
   };;
 
   // Handle profile picture upload
-  const handleFileUpload = async (e) => {
-    e.preventDefault();
-  
+  const handleFileUpload = async () => {
     if (!selectedFile) {
       setUploadMessage("Please select a file before uploading.");
       toast.info("Please select a file before uploading.",{
@@ -214,7 +415,6 @@ const Profile = () => {
     const formData = new FormData();
     formData.append("file", selectedFile);
     formData.append("user", userId);
-  
   
     try {
       const response = await axios.post(
@@ -239,68 +439,155 @@ const Profile = () => {
     }
   };
   
+  const handleCropSave = async () => {
+    if (imageUrlCrop && croppedAreaPixels) {
+      try {
+        const croppedBlob = await getCroppedImg(imageUrlCrop, croppedAreaPixels, zoom);
+        if (!croppedBlob) {
+          throw new Error("Cropped image is empty");
+        }
+        const croppedFile = new File([croppedBlob], fileName , { type: "image/jpeg" });
+        const croppedImageUrl = URL.createObjectURL(croppedFile);
+        const url = URL.createObjectURL(croppedFile);
+
+        setSelectedFile(() => croppedFile)
+        setIsModalOpen(false)
+        setPreviewURL(croppedImageUrl);
+
+      } catch (error) {
+        console.error("Error cropping image:", error);
+      }
+    }
+  };
+
+  const UserDetailsComponent = () => {
+    return <>
+      <div className="px-1 md:px-5 py-6 rounded-xl bg-[#f3f4f6] shadow-md">
+        <div className="flex justify-end items-center mb-2">
+          <div
+            className="absolute h-10 w-10 top-2 right-3 cursor-pointer rounded-full text-xl text-gray-500 flex justify-center items-center hover:scale-110 transition-transform duration-300 ease-in-out hover:bg-gray-200"
+            onClick={() => setIsEditing(true)}
+          >
+            <FaPen />
+          </div>
+        </div>
+        <div className="flex flex-col mb-6 items-center">
+          <div className="w-28 h-28 bg-gray-300 rounded-full flex items-center justify-center relative overflow-hidden">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+              id="profile-upload"
+            />
+            <label htmlFor="profile-upload" className="cursor-pointer w-full h-full rounded-full group">
+              <div className="w-full h-full rounded-full flex items-center justify-center transition-all duration-300">
+                <img className={`${profileImage ? 'w-full h-full':' w-[45%]  h-[45%]'} object-cover rounded-full`} src={profileImage || profile} />
+              </div>
+            </label>
+          </div>
+        </div>
+        <div className="">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:px-20 px-4 md:gap-y-2 md:gap-x-10 md:gap-y-6">
+            {Object.entries(userDetails).map(([key, details]) => (
+              <div key={key} className="mb-4 md:ps-10">
+                <label className="text-base md:text-base font-semibold text-gray-700 block">
+                  {details.label}
+                </label>
+                <div className="text-sm md:text-base lg:text-lg font-semibold text-gray-500">
+                  {details.value || 'N/A'}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  }
+  
 
   return (
     <RootLayout>
       <div className="flex justify-center">
-        <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-5xl">
-          <div className="flex flex-col items-center">
-            <div className="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center relative">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-                id="profile-upload"
-              />
-              {
-                selectedFile ? (
-                  <div className="w-full h-full rounded-full"><img className="w-full h-full object-cover rounded-full" src={previewURL}/></div>
-                ):(
-                  <label htmlFor="profile-upload" className="text-gray-500 cursor-pointer ">
-                {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+      {isModalOpen && (
+          <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md max-w-xs sm:max-w-lg w-full relative mt:[150px] sm:mt-0">
+              <h3 className="text-gray-700 font-semibold mb-4 text-lg text-center">
+                Adjust Image Crop
+              </h3>
+
+              <div className="relative w-full h-48 sm:h-80 bg-gray-200">
+                <Cropper
+                  image={imageUrlCrop}
+                  crop={crop}
+                  zoom={zoom}
+                  onCropChange={setCrop}
+                  onCropComplete={onCropComplete}
+                  onZoomChange={setZoom}
+                />
+              </div>
+
+              <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:justify-between">
+                <button
+                  onClick={handleCloseModal}
+                  className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500 hover:scale-105 w-full sm:w-auto"
                 >
-                  <path d="M4 3a2 2 0 012-2h8a2 2 0 012 2v2h1a1 1 0 011 1v11a1 1 0 01-1 1H3a1 1 0 01-1-1V6a1 1 0 011-1h1V3zm10 2V3H6v2h8zM4 9v7h12V9H4zm8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg> */}
-                      <img className="h-[40px] object-cover" src={profile}></img>
-                      <div className="absolute bottom-0 right-[-10px] h-[40px] w-[40px] bg-gray-100 rounded-full text-[20px] text-gray-400 flex justify-center items-center "><FaPen/></div>
-                  </label>
-                )
-              }
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCropSave}
+                  className="px-4 py-2 rounded-md bg-app-blue-1 text-white hover:scale-105 w-full sm:w-auto"
+                >
+                  Save
+                </button>
+              </div>
             </div>
-            <h2 className="mt-4 text-lg font-medium text-gray-700">
-              Upload Photo
-            </h2>
-            
-            <button
-              onClick={handleFileUpload}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              Upload
-            </button>
-            {/* {uploadMessage && (
-              <p className="mt-2 text-sm text-green-500">{uploadMessage}</p>
-            )} */}
           </div>
 
+      )}
+        <div className="bg-white p-10 rounded-lg shadow-md w-full max-w-5xl relative">
+          {
+             !isEditing ? <>
+              <UserDetailsComponent/>
+             </> :<>
+          <div className="flex flex-col items-center">
+                <div className="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    id="profile-upload"
+                  />
+                  {
+
+                    <label htmlFor="profile-upload" className={`text-gray-500 cursor-pointer ${selectedFile || profileImage ? 'h-full w-full' : 'h-[40px]'}`}>
+                      <div className="w-full h-full rounded-full"><img className="w-full h-full object-cover rounded-full" src={selectedFile ? previewURL : profileImage || profile} /></div>
+                      <div className="absolute bottom-0 right-[-10px] h-[40px] w-[40px] bg-gray-100 rounded-full text-[20px] text-gray-400 flex justify-center items-center "><FaPen /></div>
+                    </label>
+                  }
+                </div>
+          </div>
           <form className="mt-8 space-y-6">
             <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
               <div className="">
                 <label className="block text-sm text-gray-600">First Name</label>
                 <input
+                  name="firstName"
+                  onChange={handleInputChange}
                   type="text"
                   placeholder="Enter your first name"
+                  value={formData.firstName}
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div>
                 <label className="block text-sm text-gray-600">Last Name</label>
                 <input
+                  name="lastName"
                   type="text"
+                  onChange={handleInputChange}
+                  value={formData.lastName}
                   placeholder="Enter your last name"
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -311,17 +598,25 @@ const Profile = () => {
                 <label className="block text-sm text-gray-600">Email</label>
                 <input
                   type="text"
+                  name="email"
+                  onChange={handleInputChange}
+                  value={formData.email}
                   placeholder="Enter your email"
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div>
-                <label className="block text-sm text-gray-600">Phone Number</label>
-                <input
-                  type="number"
-                  placeholder="Enter your phone number"
-                  className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
-                />
+                <label className="block text-sm mb-2 text-gray-600">Phone Number</label>
+                <PhoneInput
+                country={countryCode}
+                value={phoneNumber}
+                onChange={handlePhoneChange}               
+                enableSearch={true}
+                disableDropdown={false}
+                containerClass="w-full"
+                inputClass="!w-full  !px-3 !py-3 !ps-12 !rounded-md !text-sm border !border-gray-300 !bg-transparent focus:!border-blue-500 focus:!outline-none"
+                buttonClass="!border"
+              />
               </div>
             </div>
 
@@ -329,29 +624,30 @@ const Profile = () => {
               <div>
                 <label className="block text-sm text-gray-600">Date of Birth</label>
                 <input
+                  value={formData.dateOfBirth}
+                  onChange={handleInputChange}
+                  name="dateOfBirth"
                   type="date"
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <div className="lg:mr-48">
+              <div className="">
                 <label className="block text-sm text-gray-600">Gender</label>
-                <select className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500">
-                  <option>Male</option>
-                  <option>Female</option>
-                  <option>Other</option>
+                <select onChange={handleInputChange} value={formData.gender} name="gender" className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
             </div>
             <div>
-              {baseQuestions ? (
-                <>
                   <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
                     <div>
                       <label className="block text-sm text-gray-600">Field of Industry:</label>
                       <input
                         type="text"
                         name="fieldOfIndustry"
-                        value={baseQuestions.fieldOfIndustry}
+                        value={formData.fieldOfIndustry}
                         onChange={handleInputChange}
                         placeholder="Enter your field of industry"
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
@@ -362,7 +658,7 @@ const Profile = () => {
                       <input
                         type="text"
                         name="jobTitle"
-                        value={baseQuestions.jobTitle}
+                        value={formData.jobTitle}
                         onChange={handleInputChange}
                         placeholder="Enter your job title"
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
@@ -375,7 +671,7 @@ const Profile = () => {
                       <input
                         type="text"
                         name="areasOfExpertise"
-                        value={baseQuestions.areasOfExpertise}
+                        value={formData.areasOfExpertise}
                         onChange={handleInputChange}
                         placeholder="Enter your area of expertise"
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
@@ -383,22 +679,30 @@ const Profile = () => {
                     </div>
 
                   </div>
-                </>
-              ) : (
-                <div>Loading basic information...</div>
-              )}
+            </div>
+            <div className="flex justify-center gap-2">
+            <button
+                    className="text-white bg-gray-800 px-4 py-2 rounded-md hover:scale-105"
+                    onClick={() => { 
+                      setFormTouched(false)
+                      setIsEditing(false) 
+                      setSelectedFile(null)
+                      setPreviewURL("")
+                    }}
+                  >
+                    Cancel
+             </button>
+            <button
+                    className="bg-app-blue-1 text-white px-4 py-2 rounded-md hover:scale-105"
+                    onClick={handleSubmit}
+                  >
+                    Update
+             </button>
             </div>
 
-
-            {/* <div className="px-[400px] py-4">
-              <button
-                type="submit"
-                className="w-full bg-[#4D49F6] text-white py-3 rounded-md text-sm font-medium"
-              >
-                SUBMIT
-              </button>
-            </div> */}
           </form>
+             </> 
+          }
         </div>
       </div>
     </RootLayout>
