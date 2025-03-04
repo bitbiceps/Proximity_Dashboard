@@ -9,6 +9,7 @@ import { baseURL } from "../axios/instance";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Textanimation } from "../components/common/Textanimation";
+import { toast } from "react-toastify";
 
 export const Questionnair = () => {
  
@@ -41,6 +42,11 @@ export const Questionnair = () => {
   }, [currentQuestionIndex]); // Run this effect when the question index changes
 
   const handleNext = () => {
+    const currentAnswer = answers[currentQuestion.number]
+    if(currentAnswer.length < 8) {
+      toast.error("Please provide proper answers")
+      return
+    }
     if (!isLastQuestion) {
       setCurrentQuestionIndex((prev) => prev + 1);
       setAnimationKey((prev) => prev + 1);
@@ -55,6 +61,7 @@ export const Questionnair = () => {
   };
 
   const handleAnswerChange = (e) => {
+
     const value = e.target.value;
     setAnswers((prev) => ({
       ...prev,
