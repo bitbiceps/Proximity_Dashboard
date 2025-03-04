@@ -78,19 +78,19 @@ function Registration() {
     event.preventDefault();
     if (!validateInputs()) return;
 
-    if (emails.includes(email.toLocaleLowerCase())) {
-      const formData = {
-        fullName,
-        email,
-        password,
-        phoneNumber: `${countryCode}${phoneNumber}`,
-        termsAccepted,
-      };
+    // if (emails.includes(email.toLocaleLowerCase())) {
+    const formData = {
+      fullName,
+      email,
+      password,
+      phoneNumber: `${countryCode}${phoneNumber}`,
+      termsAccepted,
+    };
 
-      dispatch(submitRegistration(formData));
-    } else {
-      toast.error("Email is not eligible");
-    }
+    dispatch(submitRegistration(formData));
+    // } else {
+    //   toast.error("Email is not eligible");
+    // }
   };
 
   useEffect(() => {
