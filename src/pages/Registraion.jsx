@@ -78,19 +78,19 @@ function Registration() {
     event.preventDefault();
     if (!validateInputs()) return;
 
-    if (emails.includes(email.toLocaleLowerCase())) {
-      const formData = {
-        fullName,
-        email,
-        password,
-        phoneNumber: `${phoneNumber}`,
-        termsAccepted,
-      };
+    // if (emails.includes(email.toLocaleLowerCase())) {
+    const formData = {
+      fullName,
+      email,
+      password,
+      phoneNumber: `${phoneNumber}`,
+      termsAccepted,
+    };
 
-      dispatch(submitRegistration(formData));
-    } else {
-      toast.error("Email is not eligible");
-    }
+    dispatch(submitRegistration(formData));
+    // } else {
+    //   toast.error("Email is not eligible");
+    // }
   };
 
   useEffect(() => {
@@ -101,9 +101,9 @@ function Registration() {
       toast.success("Registration successfull redirecting...");
       navigate("/login", { replace: true });
       dispatch(registerResetState());
-    } else if (response?.error?.message === "Email is already registered")
-      toast.error("Email is already registered");
-    else if (response?.error?.message === "Phone number is already registered")
+    } else if (
+      response?.error?.message === "Phone number is already registered"
+    )
       toast.error("Phone number is already registered");
   }, [response, navigate]);
 

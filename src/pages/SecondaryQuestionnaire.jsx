@@ -128,6 +128,12 @@ export const SecondaryQuestionnaire = () => {
   }, [answers, currentSection.section, currentQuestionKey]);
 
   const handleNext = () => {
+    // answers[currentSection.section][currentQuestionKey]
+    if (currentAnswer.length < 8) {
+      toast.error("Please provide proper answers");
+      return;
+    }
+
     if (
       currentQuestionIndex <
       Object.keys(currentSection.questions).length - 1
@@ -332,7 +338,7 @@ export const SecondaryQuestionnaire = () => {
             {!currentQuestion.mandatory && (
               <div className="mt-2 bg-orange-500 w-fit">
                 <p className="text-sm">
-                  * Please enter none if no relevant answer available
+                  * Please enter N/A if no relevant answer available
                 </p>
               </div>
             )}
@@ -340,7 +346,7 @@ export const SecondaryQuestionnaire = () => {
               <textarea
                 ref={textareaRef}
                 rows={1}
-                placeholder="Type your answer here..."
+                placeholder="N/A"
                 value={
                   answers[currentSection.section]?.[currentQuestionKey] || ""
                 }
