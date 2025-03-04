@@ -10,7 +10,7 @@ import { routes } from "../utils";
 const QuestionnaireLayout = ({ children }) => {
   const location = useLocation(); 
   const navigate = useNavigate();
-  const targetRoute = location.pathname === routes.secondary-questionnaire;
+  const targetRoute = location.pathname === routes["secondary_questionnaire"];
 
   const handleBackBtn = () => {
     navigate("/", { replace: true });
