@@ -32,6 +32,7 @@ import { io } from "socket.io-client";
 import { addNotification } from "./redux/slices/notificationSlice";
 import { baseURL } from "./axios/instance";
 import EmailVerification from "./pages/EmailVerification";
+import ForgotPassword from "./pages/ForgotPassword";
 
 
 const stripePromise = loadStripe(
@@ -50,7 +51,8 @@ const App = () => {
     routes.primary_questionnaire,
     routes.secondary_questionnaire,
     routes.loading,
-    routes.generated_article
+    routes.generated_article,
+    routes.forgot_password
   ].includes(location.pathname);
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
   const dispatch = useDispatch()
@@ -83,6 +85,8 @@ const App = () => {
             {/* Public Routes */}
             <Route path={routes.login} Component={Login} />
             <Route path={routes.registration} Component={Registration} />
+            <Route path={routes.forgot_password} Component={ForgotPassword} />
+
 
             {/* Protected Routes */}
 

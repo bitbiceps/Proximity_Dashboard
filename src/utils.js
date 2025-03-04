@@ -22,6 +22,7 @@ export const routes = {
   loading: "/loading",
   text: "/text",
   email_verfication: "/verify/:token",
+  forgot_password : "/forgot-password"
   // payment:"/payment"
 };
 

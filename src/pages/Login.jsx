@@ -125,6 +125,9 @@ function Login() {
                   )}
                 </button>
               </div>
+              <Link to='/forgot-password'>
+              <div className="text-blue-500 text-base hover:text-blue-800 cursor-pointer mt-2">Forgot Password ?</div>
+              </Link>
             </div>
             
             <button

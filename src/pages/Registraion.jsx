@@ -30,6 +30,7 @@ function Registration() {
     "vinaymaheshwari35@gmail.com",
     "kamran@saimanshetty.com",
     "omkar@saimanshetty.com",
+    "sahil.b@saimanshetty.com"
   ];
 
   const [countryCode, setCountryCode] = useState("in");

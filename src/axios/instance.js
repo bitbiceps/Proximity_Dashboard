@@ -39,6 +39,21 @@ const verifyUserRegistration = async (payload) => {
   return await api.get(apiRoutes.email_verify(payload));
 };
 
+const resetPassword = async (payload) => {
+  return await api.post(apiRoutes.reset_password , payload);
+};
+
+const verifyOtp = async (payload) => {
+  return await api.post(apiRoutes.verify_otp , payload);
+};
+
+const changePassword = async (payload) => {
+  return await api.post(apiRoutes.change_password , payload);
+};
+
+
+
+
 const requests = {
   submitQuestionnaire,
   getTopics,
@@ -47,6 +62,9 @@ const requests = {
   checkAuth,
   login,
   verifyUserRegistration,
+  changePassword,
+  verifyOtp,
+  resetPassword
 };
 
 export default requests;

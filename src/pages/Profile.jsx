@@ -267,15 +267,13 @@ const Profile = () => {
         const response = await axios.post(
           `${baseURL}/user/update`,
           {
-            user : userId,
-            fields : {
-              fullName : formData.firstName + " " + formData.lastName,
-              email : formData.email,
-              gender : formData.gender || null ,
-              dateOfBirth : formData.dateOfBirth || null,
-              phoneNumber : phoneNumber
-            },
-            basicQuestionnaire : [formData.fieldOfIndustry , formData.jobTitle, formData. areasOfExpertise]
+            user: userId,
+            fullName: formData.firstName + " " + formData.lastName,
+            email: formData.email,
+            gender: formData.gender || null,
+            dateOfBirth: formData.dateOfBirth || null,
+            phoneNumber: phoneNumber,
+            basicQuestionnaire: [formData.fieldOfIndustry, formData.jobTitle, formData.areasOfExpertise]
           },
           {
             headers: {
@@ -483,8 +481,8 @@ const Profile = () => {
               id="profile-upload"
             />
             <label htmlFor="profile-upload" className="cursor-pointer w-full h-full rounded-full group">
-              <div className="w-full h-full rounded-full flex items-center justify-center transition-all duration-300 group-hover:bg-gray-800/30">
-                <img className="w-full h-full object-cover rounded-full" src={profileImage || profile} />
+              <div className="w-full h-full rounded-full flex items-center justify-center transition-all duration-300">
+                <img className={`${profileImage ? 'w-full h-full':' w-[45%]  h-[45%]'} object-cover rounded-full`} src={profileImage || profile} />
               </div>
             </label>
           </div>

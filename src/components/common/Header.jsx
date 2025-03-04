@@ -105,12 +105,12 @@ const Header = ({userData}) => {
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
-            className="absolute right-[50px] bottom-[-95px] h-[120px] w-[160px] bg-gray-100 shadow-lg rounded-[8px] flex flex-col items-center justify-center gap-3"
+            className="absolute right-[50px] bottom-[-95px] z-50 h-[120px] w-[160px] bg-gray-100 shadow-lg rounded-[8px] flex flex-col items-center justify-center gap-3"
           >
             {navItems2.map((item, index) => (
               <motion.div
               key={index}
-              className="flex items-center w-full gap-4 justify-center "
+              className="flex items-center z-50 w-full gap-4 justify-center "
               onClick={() => {
                 // setActive(item.name);
                 if (item.callBack) item.callBack();

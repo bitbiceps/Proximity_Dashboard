@@ -9,9 +9,12 @@ import { baseURL } from "../axios/instance";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Textanimation } from "../components/common/Textanimation";
+import { fetchUserData } from "../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 export const Questionnair = () => {
  
+  const dispatch = useDispatch();
   const navigate = useNavigate()
   const user = useSelector((state) => state.auth.user);
   const primaryQuestions = user?.user?.questionnaire?.basicInformation;
@@ -54,17 +57,30 @@ export const Questionnair = () => {
     }
   };
 
+  useEffect(() => {
+    const storedAnswers = JSON.parse(localStorage.getItem(`PrimaryQuestionaireAnswers${user.user.id}`)) || {};
+    setAnswers(storedAnswers);
+  }, []);
+
   const handleAnswerChange = (e) => {
     const value = e.target.value;
-    setAnswers((prev) => ({
-      ...prev,
-      [currentQuestion.number]: value,
-    }));
+  
+    setAnswers((prev) => {
+      const updatedAnswers = {
+        ...prev,
+        [currentQuestion.number]: value,
+      };
+  
+      localStorage.setItem(`PrimaryQuestionaireAnswers${user.user.id}`, JSON.stringify(updatedAnswers));
+  
+      return updatedAnswers;
+    });
   };
+  
 
   const handleSubmit = async () => {
     const payload = {
-      user: user.user._id, // Add the user ID to the payload
+      user: user.user.id, // Add the user ID to the payload
       ...answers, // Include the answers from the state
     };
     
@@ -83,6 +99,7 @@ export const Questionnair = () => {
   
       if (response.status === 200) {
        
+       dispatch(fetchUserData(user.user.id))
         navigate("/", {
           replace: true,
           
