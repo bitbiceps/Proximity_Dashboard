@@ -3,9 +3,14 @@ import logo from "../../assets/sidebar/logo.svg";
 import { NavLink } from "react-router-dom";
 import { routes, sideBarTabs } from "../../utils";
 import { TbDashboardFilled } from "react-icons/tb";
+import { RiFileCopy2Fill } from "react-icons/ri";
+import { RiFileList2Fill } from "react-icons/ri";
+import { MdTopic } from "react-icons/md";
 import packageIcon from "../../assets/sidebar/package.svg";
 import topicGeneratorIcon from "../../assets/sidebar/topic.svg";
 import articleIcon from "../../assets/sidebar/article.svg";
+import { FaUserAlt } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 import profileIcon from "../../assets/sidebar/profile.svg";
 import logoutIcon from "../../assets/sidebar/logout.svg";
 import Divider from "../common/Divider";
@@ -58,7 +63,9 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
     ]?.answer?.trim().length;
   const navItems1 = [
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
-    { name: sideBarTabs.package, to: routes.package, img: packageIcon },
+    { name: sideBarTabs.package, to: routes.package,
+      //  img: packageIcon ,
+       icon:RiFileCopy2Fill },
     {
       name: sideBarTabs?.topicGenerator, // if lastquestion true check topic length
       to: isLastQuestion
@@ -66,18 +73,19 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
           ? routes?.topic_unlocked
           : routes.secondary_questionnaire
         : routes.secondary_questionnaire,
-      img: topicGeneratorIcon,
+      // img: topicGeneratorIcon,
+      icon:MdTopic
     },
     {
       name: sideBarTabs.articles_unlocked,
       to: routes.articles_unlocked,
-      img: articleIcon,
+      icon:RiFileList2Fill
     },
   ];
 
   const navItems2 = [
-    { name: sideBarTabs.profile, to: routes.profile, img: profileIcon },
-    { name: sideBarTabs.logout, img: logoutIcon, callBack: logout },
+    { name: sideBarTabs.profile, to: routes.profile, icon : FaUserAlt },
+    { name: sideBarTabs.logout, callBack: logout , icon : FiLogOut },
   ];
   const handleGeneration = () => {
     dispatch(getAllTopics(user.user._id));
@@ -118,7 +126,7 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
                   } pl-6  rounded-lg ${
                     active == item.name
                       ? "bg-app-blue-1 text-white"
-                      : "hover:bg-gray-100 text-app-grey-1"
+                      : "hover:bg-gray-100 hover:text-app-blue-1 text-app-grey-1"
                   } ${!isHovered ? "justify-center" : ""}`}
                 >
                   {isHovered ? (
@@ -182,8 +190,8 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
                       } pl-6  rounded-lg ${
                         active == item.name
                           ? "bg-app-blue-1 text-white"
-                          : "hover:bg-gray-100 text-app-grey-1"
-                      } ${!isHovered ? "justify-center" : ""}`}
+                          : "hover:bg-gray-100 hover:text-app-blue-1 text-app-grey-1"
+                        } ${!isHovered ? "justify-center" : ""}`}
                     >
                       {isHovered ? (
                         <>
@@ -248,7 +256,7 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
                       } pl-6  rounded-lg ${
                         active == item.name
                           ? "bg-app-blue-1 text-white"
-                          : "hover:bg-gray-100 text-app-grey-1"
+                          : "hover:bg-gray-100 hover:text-app-blue-1 text-app-grey-1"
                       } ${!isHovered ? "justify-center" : ""}`}
                     >
                       {isHovered ? (

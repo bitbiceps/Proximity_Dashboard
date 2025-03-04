@@ -49,7 +49,9 @@ const PRServices = () => {
                 <div className="flex justify-center">
                   <button
                     disabled={service.locked}
-                    className="bg-[#4D49F6] text-white py-3 px-4 rounded hover:bg-blue-600 transition-colors"
+                    className={`bg-[#4D49F6] text-white py-3 px-4 rounded hover:bg-blue-600 transition-colors ${
+                      service.locked ? "cursor-not-allowed opacity-50" : ""
+                    }`}
                   >
                     Choose Package
                   </button>

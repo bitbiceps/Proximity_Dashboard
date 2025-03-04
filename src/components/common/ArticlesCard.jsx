@@ -41,7 +41,7 @@ export const ArticlesCard = ({
           : articleStatus === "completed"
           ? "py-[32px] px-[40px] cursor-not-allowed opacity-75 border-[1px] border-green-300 shadow-green-100 shadow-sm"
           : "bg-[#FFFFFF]"
-      } w-[300px] rounded-[12px]`}
+      } w-[300px] cursor-pointer rounded-[12px]`}
     >
       <div>
         <img
