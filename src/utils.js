@@ -19,7 +19,7 @@ export const routes = {
   popup_search: "/popup_search",
   primary_questionnaire: "/primary-questionnaire",
   secondary_questionnaire: "/secondary-questionnaire",
-  loading: "/loading",
+  basicInformation: "/basic-information",
   text: "/text",
   email_verfication: "/verify/:token",
   // payment:"/payment"

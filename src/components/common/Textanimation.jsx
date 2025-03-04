@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Questionnair } from "../../pages/Questionnair";
 
 export const Textanimation = () => {
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
   const handleClick = () => {
-    navigate("/primary-questionnaire");
+    // navigate("/primary-questionnaire");
+    setShow(true);
   };
-  return (
+  return show ? (
+    <>
+      <Questionnair />
+    </>
+  ) : (
     <div className="flex items-center justify-center h-screen w-screen bg-white">
       <motion.div
         className="bg-white flex flex-col justify-center items-center"
@@ -22,8 +29,7 @@ export const Textanimation = () => {
       >
         <h1
           style={{
-            background:
-              "linear-gradient(129.89deg, #02A6F2 -98%, #8A62F6 98%)",
+            background: "linear-gradient(129.89deg, #02A6F2 -98%, #8A62F6 98%)",
             WebkitBackgroundClip: "text",
           }}
           className="text-4xl md:text-7xl font-bold text-center text-transparent"

@@ -18,17 +18,17 @@ function Registration() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const emails = [
-    "tanvi.kapila@saimanshetty.com",
-    "saanidhya@saimanshetty.com",
-    "harsh@saimanshetty.com",
-    "saiman@saimanshetty.com",
-    "vinay.m@saimanshetty.com",
-    "yogesh.y@saimanshetty.com",
-    "vinaymaheshwari35@gmail.com",
-    "kamran@saimanshetty.com",
-    "omkar@saimanshetty.com",
-  ];
+  // const emails = [
+  //   "tanvi.kapila@saimanshetty.com",
+  //   "saanidhya@saimanshetty.com",
+  //   "harsh@saimanshetty.com",
+  //   "saiman@saimanshetty.com",
+  //   "vinay.m@saimanshetty.com",
+  //   "yogesh.y@saimanshetty.com",
+  //   "vinaymaheshwari35@gmail.com",
+  //   "kamran@saimanshetty.com",
+  //   "omkar@saimanshetty.com",
+  // ];
 
   const [countryCode, setCountryCode] = useState("+91");
   const [phoneNumber, setPhoneNumber] = useState("");

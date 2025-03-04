@@ -49,7 +49,7 @@ const App = () => {
     routes.registration,
     routes.primary_questionnaire,
     routes.secondary_questionnaire,
-    routes.loading,
+    routes.basicInformation,
   ].includes(location.pathname);
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
   const dispatch = useDispatch()
@@ -93,12 +93,12 @@ const App = () => {
               path={routes.text}
               element={<ProtectedRoute Component={TextGenerating} />}
             />
-            <Route
+            {/* <Route
               path={routes.primary_questionnaire}
               element={<ProtectedRoute Component={Questionnair} />}
-            />
+            /> */}
             <Route
-              path={routes.loading}
+              path={routes.basicInformation}
               element={<ProtectedRoute Component={LoadingPage} />}
             />
             <Route
