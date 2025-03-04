@@ -2,13 +2,15 @@ import React from "react";
 import { BrandHeader } from "../components/common/BrandHeader";
 import { useNavigate , useLocation } from "react-router-dom";
 import leftArrow from "../assets/arows/left.png"
+import { routes } from "../utils";
+
 
 
 
 const QuestionnaireLayout = ({ children }) => {
   const location = useLocation(); 
   const navigate = useNavigate();
-  const targetRoute = location.pathname === "/secondary-questionnaire";
+  const targetRoute = location.pathname === routes.secondary-questionnaire;
 
   const handleBackBtn = () => {
     navigate("/", { replace: true });
