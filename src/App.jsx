@@ -23,7 +23,6 @@ import ProtectedRoute from "./components/common/ProtectedRoutes";
 import { loadStripe } from "@stripe/stripe-js";
 import { ToastContainer } from "react-toastify";
 import TopicUnlocked from "./pages/TopicUnlocked";
-import { Questionnair } from "./pages/Questionnair";
 import { SecondaryQuestionnaire } from "./pages/SecondaryQuestionnaire";
 import { LoadingPage } from "./pages/LoadingPage";
 import { TextGenerating } from "./pages/TextGenerating";
@@ -50,6 +49,7 @@ const App = () => {
     routes.primary_questionnaire,
     routes.secondary_questionnaire,
     routes.basicInformation,
+    routes.forgot_password
   ].includes(location.pathname);
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
   const dispatch = useDispatch()

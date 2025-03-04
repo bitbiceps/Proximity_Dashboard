@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -24,9 +24,7 @@ export const Textanimation = () => {
 
   return (
     <div className="flex items-center justify-center h-screen w-screen bg-white">
-      <motion.div
-        className="bg-white flex flex-col justify-center items-center"
-      >
+      <motion.div className="bg-white flex flex-col justify-center items-center">
         {/* Animated Welcome Text */}
         <motion.h1
           initial={{ x: 100, opacity: 0 }}
