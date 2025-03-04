@@ -280,9 +280,7 @@ export const SecondaryQuestionnaire = () => {
   // }, [isNextDisabled, isLastQuestion, answers[currentQuestion.number]]);
   
 
-  const handleBackBtn = () => {
-    navigate("/", { replace: true });
-  }
+
 
   const wordCount = () => {
     const answer =  (answers[currentSection.section]?.[currentQuestionKey] || "").trim()
@@ -305,15 +303,6 @@ export const SecondaryQuestionnaire = () => {
         className="mb-[40px] mt-[5px]"
       >
         <div className="lg:w-[70%] md:w-[70%] w-[90%] mx-auto flex flex-col justify-start  mt-[5px]">
-        <div 
-        className="flex items-center gap-2 text-[16px] lg:text-[24px] text-gray-600 border border-gray-400 w-fit px-2 py-2 rounded-md hover:scale-105 transition-all duration-300 cursor-pointer"
-        onClick={handleBackBtn}
-        >
-          <img className="w-8 h-8" src={leftArrow}/> 
-            <div className="font-semibold">
-              Back
-            </div>
-        </div>
         <div className="flex justify-start items-center text-[18px] lg:text-[28px] font-semibold text-[#8A62F6] mt-[30px]">
           {currentSection.name}
         </div>
