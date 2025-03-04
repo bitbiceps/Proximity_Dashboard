@@ -56,7 +56,8 @@ export default function ForgotPassword() {
         setLoading(false);
     };
 
-    const verifyOtp = async () => {
+    const verifyOtp = async (event) => {
+        event.preventDefault()
         setLoading(true);
         try {
             const response = await requests.verifyOtp({email, otp });
@@ -70,7 +71,8 @@ export default function ForgotPassword() {
         setLoading(false);
     };
 
-    const resetPassword = async () => {
+    const resetPassword = async (event) => {
+        event.preventDefault()
         if (newPassword !== confirmPassword) {
             toast.error("Passwords do not match");
             return;
@@ -99,30 +101,35 @@ export default function ForgotPassword() {
                     <img className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]" src={news} />
                 </div>
 
-                <div className="flex flex-col w-full md:w-1/2 px-8 md:px-48 py-6 md:py-16 h-full justify-center">
+                <div className="flex flex-col w-full md:w-1/2 px-8 md:px-16 lg:px-48 py-6 md:py-16 h-full justify-center">
                     <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-8 text-center">
                         Unlock Your PR Potential
                     </h2>
                     <div className="max-w-xl mt-2 p-2 bg-white rounded-lg">
                         {step === 1 && (
                             <>
-                                <h2 className="text-lg font-semibold mb-10">Reset Your Password</h2>
+                             <form onSubmit={handleOtpSend}>
+                             <h2 className="text-lg font-semibold mb-10">Reset Your Password</h2>
                                 <label className="block text-sm text-gray-500 mb-1">
                                     Email Address
                                 </label>
-                                <input type="email" placeholder="Enter your email" className="w-full border-b-2 border-gray-300 py-1 focus:outline-none focus:border-blue-600 text-sm text-gray-800" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                <button onClick={handleOtpSend} className={`mt-4 w-full bg-[#4D49F6] text-white py-[15px] rounded-full text-sm font-semibold shadow-lg ${loading ? "opacity-50 cursor-not-allowed" : ""}`}>Send OTP</button>
+                                <input placeholder="Enter your email" className="w-full border-b-2 border-gray-300 py-1 focus:outline-none focus:border-blue-600 text-sm text-gray-800" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                <button type="submit" className={`mt-4 w-full bg-[#4D49F6] text-white py-[15px] rounded-full text-sm font-semibold shadow-lg ${loading ? "opacity-50 cursor-not-allowed" : ""}`}>Send OTP</button>
+                             </form>
                             </>
                         )}
                         {step === 2 && (
                             <>
-                                <h2 className="text-lg font-semibold mb-2">Verify OTP</h2>
+                               <form onSubmit={verifyOtp}>
+                               <h2 className="text-lg font-semibold mb-2">Verify OTP</h2>
                                 <input type="text" placeholder="Enter OTP" className="w-full border-b-2 border-gray-300 py-1 focus:outline-none focus:border-blue-600 text-sm text-gray-800" value={otp} onChange={(e) => setOtp(e.target.value)} />
-                                <button onClick={verifyOtp} className={`mt-4 w-full bg-[#4D49F6] text-white py-[15px] rounded-full text-sm font-semibold shadow-lg ${loading ? "opacity-50 cursor-not-allowed" : ""}`}>Verify OTP</button>
+                                <button type="submit" className={`mt-4 w-full bg-[#4D49F6] text-white py-[15px] rounded-full text-sm font-semibold shadow-lg ${loading ? "opacity-50 cursor-not-allowed" : ""}`}>Verify OTP</button>
+                               </form>
                             </>
                         )}
                         {step === 3 && (<>
-                            <h2 className="text-lg font-semibold mb-2">Set New Password</h2>
+                           <form onSubmit={resetPassword}>
+                           <h2 className="text-lg font-semibold mb-2">Set New Password</h2>
                             <label className="block text-sm text-gray-600 mb-1">New Password</label>
                             <div className="relative">
                                 <input
@@ -170,12 +177,14 @@ export default function ForgotPassword() {
 
                             <div className="flex justify-between mt-3">
                                 <button
-                                   onClick={resetPassword}
+                                    type="submit"
                                     className="bg-green-600 w-full text-white py-2 px-4 rounded hover:bg-green-700"
                                 >
                                     Reset Password
                                 </button>
                             </div>
+
+                           </form>
                         </>
                         )}
                     </div>
