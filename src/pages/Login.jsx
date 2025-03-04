@@ -41,7 +41,6 @@ function Login() {
           cookieAccessKeys?.tokens?.accessToken,
           response.data.tokens[cookieAccessKeys?.tokens?.accessToken]
         );
-        console.log('respnos data',response.data)
         if(!response.data.user.questionnaire.basicInformation[1].answer) {
           navigate("/",{replace:true})
           return
