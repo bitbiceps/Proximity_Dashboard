@@ -22,7 +22,8 @@ export const routes = {
   basicInformation: "/basic-information",
   text: "/text",
   email_verfication: "/verify/:token",
-  forgot_password : "/forgot-password"
+  forgot_password : "/forgot-password",
+  terms_condition : "/terms_condition"
   // payment:"/payment"
 };
 
