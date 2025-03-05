@@ -99,10 +99,10 @@ const App = () => {
               path={routes.text}
               element={<ProtectedRoute Component={TextGenerating} />}
             />
-            <Route
+            {/* <Route
               path={routes.primary_questionnaire}
               element={<ProtectedRoute Component={Questionnair} />}
-            />
+            /> */}
             <Route
               path={routes.basicInformation}
               element={<ProtectedRoute Component={LoadingPage} />}
