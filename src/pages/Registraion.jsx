@@ -14,6 +14,8 @@ import "react-toastify/dist/ReactToastify.css";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import parsePhoneNumberFromString from "libphonenumber-js";
+import { FaCircleInfo } from "react-icons/fa6";
+
 
 
 function Registration() {
@@ -204,7 +206,8 @@ function Registration() {
               {loading ? "Logging In..." : "CREATE ACCOUNT"}
             </button> */}
 
-            <div className="flex items-center mt-2 mx-auto">
+            <div className="flex gap-2 items-center mt-2 mx-auto">
+              <div className="flex items-center">
               <input
                 type="checkbox"
                 checked={termsAccepted}
@@ -212,10 +215,16 @@ function Registration() {
                 id="terms"
                 className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
-              <label htmlFor="terms" className="ml-2 text-xs text-gray-500">
+              <label htmlFor="terms" className="ml-2 text-xs cursor-pointer text-gray-500">
                 I accept the terms & Conditions
               </label>
+              </div>
+              <a href='/terms_condition' target='_blank' rel='noopener noreferrer'>
+  <FaCircleInfo />
+</a>
+
             </div>
+
           </form>
 
           <div className="flex items-center my-6">

@@ -68,9 +68,8 @@ export const Questionnair = () => {
     setAnswers(storedAnswers);
   }, []);
 
-  const handleAnswerChange = (e) => {
+  const handleAnswerChange = (value) => {
 
-    const value = e.target.value;
   
     setAnswers((prev) => {
       const updatedAnswers = {
@@ -182,14 +181,32 @@ export const Questionnair = () => {
           {currentQuestion.question}
           </div>
           <div className="mt-[54px]">
-            <textarea
-             ref={textareaRef}
-              rows={1}
-              placeholder="Type your answer here..."
-              value={answers[currentQuestion.number] || ""}
-              onChange={handleAnswerChange}
-              className="flex w-full  placeholder:text-[13px] lg:placeholder:text-[24px] placeholder:font-normal focus:outline-none text-[16px] lg:text-[24px] placeholder:text-gray-400 border-b-[1px] border-[#878787] pb-2"
-            ></textarea>
+          {currentQuestion.questionType === "input" ? (
+                <textarea
+                  ref={textareaRef}
+                  rows={1}
+                  placeholder="Type your answer here..."
+                  value={answers[currentQuestion.number] || ""}
+                  onChange={(e) => handleAnswerChange(e.target.value)}
+                  className="flex w-full placeholder:text-[13px] lg:placeholder:text-[24px] placeholder:font-normal focus:outline-none text-[16px] lg:text-[24px] placeholder:text-gray-400 border-b-[1px] border-[#878787] pb-2"
+                ></textarea>
+              ) : (
+                <div className="flex flex-wrap gap-3">
+                  {currentQuestion.options.map((option, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleAnswerChange(option)}
+                      className={`px-4 py-2 border rounded cursor-pointer transition-transform duration-200 ease-in-out transform ${
+                        answers[currentQuestion.number] === option
+                          ? "bg-[#8A62F6] text-white scale-105 shadow-md"
+                          : "border-gray-400 text-gray-700 hover:scale-105 hover:border-[#8A62F6]"
+                      }`}
+                    >
+                      {option}
+                    </div>
+                  ))}
+                </div>
+              )}
             <div className="flex flex-row gap-[32px] mt-[77px]">
             <button
                 onClick={handleBack}

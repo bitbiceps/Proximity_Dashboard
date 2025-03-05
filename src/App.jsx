@@ -31,7 +31,8 @@ import { addNotification } from "./redux/slices/notificationSlice";
 import { baseURL } from "./axios/instance";
 import EmailVerification from "./pages/EmailVerification";
 import ForgotPassword from "./pages/ForgotPassword";
-
+import { Questionnair } from "./pages/Questionnair";
+import TermsAndConditions from "./pages/TermsAndConditions"
 
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
@@ -50,7 +51,8 @@ const App = () => {
     routes.secondary_questionnaire,
     routes.basicInformation,
     routes.forgot_password,
-    routes.generated_article
+    routes.generated_article,
+    routes.terms_condition
   ].includes(location.pathname);
   const isErrorRoute = !isValidRoute; // If it's not a valid route, it's an error (404)
   const dispatch = useDispatch()
@@ -84,6 +86,7 @@ const App = () => {
             <Route path={routes.login} Component={Login} />
             <Route path={routes.registration} Component={Registration} />
             <Route path={routes.forgot_password} Component={ForgotPassword} />
+            <Route path={routes.terms_condition} Component={TermsAndConditions} />
 
 
             {/* Protected Routes */}
@@ -96,10 +99,10 @@ const App = () => {
               path={routes.text}
               element={<ProtectedRoute Component={TextGenerating} />}
             />
-            {/* <Route
+            <Route
               path={routes.primary_questionnaire}
               element={<ProtectedRoute Component={Questionnair} />}
-            /> */}
+            />
             <Route
               path={routes.basicInformation}
               element={<ProtectedRoute Component={LoadingPage} />}

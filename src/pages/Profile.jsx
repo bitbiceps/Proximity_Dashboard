@@ -148,6 +148,7 @@ import "react-phone-input-2/lib/style.css";
 import parsePhoneNumberFromString from "libphonenumber-js";
 import Cropper from 'react-easy-crop'
 import { getCroppedImg } from "../utils";
+import dayjs from "dayjs";
 
 
 
@@ -185,8 +186,9 @@ const Profile = () => {
     gender : {label : "Gender" , value : ""},
     fieldOfIndustry: { label: "Field of Industry", value: "" },
     jobTitle: { label: "Job Title", value: "" },
-    areasOfExpertise: { label: "Areas of Expertise", value: "" },
+    companyName: { label: "Company name", value: "" },
   })
+
 
   const [formData, setFormData] = useState({
     firstName: firstName,
@@ -197,7 +199,7 @@ const Profile = () => {
     gender: "",
     fieldOfIndustry: "",
     jobTitle: "",
-    areasOfExpertise: "",
+    companyName: "",
   });
 
 
@@ -219,14 +221,18 @@ const Profile = () => {
     } else if (!formData.phoneNumber.trim()) {
       errorMessage = "Phone number is required";
       isValid = false;
-    }  else if (!formData.fieldOfIndustry.trim()) {
+    }else if (!validatePhonenumber()){
+      errorMessage = "Phone number is not valid";
+      isValid = false;
+    } 
+     else if (!formData.fieldOfIndustry.trim()) {
       errorMessage = "Field of industry is required";
       isValid = false;
     } else if (!formData.jobTitle.trim()) {
       errorMessage = "Job title is required";
       isValid = false;
-    } else if (!formData.areasOfExpertise.trim()) {
-      errorMessage = "Areas of expertise is required";
+    } else if (!formData.companyName.trim()) {
+      errorMessage = "Company name is required";
       isValid = false;
     }
 
@@ -268,12 +274,14 @@ const Profile = () => {
           `${baseURL}/user/update`,
           {
             user: userId,
-            fullName: formData.firstName + " " + formData.lastName,
-            email: formData.email,
-            gender: formData.gender || null,
-            dateOfBirth: formData.dateOfBirth || null,
-            phoneNumber: phoneNumber,
-            basicQuestionnaire: [formData.fieldOfIndustry, formData.jobTitle, formData.areasOfExpertise]
+            fields : {
+              fullName: formData.firstName + " " + formData.lastName,
+              email: formData.email,
+              gender: formData.gender || null,
+              dateOfBirth: formData.dateOfBirth || null,
+              phoneNumber: phoneNumber,
+            },
+            basicQuestionnaire: [formData.fieldOfIndustry, formData.jobTitle, formData.companyName]
           },
           {
             headers: {
@@ -329,11 +337,11 @@ const Profile = () => {
       lastName: { ...prevDetails.lastName, value: lastName || "" },
       email: { ...prevDetails.email, value: user?.email || "" },
       phoneNumber: { ...prevDetails.phoneNumber, value: user?.phoneNumber || "" },
-      dob: { ...prevDetails.dob, value: baseQuestions?.dateOfBirth || "" },
-      gender: { ...prevDetails.gender, value: baseQuestions?.gender || "" },
+      dob: { ...prevDetails.dob, value: user?.dateOfBirth ? dayjs(user?.dateOfBirth).format("DD MMM, YYYY") : "" },
+      gender: { ...prevDetails.gender, value: user?.gender || "" },
       fieldOfIndustry: { ...prevDetails.fieldOfIndustry, value: baseQuestions?.fieldOfIndustry || "" },
       jobTitle: { ...prevDetails.jobTitle, value: baseQuestions?.jobTitle || "" },
-      areasOfExpertise: { ...prevDetails.areasOfExpertise, value: baseQuestions?.areasOfExpertise || "" },
+      companyName: { ...prevDetails.companyName, value: baseQuestions?.companyName || "" },
     }));
   
     setFormData((prevDetails) => ({
@@ -342,11 +350,11 @@ const Profile = () => {
       lastName: lastName || "",
       email: user?.email || "",
       phoneNumber: user?.phoneNumber || "",
-      dateOfBirth: baseQuestions?.dateOfBirth || "",
-      gender: baseQuestions?.gender || "",
+      dateOfBirth: user?.dateOfBirth || "",
+      gender: user?.gender || "",
       fieldOfIndustry: baseQuestions?.fieldOfIndustry || "",
       jobTitle: baseQuestions?.jobTitle || "",
-      areasOfExpertise: baseQuestions?.areasOfExpertise || "",
+      companyName: baseQuestions?.companyName || "",
     }));
   };
   
@@ -362,7 +370,7 @@ const Profile = () => {
           const baseQuestions = {
             fieldOfIndustry: basicInformation[1]?.answer || "",
             jobTitle: basicInformation[2]?.answer || "",
-            areasOfExpertise: basicInformation[3]?.answer || "",
+            companyName: basicInformation[3]?.answer || "",
           };
           updateBaseQuestions(user , baseQuestions);
           setProfileImage(user?.profileImage?.filepath || '')
@@ -623,13 +631,13 @@ const Profile = () => {
             <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
               <div>
                 <label className="block text-sm text-gray-600">Date of Birth</label>
-                <input
-                  value={formData.dateOfBirth}
-                  onChange={handleInputChange}
-                  name="dateOfBirth"
-                  type="date"
-                  className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
-                />
+                      <input
+                        value={formData.dateOfBirth ? dayjs(formData.dateOfBirth).format("YYYY-MM-DD") : ""}
+                        onChange={handleInputChange}
+                        name="dateOfBirth"
+                        type="date"
+                        className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                      />
               </div>
               <div className="">
                 <label className="block text-sm text-gray-600">Gender</label>
@@ -655,23 +663,38 @@ const Profile = () => {
                     </div>
                     <div>
                       <label className="block text-sm text-gray-600">Role/Job Title:</label>
-                      <input
-                        type="text"
-                        name="jobTitle"
-                        value={formData.jobTitle}
-                        onChange={handleInputChange}
-                        placeholder="Enter your job title"
-                        className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
-                      />
+                        <select
+                          name="jobTitle"
+                          value={formData.jobTitle}
+                          onChange={handleInputChange}
+                          className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value="" disabled>Select your job title</option>
+                          {[
+                            "Software Engineer",
+                            "Project Manager",
+                            "Data Analyst",
+                            "Product Manager",
+                            "Marketing Specialist",
+                            "Sales Representative",
+                            "HR Manager",
+                            "Other",
+                          ].map((title) => (
+                            <option key={title} value={title}>
+                              {title}
+                            </option>
+                          ))}
+                        </select>
+
                     </div>
                   </div>
                   <div className="grid grid-cols-2 mt-6 lg:px-16 px-0 gap-2 lg:gap-16">
                     <div>
-                      <label className="block text-sm text-gray-600">Areas of Expertise:</label>
+                      <label className="block text-sm text-gray-600">Company name:</label>
                       <input
                         type="text"
-                        name="areasOfExpertise"
-                        value={formData.areasOfExpertise}
+                        name="companyName"
+                        value={formData.companyName}
                         onChange={handleInputChange}
                         placeholder="Enter your area of expertise"
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"

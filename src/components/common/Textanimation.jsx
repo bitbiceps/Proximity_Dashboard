@@ -18,7 +18,7 @@ export const Textanimation = () => {
   }, []);
 
   const handleClick = () => {
-    // navigate("/primary-questionnaire");
+    navigate("/primary-questionnaire");
     setShow(true);
   };
 

@@ -45,7 +45,7 @@ function Login() {
           navigate("/",{replace:true})
           return
         }
-        navigate(routes.loading,{replace:true})
+        navigate(routes.basicInformation,{replace:true})
       }
     } catch (error) {
       toast.error(error.message);
