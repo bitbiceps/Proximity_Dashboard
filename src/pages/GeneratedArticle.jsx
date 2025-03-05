@@ -79,8 +79,8 @@ const GeneratedArticle = () => {
   }, [])
 
   useEffect(() => {
-     if(articleGenerate.filepath){
-      setProfileImage(articleGenerate.filepath)      
+     if(articleGenerate.profileImage){
+      setProfileImage(articleGenerate?.profileImage?.filepath)      
      }
      let title, content;
      const temp = articleGenerate.value.split(':');

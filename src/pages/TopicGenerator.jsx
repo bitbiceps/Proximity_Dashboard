@@ -136,12 +136,12 @@ const TopicGenerator = ({ topicId }) => {
               {topics.map((title, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-4 bg-gray-50 border border-gray-300 rounded-lg"
+                  className="flex items-center gap-2 justify-between p-4 bg-gray-50 border border-gray-300 rounded-lg"
                 >
                   <span className="text-gray-700 font-semibold">
                     {title.value}
                   </span>
-                  <div className="space-x-2">
+                  <div className=" flex justify-between gap-2">
                     <button
                       onClick={() => handleVerify(title._id, index)}
                       className={`px-6 py-2 text-sm font-medium rounded-sm ${

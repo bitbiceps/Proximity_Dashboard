@@ -247,6 +247,7 @@ export const SecondaryQuestionnaire = () => {
 
       if (response.status === 200) {
         await handleTopicCreation(user?.user?._id);
+        localStorage.removeItem(`ProximityDbSecQuesAns_${user.user.id}`);
         navigate("/topic_unlocked", { replace: true });
       } else {
         setIsSubmitDisabled(false); // Re-enable button on failure
