@@ -69,6 +69,10 @@ const GeneratedArticle = () => {
   );
 
   const [profileImage , setProfileImage] = useState('');
+  const [articleData , setArticleData] = useState({
+    title : "",
+    value : ""
+  })
 
   useEffect(() => {
     dispatch(generateArticles({_id :id, userId}));
@@ -76,8 +80,23 @@ const GeneratedArticle = () => {
 
   useEffect(() => {
      if(articleGenerate.filepath){
-      setProfileImage(articleGenerate.filepath)
+      setProfileImage(articleGenerate.filepath)      
      }
+     let title, content;
+     const temp = articleGenerate.value.split(':');
+
+     if (temp.length > 1) {
+         title = temp.shift().trim();
+         content = temp.join(":").trim();
+     } else {
+         title = "Generated Article";  
+         content = articleGenerate.value.trim();
+     }
+     
+     setArticleData({
+       title : title,
+       value : content
+     })
   },[articleGenerate])
 
   useEffect(() => {
@@ -270,8 +289,8 @@ const GeneratedArticle = () => {
 
         {/* Generated Article Section */}
         <div className="w-full max-w-4xl ">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Generated Article
+          <h2 className="text-xl text-center mt-5 font-semibold text-gray-800 mb-4">
+              {articleData?.title}
           </h2>
           {/* <p className="text-gray-700 text-justify leading-relaxed mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
@@ -292,7 +311,7 @@ const GeneratedArticle = () => {
               {a._id == currentArticle._id && <p>{a.value}</p>}
             </div>
           ))} */}
-          <div>{articleGenerate?.value}</div>
+          <div>{articleData?.value}</div>
 
           {/* <p className="text-gray-700 text-justify leading-relaxed mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
