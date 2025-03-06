@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseURL } from "../../axios/instance";
+import { toast } from "react-toastify";
 
 //fetch user 
 export const fetchUser = async (userId) => {
@@ -96,8 +97,13 @@ export const submitRegistration = createAsyncThunk(
         `${baseURL}/api/auth/register`,
         formData
       );
+
+      toast.success(response?.data?.message || '')
+
       return response.data;
     } catch (error) {
+      toast.error(error?.response?.data?.message || '')
+
       return rejectWithValue(error.response?.data || "Registration failed");
     }
   }

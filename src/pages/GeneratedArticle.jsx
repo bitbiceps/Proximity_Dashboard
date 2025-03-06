@@ -76,12 +76,20 @@ const GeneratedArticle = () => {
     dispatch(generateArticles({ _id: id, userId }));
   }, []);
 
-  useEffect(() => {
-    if (articleGenerate?.filepath) {
-      setProfileImage(articleGenerate?.filepath);
+  const wordCount = (value) => {
+    let totalWord = 0 ;
+    if(value){
+         totalWord = value.split(/\s+/).length;
     }
-    let title, content;
-    const temp = articleGenerate.value.split(":");
+    return totalWord
+  }
+
+  useEffect(() => {
+     if(articleGenerate.profileImage){
+      setProfileImage(articleGenerate?.profileImage?.filepath)      
+     }
+     let title, content;
+     const temp = articleGenerate.value.split(':');
 
     if (temp.length > 1) {
       title = temp.shift().trim();
@@ -304,6 +312,7 @@ const GeneratedArticle = () => {
           <h2 className="text-xl text-center mt-5 font-semibold text-gray-800 mb-4">
             {articleData?.title}
           </h2>
+          <h4 className="flex justify-end font-semibold italic text-gray-600">Words Count : {wordCount(articleData?.value)}</h4>
           {/* <p className="text-gray-700 text-justify leading-relaxed mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
             lacus sem. Fusce volutpat fermentum turpis a mollis. Pellentesque
@@ -323,7 +332,7 @@ const GeneratedArticle = () => {
               {a._id == currentArticle._id && <p>{a.value}</p>}
             </div>
           ))} */}
-          <div>{articleData?.value}</div>
+          <div className="text-justify mt-2">{articleData?.value}</div>
 
           {/* <p className="text-gray-700 text-justify leading-relaxed mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
