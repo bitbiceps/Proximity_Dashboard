@@ -61,6 +61,7 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
     userData?.questionnaire?.industryContextAndInsights[
       questionsArray.length
     ]?.answer?.trim().length;
+    
   const navItems1 = [
     { name: sideBarTabs.dashboard, to: routes.root, icon: TbDashboardFilled },
     { name: sideBarTabs.package, to: routes.package,
