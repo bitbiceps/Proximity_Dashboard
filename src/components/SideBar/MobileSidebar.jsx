@@ -16,6 +16,8 @@ import axios from "axios";
 import { baseURL } from "../../axios/instance";
 import { useSelector } from "react-redux";;
 import { toggleMobileOpen } from "../../redux/slices/sidebarSlice";
+import { MdOutlineMessage } from "react-icons/md";
+
 const MobileSidebar = ({ logout, user, articles, topics }) => {
   const isMobileOpen = useSelector(
     ({ sidebar: { isMobileOpen } }) => isMobileOpen
@@ -98,6 +100,11 @@ const MobileSidebar = ({ logout, user, articles, topics }) => {
       name: sideBarTabs.articles_unlocked,
       to: routes.articles_unlocked,
       img: articleIcon,
+    },
+    {
+      name: sideBarTabs.team_reply,
+      to: routes.team_reply,
+      icon:MdOutlineMessage ,
     },
   ];
 

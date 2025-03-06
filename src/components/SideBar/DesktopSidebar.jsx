@@ -5,6 +5,7 @@ import { routes, sideBarTabs } from "../../utils";
 import { TbDashboardFilled } from "react-icons/tb";
 import { RiFileCopy2Fill } from "react-icons/ri";
 import { RiFileList2Fill } from "react-icons/ri";
+import { MdOutlineMessage } from "react-icons/md";
 import { MdTopic } from "react-icons/md";
 import packageIcon from "../../assets/sidebar/package.svg";
 import topicGeneratorIcon from "../../assets/sidebar/topic.svg";
@@ -82,6 +83,11 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
       to: routes.articles_unlocked,
       icon:RiFileList2Fill
     },
+    {
+      name : sideBarTabs.team_reply,
+      to : routes.team_reply,
+      icon : MdOutlineMessage
+    }
   ];
 
   const navItems2 = [

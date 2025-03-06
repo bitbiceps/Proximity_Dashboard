@@ -149,6 +149,7 @@ import parsePhoneNumberFromString from "libphonenumber-js";
 import Cropper from 'react-easy-crop'
 import { getCroppedImg } from "../utils";
 import dayjs from "dayjs";
+import { industryJobRoles } from "../utils";
 
 
 
@@ -209,10 +210,12 @@ const Profile = () => {
     if (!formData.firstName.trim()) {
       errorMessage = "First name is required";
       isValid = false;
-    } else if (!formData.lastName.trim()) {
-      errorMessage = "Last name is required";
-      isValid = false;
-    } else if (!formData.email.trim()) {
+    } 
+    // else if (!formData.lastName.trim()) {
+    //   errorMessage = "Last name is required";
+    //   isValid = false;
+    // }
+     else if (!formData.email.trim()) {
       errorMessage = "Email is required";
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -243,32 +246,38 @@ const Profile = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormTouched(true);
-    setFormData({ ...formData, [name]: value });
+    const updatedData = {...formData , [name] : value};
+    if(name === 'fieldOfIndustry'){
+      updatedData["jobTitle"]=""
+    }
+    setFormData(updatedData);
   };
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const {isValid , errorMessage} = validateForm();
+    if(!isValid){
+      toast.error(errorMessage);
+      return ;
+    }
     if(formTouched){
       await handleUserDetailsSubmit();
     }
     if(selectedFile){
       await handleFileUpload();
-      setSelectedFile(null);
-      setPreviewURL("")
     }
     if(formTouched || selectedFile) {
        await dispatch(fetchUserData(userId))
+       setFormTouched(false);
+       setIsEditing(false);
     }
-    setIsEditing(false);
-    setFormTouched(false);
     setSelectedFile(null);
-    setPreviewURL(null)
+    setPreviewURL(null);
+
   }
 
   const handleUserDetailsSubmit = async () => {
-    const {isValid , errorMessage} = validateForm();
-    if (isValid) {
       try {
         const response = await axios.post(
           `${baseURL}/user/update`,
@@ -292,16 +301,11 @@ const Profile = () => {
         if(response){
           toast.success("User Profile updated!!",{
             theme: "light",
-            
           })
         }
       } catch (error) {
          toast.error('Error while uploading the user details')
       }
-
-    } else {
-      toast.error(errorMessage);
-    }
   };
   
   
@@ -439,7 +443,6 @@ const Profile = () => {
       if(response){
         toast.success("Profile pic uploaded!!",{
           theme: "light",
-          
         })
       }
     } catch (error) {
@@ -579,7 +582,7 @@ const Profile = () => {
           <form className="mt-8 space-y-6">
             <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
               <div className="">
-                <label className="block text-sm text-gray-600">First Name</label>
+                <label className="block text-sm text-gray-600">First Name *</label>
                 <input
                   name="firstName"
                   onChange={handleInputChange}
@@ -603,7 +606,7 @@ const Profile = () => {
             </div>
             <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
               <div>
-                <label className="block text-sm text-gray-600">Email</label>
+                <label className="block text-sm text-gray-600">Email *</label>
                 <input
                   type="text"
                   name="email"
@@ -614,7 +617,7 @@ const Profile = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm mb-2 text-gray-600">Phone Number</label>
+                <label className="block text-sm mb-2 text-gray-600">Phone Number *</label>
                 <PhoneInput
                 country={countryCode}
                 value={phoneNumber}
@@ -650,19 +653,35 @@ const Profile = () => {
             </div>
             <div>
                   <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
-                    <div>
-                      <label className="block text-sm text-gray-600">Field of Industry:</label>
-                      <input
-                        type="text"
-                        name="fieldOfIndustry"
-                        value={formData.fieldOfIndustry}
-                        onChange={handleInputChange}
-                        placeholder="Enter your field of industry"
-                        className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
-                      />
+                  <div>
+                      <label className="block text-sm text-gray-600">Field of industry *</label>
+                        <select
+                          name="fieldOfIndustry"
+                          value={formData.fieldOfIndustry}
+                          onChange={handleInputChange}
+                          className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value="" disabled>Select your field</option>
+                          {[
+                              "Software and IT",
+                              "Finance and Banking",
+                              "Healthcare and Medicine",
+                              "Education and Research",
+                              "Marketing and Advertising",
+                              "Sales and Business Development",
+                              "Human Resources",
+                              "Manufacturing and Engineering",
+                              "Legal and Compliance",
+                              "Creative and Design"              
+                          ].map((title) => (
+                            <option key={title} value={title}>
+                              {title}
+                            </option>
+                          ))}
+                        </select>
                     </div>
                     <div>
-                      <label className="block text-sm text-gray-600">Role/Job Title:</label>
+                      <label className="block text-sm text-gray-600">Role/Job Title *</label>
                         <select
                           name="jobTitle"
                           value={formData.jobTitle}
@@ -670,27 +689,24 @@ const Profile = () => {
                           className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
                         >
                           <option value="" disabled>Select your job title</option>
-                          {[
-                            "Software Engineer",
-                            "Project Manager",
-                            "Data Analyst",
-                            "Product Manager",
-                            "Marketing Specialist",
-                            "Sales Representative",
-                            "HR Manager",
-                            "Other",
-                          ].map((title) => (
-                            <option key={title} value={title}>
-                              {title}
+                          {industryJobRoles[formData.fieldOfIndustry]?.length > 0 ? (
+                            industryJobRoles[formData.fieldOfIndustry].map((title) => (
+                              <option key={title} value={title}>
+                                {title}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="" disabled>
+                              No job roles available
                             </option>
-                          ))}
-                        </select>
+                          )}
 
+                        </select>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 mt-6 lg:px-16 px-0 gap-2 lg:gap-16">
                     <div>
-                      <label className="block text-sm text-gray-600">Company name:</label>
+                      <label className="block text-sm text-gray-600">Company name *</label>
                       <input
                         type="text"
                         name="companyName"
