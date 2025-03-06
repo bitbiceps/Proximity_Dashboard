@@ -8,7 +8,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { baseURL } from "../axios/instance";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Textanimation } from "../components/common/Textanimation";
+// import { Textanimation } from "../components/common/Textanimation";
 import { fetchUserData } from "../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -26,6 +26,8 @@ export const Questionnair = () => {
     number: parseInt(key),
     ...primaryQuestions[key],
   }));
+
+  console.log(questionsArray)
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});

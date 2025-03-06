@@ -50,7 +50,7 @@ export default function ForgotPassword() {
                     handleNext();
                 }
             } catch (error) {
-                toast.error(error.response?.data?.message || "Failed to send OTP");
+                toast.error(error.response?.data?.error || "Failed to send OTP");
             }
         }
         setLoading(false);
@@ -66,7 +66,7 @@ export default function ForgotPassword() {
                 handleNext();
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || "Invalid OTP");
+            toast.error(error.response?.data?.error || "Invalid OTP");
         }
         setLoading(false);
     };
@@ -88,7 +88,7 @@ export default function ForgotPassword() {
                 navigate(routes.login);
             }
         } catch (error) {
-            toast.error(error.response?.data?.message || "Failed to reset password");
+            toast.error(error.response?.data?.error || "Failed to reset password");
         }
         setLoading(false);
     };
