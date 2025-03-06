@@ -31,7 +31,6 @@ import { addNotification } from "./redux/slices/notificationSlice";
 import { baseURL } from "./axios/instance";
 import EmailVerification from "./pages/EmailVerification";
 import ForgotPassword from "./pages/ForgotPassword";
-import { Questionnair } from "./pages/Questionnair";
 import TermsAndConditions from "./pages/TermsAndConditions"
 
 const stripePromise = loadStripe(
