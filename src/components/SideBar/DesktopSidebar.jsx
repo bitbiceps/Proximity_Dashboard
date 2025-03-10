@@ -98,6 +98,20 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
     dispatch(getAllTopics(user.user._id));
     // dispatch(updatedArticles(user.user.userId))
   };
+
+  useEffect(() => {
+       const temp = {
+        [routes.root] : "Dashboard" ,
+        [routes.pr_services]:"Dashboard",
+        [routes.package] : "Package",
+        [routes.team_reply]:"Team Message",
+        [routes.articles_unlocked]:"Articles Unlocked"
+       }
+       const currentRoute = location.pathname ;
+       const currentActive = temp[currentRoute] || "/";
+       setActive(currentActive)
+    } , [])
+
   return (
     <div
       className={`flex flex-col h-screen bg-white text-white transition-width duration-300 sidebar-shadow ${

@@ -94,7 +94,7 @@ const GeneratedArticle = () => {
      }
      let title, content;
      const temp = articleGenerate.value.split(':');
-
+     
     if (temp.length > 1) {
       title = temp.shift().trim();
       content = temp.join(":").trim();
@@ -215,7 +215,9 @@ const GeneratedArticle = () => {
 
 
   const handleArticleEdit = ({title , content}) => {
-         console.log(title , content);
+    let wholeContent = `${title}: ${content}`
+    const articleId = articleGenerate._id ;
+    dispatch(updateRequestArticle({ articleId , content : wholeContent }));
   }
 
   const handleFileChange = (event) => {
@@ -353,10 +355,10 @@ const GeneratedArticle = () => {
 
           <div className="flex justify-center mt-3 space-x-4">
             <button
-              onClick={() => handleUpdate(articleGenerate._id)}
+              onClick={() => setIsEditing(true)}
               className="px-8 py-2 text-blue-500 border border-[#4D49F6] rounded-lg "
             >
-              Update
+                  Edit
             </button>
             <button
               onClick={handleVerify}

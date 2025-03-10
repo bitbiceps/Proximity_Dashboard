@@ -93,7 +93,7 @@ const Header = ({userData}) => {
         </motion.button>
         <CgMenuRight
           onClick={toogleMobileSidebar}
-          className="md:hidden"
+          className="lg:hidden"
           size={30}
         />
         {/* <Dropdown label="Select Language" onSelect={handleCountrySelect} options={langOptions} selected={selected} /> */}

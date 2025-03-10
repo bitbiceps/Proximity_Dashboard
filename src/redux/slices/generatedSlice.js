@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { baseURL } from "../../axios/instance";
 import { article } from "framer-motion/client";
+import { toast } from "react-toastify";
 
 export const updateRequestArticle = createAsyncThunk(
   "generated/updateRequestArticle",
-  async ({ articleId }, { rejectWithValue }) => {
+  async ({ articleId , content }, { rejectWithValue }) => {
     try {
       const response = await fetch(`${baseURL}/article/request-update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ articleId }),
+        body: JSON.stringify({ articleId , content }),
       });
 
       if (!response.ok) {
@@ -17,8 +18,11 @@ export const updateRequestArticle = createAsyncThunk(
       }
 
       const data = await response.json();
+      toast.success(response.data?.message || 'Update request sended successfully');
+
       return data;
     } catch (error) {
+      toast.error(error.response?.data?.message || 'Error while sending update request')
       return rejectWithValue(error.message);
     }
   }

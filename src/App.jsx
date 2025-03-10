@@ -80,7 +80,7 @@ const App = () => {
             <Sidebar />
           </div>
         )}
-        <main className="flex-1 overflow-auto min-h-screen">
+        <main className="flex-1 overflow-auto min-h-screen scrollbar-hide">
           <Routes>
             {/* Public Routes */}
             <Route path={routes.login} Component={Login} />
