@@ -5,6 +5,7 @@ import { routes, sideBarTabs } from "../../utils";
 import { TbDashboardFilled } from "react-icons/tb";
 import { RiFileCopy2Fill } from "react-icons/ri";
 import { RiFileList2Fill } from "react-icons/ri";
+import { MdOutlineMessage } from "react-icons/md";
 import { MdTopic } from "react-icons/md";
 import packageIcon from "../../assets/sidebar/package.svg";
 import topicGeneratorIcon from "../../assets/sidebar/topic.svg";
@@ -82,6 +83,11 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
       to: routes.articles_unlocked,
       icon:RiFileList2Fill
     },
+    {
+      name : sideBarTabs.team_reply,
+      to : routes.team_reply,
+      icon : MdOutlineMessage
+    }
   ];
 
   const navItems2 = [
@@ -92,6 +98,20 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
     dispatch(getAllTopics(user.user._id));
     // dispatch(updatedArticles(user.user.userId))
   };
+
+  useEffect(() => {
+       const temp = {
+        [routes.root] : "Dashboard" ,
+        [routes.pr_services]:"Dashboard",
+        [routes.package] : "Package",
+        [routes.team_reply]:"Team Message",
+        [routes.articles_unlocked]:"Articles Unlocked"
+       }
+       const currentRoute = location.pathname ;
+       const currentActive = temp[currentRoute] || "/";
+       setActive(currentActive)
+    } , [])
+
   return (
     <div
       className={`flex flex-col h-screen bg-white text-white transition-width duration-300 sidebar-shadow ${

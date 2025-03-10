@@ -27,7 +27,6 @@ export const Textanimation = () => {
   ) : (
     <div className="flex items-center justify-center h-screen w-screen bg-white">
       <motion.div className="bg-white flex flex-col justify-center items-center">
-        {/* Animated Welcome Text */}
         <motion.h1
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -35,6 +34,7 @@ export const Textanimation = () => {
           style={{
             background: "linear-gradient(129.89deg, #02A6F2 -98%, #8A62F6 98%)",
             WebkitBackgroundClip: "text",
+            lineHeight:"2"
           }}
           className="text-4xl md:text-7xl font-bold text-center text-transparent"
         >

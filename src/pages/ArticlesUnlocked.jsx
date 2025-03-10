@@ -42,7 +42,7 @@ const ArticlesUnlocked = () => {
       <div className="min-h-[calc(100vh-150px)] bg-gray-100 flex flex-col items-center py-8">
         {submittedTopics?.length > 0 ? (
           /* Render Articles Cards */
-          <div className=" w-full flex gap-[20px] relative z-[10] flex-wrap  px-8 md:px-0">
+          <div className=" w-full flex justify-center md:justify-start gap-[20px] relative z-[10] flex-wrap  px-8 md:px-0">
             {submittedTopics.map((item, index) => (
               <ArticlesCard
                 key={index}

@@ -17,8 +17,8 @@ const QuestionnaireLayout = ({ children }) => {
   }
 
   return (
-    <div className="w-full h-auto overflow-x-hidden">
-      <div className="w-100w flex items-center justify-between">
+    <div className="w-full h-screen  overflow-x-hidden">
+      <div className="w-full flex items-center justify-between">
       <BrandHeader/>
       {
         targetRoute &&  <div 
