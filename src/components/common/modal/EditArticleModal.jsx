@@ -15,7 +15,7 @@ const EditArticleModal = ({
   };
 
   const handleSubmit = () => {
-    handleArticleEdit({ title, content }); // Send updated values
+    handleArticleEdit({content }); // Send updated values
     onClose();
   };
 
@@ -30,14 +30,14 @@ const EditArticleModal = ({
         <h2 className="text-xl font-semibold mb-4">Edit Article</h2>
         
         {/* Title Input */}
-        <label className="text-gray-600 text-lg">Title</label>
+        {/* <label className="text-gray-600 text-lg">Title</label>
         <input 
           type="text" 
           value={title} 
           onChange={(e) => setTitle(e.target.value)}
           className="w-full p-2 border rounded mb-4" 
           placeholder="Enter title..."
-        />
+        /> */}
         
         {/* Content Input */}
         <label className="text-gray-600 text-lg">Content</label>

@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { getCroppedImg } from "../utils";
 import Cropper from 'react-easy-crop'
 import EditArticleModal from "../components/common/modal/EditArticleModal";
+import apiRoutes from "../axios/apiRoutes";
 
 
 const GeneratedArticle = () => {
@@ -92,22 +93,15 @@ const GeneratedArticle = () => {
      if(articleGenerate.profileImage){
       setProfileImage(articleGenerate?.profileImage?.filepath)      
      }
-     let title, content;
-     const temp = articleGenerate.value.split(':');
-     
-    if (temp.length > 1) {
-      title = temp.shift().trim();
-      content = temp.join(":").trim();
-    } else {
-      title = "Generated Article";
-      content = articleGenerate.value.trim();
-    }
+    let title, content;
+    title = articleGenerate?.topicId?.finalTopic || 'AI Generated Article';
+    content = articleGenerate?.value;
 
     setArticleData({
       title: title,
       value: content,
     });
-  }, [articleGenerate]);
+  }, []);
 
   useEffect(() => {
     if (
@@ -214,10 +208,9 @@ const GeneratedArticle = () => {
   };
 
 
-  const handleArticleEdit = ({title , content}) => {
-    let wholeContent = `${title}: ${content}`
+  const handleArticleEdit = ({content}) => {
     const articleId = articleGenerate._id ;
-    dispatch(updateRequestArticle({ articleId , content : wholeContent }));
+    dispatch(updateRequestArticle({ articleId , content}));
   }
 
   const handleFileChange = (event) => {
@@ -321,19 +314,20 @@ const GeneratedArticle = () => {
         </div>
 
         {/* Generated Article Section */}
+        <h2 className="text-xl text-center mt-5 font-semibold text-gray-800 mb-4">
+            {articleData?.title}
+          </h2>
+
         <div className="w-full mt-4 bg-[#f8f8f8] rounded-sm max-w-6xl relative p-3">
           {
             !isEditing &&  <div
-            className="absolute h-10 w-10 top-[-35px] right-[-30px] cursor-pointer rounded-full text-xl text-gray-500 flex justify-center items-center hover:scale-110 transition-transform duration-300 ease-in-out hover:bg-gray-200"
+            className="absolute h-10 w-10 top-[-32px] right-[-30px] cursor-pointer rounded-full text-xl text-gray-500 flex justify-center items-center hover:scale-110 transition-transform duration-300 ease-in-out hover:bg-gray-200"
             onClick={() => setIsEditing(true)}
           >
             <FaPen />
           </div>
           }
 
-          <h2 className="text-xl text-center mt-5 font-semibold text-gray-800 mb-4">
-            {articleData?.title}
-          </h2>
           <h4 className="flex justify-end font-semibold italic text-gray-600">Words Count : {wordCount(articleData?.value)}</h4>
 
           {/* {articles.map((a, i) => (
