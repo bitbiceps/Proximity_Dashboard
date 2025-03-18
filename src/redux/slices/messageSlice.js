@@ -11,7 +11,7 @@ export const fetchMessages = createAsyncThunk(
       const response = await axios.get(`${baseURL}${apiRoutes.messageList}/${userId}`);
       return response.data.data; 
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Failed to fetch messages");
+      return [];
     }
   }
 );
