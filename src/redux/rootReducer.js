@@ -6,6 +6,7 @@ import articleReducer from "./slices/articleSlice";
 import generatedReducer from "./slices/generatedSlice";
 import topicReducer from "./slices/topicSlice";
 import notificationsReducer from "./slices/notificationSlice";
+import messageReducer from "./slices/messageSlice";
 const rootReducer = combineReducers({
   sidebar: sidebarReducer,
   auth: authReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   generated: generatedReducer,
   topics: topicReducer,
   notifications: notificationsReducer,
+  message : messageReducer
 });
 
 export default rootReducer;

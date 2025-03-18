@@ -483,7 +483,7 @@ const Profile = () => {
           </div>
         </div>
         <div className="flex flex-col mb-4 items-center">
-          <div className="w-28 h-28 bg-gray-300 rounded-full flex items-center justify-center relative overflow-hidden">
+          <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center relative overflow-hidden">
             <input
               type="file"
               accept="image/*"
@@ -493,19 +493,19 @@ const Profile = () => {
             />
             <label htmlFor="profile-upload" className="cursor-pointer w-full h-full rounded-full group">
               <div className="w-full h-full rounded-full flex items-center justify-center transition-all duration-300">
-                <img className={`${profileImage ? 'w-full h-full':' w-[45%]  h-[45%]'} object-cover rounded-full`} src={profileImage || profile} />
+                <img className={`${profileImage ? 'w-full h-full':' w-[40%]  h-[40%]'} object-cover rounded-full`} src={profileImage || profile} />
               </div>
             </label>
           </div>
         </div>
         <div className="">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:px-20 px-4  md:gap-x-10 md:gap-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:px-20 px-4 gap-y-3  md:gap-x-10 md:gap-y-4">
             {Object.entries(userDetails).map(([key, details]) => (
               <div key={key} className="mb-4 md:ps-10">
                 <label className="text-base md:text-base font-semibold text-gray-700 block">
                   {details.label}
                 </label>
-                <div className="text-sm md:text-base lg:text-lg font-semibold text-gray-500">
+                <div className="text-sm md:text-base lg:text-[17px] font-semibold text-gray-500">
                   {details.value || 'N/A'}
                 </div>
               </div>
@@ -563,9 +563,9 @@ const Profile = () => {
                 <UserDetailsComponent/>
               </div>
             </> : <>
-              <div className="px-2 py-4">
+              <div className="px-2 py-4 md:mt-0 mt-6">
                 <div className="flex flex-col items-center">
-                  <div className="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center relative">
+                  <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center relative">
                     <input
                       type="file"
                       accept="image/*"
@@ -577,7 +577,7 @@ const Profile = () => {
 
                       <label htmlFor="profile-upload" className={`text-gray-500 cursor-pointer ${selectedFile || profileImage ? 'h-full w-full' : 'h-[40px]'}`}>
                         <div className="w-full h-full rounded-full"><img className="w-full h-full object-cover rounded-full" src={selectedFile ? previewURL : profileImage || profile} /></div>
-                        <div className="absolute bottom-0 right-[-10px] h-[40px] w-[40px] bg-gray-100 rounded-full text-[20px] text-gray-400 flex justify-center items-center "><FaPen /></div>
+                        <div className="absolute bottom-[3px] right-[0px] h-[30px] w-[30px] bg-gray-100 rounded-full text-[16px] text-gray-400 flex justify-center items-center "><FaPen /></div>
                       </label>
                     }
                   </div>

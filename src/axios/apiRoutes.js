@@ -9,7 +9,8 @@ const apiRoutes = {
   email_verify: (token) => `/api/auth/verify/${token}`,
   reset_password : "/api/auth/reset-password",
   verify_otp : "/api/auth/verify-otp",
-  change_password : "/api/auth/change-password"
+  change_password : "/api/auth/change-password",
+  messageList : "/user/messageList",
 };
 
 export default apiRoutes;
