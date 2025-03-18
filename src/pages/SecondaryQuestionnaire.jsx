@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../redux/slices/authSlice";
 import leftArrow from "../assets/arows/left.png"
+import { fetchTopics } from "../redux/slices/topicSlice";
 
 
 export const SecondaryQuestionnaire = () => {
@@ -129,7 +130,7 @@ export const SecondaryQuestionnaire = () => {
 
   const handleNext = () => {
     // answers[currentSection.section][currentQuestionKey]
-    if (currentAnswer.length < 8) {
+    if (currentAnswer?.length < 8 && currentQuestion?.mandatory) {
       toast.error("Please provide proper answers");
       return;
     }
@@ -204,6 +205,7 @@ export const SecondaryQuestionnaire = () => {
           },
         }
       );
+      dispatch(fetchTopics(userId))
     } catch (error) {
       console.error("Error generating topics:", error);
       toast.error(

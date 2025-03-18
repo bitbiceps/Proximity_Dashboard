@@ -76,9 +76,10 @@ const App = () => {
 
     return () => {
       socket.off("notification");
+      socket.disconnect();
     };
   }, [userId]);
-  
+
   return (
       <div className="antialiased flex h-screen">
         {!isNoSidebar && !isErrorRoute && (

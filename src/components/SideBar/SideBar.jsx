@@ -13,36 +13,22 @@ import { setMobileOpen } from "../../redux/slices/sidebarSlice";
 import axios from "axios";
 import { useCallback } from "react";
 import { baseURL } from "../../axios/instance";
+import { fetchTopics } from "../../redux/slices/topicSlice";
+
 const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
   const articles = useSelector((state) => state.articles || []);
-  const topics = useSelector((state) => state.topics?.topics || []);
 
-  // to get topics 
-  const [topicsData, setTopicsData] = useState([]); // State to hold raw topics data
 
-  // Fetch topics from the backend
-  const fetchGeneratedTopic = useCallback(async () => {
-    if (!user?.userId) return; // Early return if no user is present
-    try {
-      const url = `${baseURL}/topic?userId=${user.userId}`;
-
-      const { data } = await axios.get(url);
-
-      // Directly use the fetched data without restructuring
-      setTopicsData(data.data); // Set the raw data directly
-      // Store raw topic data in Redux as well (if needed)
-      // dispatch(setTopics(data.data));
-    } catch (err) {
-      console.error("Error fetching topics:", err);
-    }
-  }, [user, dispatch]);
   useEffect(() => {
-      fetchGeneratedTopic();
+    if(user?.user?._id)
+    dispatch(fetchTopics(user?.user?._id))
     }, []);
+
+
   
 
   const logout = () => {
@@ -64,12 +50,12 @@ const Sidebar = () => {
     <div className="relative h-screen w-fit shadow-custom">
       {/* Desktop Sidebar */}
       <div className="hidden lg:block overflow-hidden">
-        <DesktopSidebar logout={logout}  user={user} articles={articles} topics={topicsData} />
+        <DesktopSidebar logout={logout}  user={user} articles={articles} />
       </div>
 
       {/* Mobile Sidebar */}
       <div className="lg:hidden">
-        <MobileSidebar logout={logout} user={user} articles={articles} topics={topicsData}  />
+        <MobileSidebar logout={logout} user={user} articles={articles}  />
       </div>
     </div>
   );

@@ -41,6 +41,8 @@ const GeneratedArticle = () => {
   const [fileName , setFileName] = useState('');
   const apiCalled = useRef(false);
   const [isEditing , setIsEditing] = useState(false);
+  const [articleGenerate , setArticleGenerate] = useState(null);
+  const [articleLoading , setArticleLoading] = useState(true);
 
   const dispatch = useDispatch();
   // const navigate = useNavigate();
@@ -58,18 +60,24 @@ const GeneratedArticle = () => {
     setIsAuthorNameChecked(!isAuthorNameChecked);
   };
 
-  const {
-    articleVerify,
-    articleUpdate,
-    loading,
-    error,
-    articleGenerate,
-    articleloading,
-  } = useSelector((state) => state.generated);
-  const articles = useSelector(({ articles: { articles } }) => articles);
-  const currentArticle = useSelector(
-    (state) => state.articles.currentSelectedArticle
-  );
+
+  
+
+  const fetchArticleDetails = async () => {
+    setArticleLoading(true);
+    try {
+      const response = await axios.post(`${baseURL}/article/create-article`, { _id : id, userId });
+      setArticleGenerate(response.data);
+      toast.success(response.data.message || 'Article Fetched Successfully');
+    } catch (error) {
+       console.log('Error while fetching the article')
+    }finally{
+      setArticleLoading(false);
+    }
+  }
+
+
+
 
   const [profileImage, setProfileImage] = useState("");
   const [articleData, setArticleData] = useState({
@@ -79,7 +87,8 @@ const GeneratedArticle = () => {
 
   useEffect(() => {
     dispatch(generateArticles({ _id: id, userId }));
-  }, []);
+    fetchArticleDetails();
+  }, [userId]);
 
   const wordCount = (value) => {
     let totalWord = 0 ;
@@ -90,7 +99,7 @@ const GeneratedArticle = () => {
   }
 
   useEffect(() => {
-     if(articleGenerate.profileImage){
+     if(articleGenerate?.profileImage){
       setProfileImage(articleGenerate?.profileImage?.filepath)      
      }
     let title, content;
@@ -101,18 +110,9 @@ const GeneratedArticle = () => {
       title: title,
       value: content,
     });
-  }, []);
+  }, [articleGenerate]);
 
-  useEffect(() => {
-    if (
-      articleUpdate?.message ===
-      "Article updateRequested status toggled successfully"
-      && !apiCalled.current
-    ) {
-      toast.success(articleUpdate?.message);
-      apiCalled.current = true
-    }
-  }, [articleUpdate]);
+
 
   const handleUpdate = (articleId) => {
     dispatch(updateRequestArticle({ articleId }));
@@ -224,7 +224,7 @@ const GeneratedArticle = () => {
     }
   };
 
-  if (articleloading) {
+  if (articleLoading) {
     return (
       <GeneratedArticleLayout>
         <div className="flex items-center justify-center h-screen w-full">
