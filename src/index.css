@@ -23,3 +23,15 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+
+
+.profileForm .react-tel-input .form-control ,.profileForm input ,.profileForm select {
+  height: 41.78px !important;
+}
+
+@media (max-width: 640px) {
+  .react-tel-input .country-list {
+    width: 186px !important;
+  }
+}

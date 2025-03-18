@@ -63,12 +63,12 @@ const Sidebar = () => {
   return (
     <div className="relative h-screen w-fit shadow-custom">
       {/* Desktop Sidebar */}
-      <div className="hidden md:block overflow-hidden">
+      <div className="hidden lg:block overflow-hidden">
         <DesktopSidebar logout={logout}  user={user} articles={articles} topics={topicsData} />
       </div>
 
       {/* Mobile Sidebar */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <MobileSidebar logout={logout} user={user} articles={articles} topics={topicsData}  />
       </div>
     </div>

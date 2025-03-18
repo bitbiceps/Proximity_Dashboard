@@ -347,12 +347,29 @@ export const SecondaryQuestionnaire = () => {
                   e.target.style.height = `${Math.min(e.target.scrollHeight, maxHeight)}px`;
                 }}
                         
-                className="flex w-full placeholder:text-[13px] lg:placeholder:text-[24px] placeholder:font-normal focus:outline-none text-[16px] lg:text-[24px] placeholder:text-gray-400 border-b-[1px] border-[#878787] pb-2"
+                className="hidden lg:flex w-full placeholder:text-[13px] lg:placeholder:text-[24px] placeholder:font-normal focus:outline-none text-[16px] lg:text-[24px] placeholder:text-gray-400 border-b-[1px] border-[#878787] pb-2"
               ></textarea>
-              <div className="flex w-full justify-end text-bold text-gray-600 pe-2 italic text-xl">
+
+              <textarea
+                ref={textareaRef}
+                rows={1}
+                placeholder="N/A"
+                value={
+                  answers[currentSection.section]?.[currentQuestionKey] || ""
+                }
+                onChange={handleAnswerChange}
+                onInput={(e) => {
+                  e.target.style.height = "auto";
+                  const maxHeight = 12 * parseInt(getComputedStyle(e.target).lineHeight); // Calculate max height for 5 rows
+                  e.target.style.height = `${Math.min(e.target.scrollHeight, maxHeight)}px`;
+                }}
+                        
+                className="flex lg:hidden w-full placeholder:text-[13px] lg:placeholder:text-[24px] placeholder:font-normal focus:outline-none text-[16px] lg:text-[24px] placeholder:text-gray-400 border-b-[1px] border-[#878787] pb-2"
+              ></textarea>
+              <div className="flex w-full justify-end text-sm text-bold text-gray-600 pe-2 italic md:text-xl">
                 Count :   {wordCount()}
               </div>
-              <div className="flex flex-row gap-[32px] mt-[77px]">
+              <div className="flex flex-row gap-[32px] mt-[10px] md:mt-[77px]">
                 <button
                   onClick={handleBack}
                   disabled={isFirstQuestion}

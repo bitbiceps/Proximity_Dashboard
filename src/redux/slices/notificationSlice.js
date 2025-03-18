@@ -13,7 +13,7 @@ const notificationsSlice = createSlice({
   reducers: {
     // Action to add a new notification
     addNotification: (state, action) => {
-      state.notifications.push(action.payload);
+      state.notifications.unshift(action.payload);
     },
     // Action to clear all notifications
     clearNotifications: (state) => {

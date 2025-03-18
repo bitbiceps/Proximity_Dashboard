@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { IoIosNotifications, IoMdNotificationsOutline } from "react-icons/io";
 import { useSelector } from "react-redux";
+import noNotifications from "../../assets/noNotifications.jpg"
 
 const Notifications = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,14 +46,17 @@ const Notifications = () => {
               {notifications.map((note, index) => (
                 <li
                   key={index}
-                  className="px-4 py-3 border-b last:border-none transition-all duration-200 hover:bg-app-blue-1/10 hover:text-app-blue-1 cursor-pointer"
+                  className="px-4 py-3 border-b font-semibold text-gray-800 last:border-none transition-all duration-200 hover:bg-app-blue-1/10 hover:text-app-blue-1 cursor-pointer"
                 >
                   {note.message}
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="p-4 text-gray-500 text-center">No notifications</div>
+            <div className="p-4 flex flex-col justify-center items-center">
+             <img className="w-[55%]" src={noNotifications} alt="no notification image"/>
+             <div className="text-gray-500 text-base md:text-lg"> No notifications </div>
+            </div>
           )}
         </div>
       )}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import TermsCondition from "../components/common/modal/TermsCondition";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -17,7 +17,10 @@ import profile from "../assets/sidebar/profile.svg";
 import { FaPen } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { getCroppedImg } from "../utils";
-import Cropper from "react-easy-crop";
+import Cropper from 'react-easy-crop'
+import EditArticleModal from "../components/common/modal/EditArticleModal";
+import apiRoutes from "../axios/apiRoutes";
+
 
 const GeneratedArticle = () => {
   const [showModal, setShowModal] = useState(false);
@@ -33,9 +36,11 @@ const GeneratedArticle = () => {
   const [zoom, setZoom] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [imageUrlCrop, setImageUrlCrop] = useState(null);
-  const [showUpload, setShowUpload] = useState(false);
-  const [fileName, setFileName] = useState("");
+  const [imageUrlCrop , setImageUrlCrop] = useState(null);
+  const [showUpload , setShowUpload] = useState(false);
+  const [fileName , setFileName] = useState('');
+  const apiCalled = useRef(false);
+  const [isEditing , setIsEditing] = useState(false);
 
   const dispatch = useDispatch();
   // const navigate = useNavigate();
@@ -88,29 +93,24 @@ const GeneratedArticle = () => {
      if(articleGenerate.profileImage){
       setProfileImage(articleGenerate?.profileImage?.filepath)      
      }
-     let title, content;
-     const temp = articleGenerate.value.split(':');
-
-    if (temp.length > 1) {
-      title = temp.shift().trim();
-      content = temp.join(":").trim();
-    } else {
-      title = "Generated Article";
-      content = articleGenerate.value.trim();
-    }
+    let title, content;
+    title = articleGenerate?.topicId?.finalTopic || 'AI Generated Article';
+    content = articleGenerate?.value;
 
     setArticleData({
       title: title,
       value: content,
     });
-  }, [articleGenerate]);
+  }, []);
 
   useEffect(() => {
     if (
       articleUpdate?.message ===
       "Article updateRequested status toggled successfully"
+      && !apiCalled.current
     ) {
       toast.success(articleUpdate?.message);
+      apiCalled.current = true
     }
   }, [articleUpdate]);
 
@@ -207,6 +207,12 @@ const GeneratedArticle = () => {
     setIsModalOpen(false);
   };
 
+
+  const handleArticleEdit = ({content}) => {
+    const articleId = articleGenerate._id ;
+    dispatch(updateRequestArticle({ articleId , content}));
+  }
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -229,8 +235,8 @@ const GeneratedArticle = () => {
   }
   return (
     <GeneratedArticleLayout>
-      <div className="  flex flex-col items-center pt-2 pb-4 px-6">
-        {isModalOpen && (
+      <div className="  flex flex-col  w-full items-center pt-2 pb-4 px-6">
+      {isModalOpen && (
           <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
             <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md max-w-xs sm:max-w-lg w-full relative mt:[150px] sm:mt-0">
               <h3 className="text-gray-700 font-semibold mb-4 text-lg text-center">
@@ -308,21 +314,21 @@ const GeneratedArticle = () => {
         </div>
 
         {/* Generated Article Section */}
-        <div className="w-full max-w-4xl ">
-          <h2 className="text-xl text-center mt-5 font-semibold text-gray-800 mb-4">
+        <h2 className="text-xl text-center mt-5 font-semibold text-gray-800 mb-4">
             {articleData?.title}
           </h2>
+
+        <div className="w-full mt-4 bg-[#f8f8f8] rounded-sm max-w-6xl relative p-3">
+          {
+            !isEditing &&  <div
+            className="absolute h-10 w-10 top-[-32px] right-[-30px] cursor-pointer rounded-full text-xl text-gray-500 flex justify-center items-center hover:scale-110 transition-transform duration-300 ease-in-out hover:bg-gray-200"
+            onClick={() => setIsEditing(true)}
+          >
+            <FaPen />
+          </div>
+          }
+
           <h4 className="flex justify-end font-semibold italic text-gray-600">Words Count : {wordCount(articleData?.value)}</h4>
-          {/* <p className="text-gray-700 text-justify leading-relaxed mb-6">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
-            lacus sem. Fusce volutpat fermentum turpis a mollis. Pellentesque
-            ornare imperdiet eros, et convallis eros tristique id. Aliquam
-            elementum, erat non rhoncus tristique, risus metus malesuada sem, et
-            tincidunt quam ex vel lectus. Nulla sagittis suscipit felis, laoreet
-            consequat ligula fermentum nec. Morbi vestibulum elit in congue
-            mattis. Morbi est est, facilisis auctor dui et, dignissim elementum
-            augue.
-          </p> */}
 
           {/* {articles.map((a, i) => (
             <div
@@ -332,7 +338,7 @@ const GeneratedArticle = () => {
               {a._id == currentArticle._id && <p>{a.value}</p>}
             </div>
           ))} */}
-          <div className="text-justify mt-2">{articleData?.value}</div>
+          <div className="text-justify mt-2 whitespace-pre-line">{articleData?.value}</div>
 
           {/* <p className="text-gray-700 text-justify leading-relaxed mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin at
@@ -341,12 +347,12 @@ const GeneratedArticle = () => {
             elementum, erat
           </p> */}
 
-          <div className="flex justify-center space-x-4">
+          <div className="flex justify-center mt-3 space-x-4">
             <button
-              onClick={() => handleUpdate(articleGenerate._id)}
+              onClick={() => setIsEditing(true)}
               className="px-8 py-2 text-blue-500 border border-[#4D49F6] rounded-lg "
             >
-              Update
+                  Edit
             </button>
             <button
               onClick={handleVerify}
@@ -357,16 +363,19 @@ const GeneratedArticle = () => {
           </div>
         </div>
         {showModal && (
-          <TermsCondition
-            handleTermsChange={handleTermsChange}
-            handleCompanyNameChange={handleCompanyNameChange}
-            handleAuthorNameChange={handleAuthorNameChange}
-            termsAndCondition={isTermsChecked}
-            authorName={isAuthorNameChecked}
-            companyName={isCompanyNameChecked}
-            setShowModal={setShowModal}
-          />
+              <TermsCondition
+                handleTermsChange={handleTermsChange}
+                handleCompanyNameChange={handleCompanyNameChange}
+                handleAuthorNameChange={handleAuthorNameChange}
+                termsAndCondition={isTermsChecked}
+                authorName={isAuthorNameChecked}
+                companyName={isCompanyNameChecked}
+                setShowModal={setShowModal}
+              />
         )}
+        { isEditing && (< EditArticleModal title={articleData.title} content={articleData.value} setisEditing={setIsEditing} handleArticleEdit={handleArticleEdit} />)
+
+        }
       </div>
     </GeneratedArticleLayout>
   );

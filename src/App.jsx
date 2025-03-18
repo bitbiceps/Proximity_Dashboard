@@ -32,6 +32,7 @@ import { baseURL } from "./axios/instance";
 import EmailVerification from "./pages/EmailVerification";
 import ForgotPassword from "./pages/ForgotPassword";
 import TermsAndConditions from "./pages/TermsAndConditions"
+import TeamMessage from "./pages/TeamReply";
 
 const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
@@ -79,7 +80,7 @@ const App = () => {
             <Sidebar />
           </div>
         )}
-        <main className="flex-1 overflow-auto min-h-screen">
+        <main className="flex-1 overflow-auto min-h-screen scrollbar-hide">
           <Routes>
             {/* Public Routes */}
             <Route path={routes.login} Component={Login} />
@@ -89,7 +90,6 @@ const App = () => {
 
 
             {/* Protected Routes */}
-
             <Route
               path={routes.root}
               element={<ProtectedRoute Component={Dashboard} />}
@@ -98,7 +98,12 @@ const App = () => {
               path={routes.text}
               element={<ProtectedRoute Component={TextGenerating} />}
             />
+            <Route
+              path={routes.team_reply}
+              element={<ProtectedRoute Component={TeamMessage} />}
+            />
             {/* <Route
+            <Route
               path={routes.primary_questionnaire}
               element={<ProtectedRoute Component={Questionnair} />}
             /> */}

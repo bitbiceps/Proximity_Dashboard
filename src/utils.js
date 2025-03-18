@@ -23,7 +23,8 @@ export const routes = {
   text: "/text",
   email_verfication: "/verify/:token",
   forgot_password : "/forgot-password",
-  terms_condition : "/terms_condition"
+  terms_condition : "/terms_condition",
+  team_reply : "/team-message"
   // payment:"/payment"
 };
 
@@ -35,6 +36,7 @@ export const sideBarTabs = {
   profile: "Profile",
   logout: "Logout",
   articles_unlocked: "Articles Unlocked",
+  team_reply : "Team Message"
 };
 
 export const cookieAccessKeys = {
@@ -98,4 +100,91 @@ export const getCroppedImg = async (imageSrc, crop, zoom) => {
     image.onerror = (err) => reject(new Error("Failed to load image: " + err.message));
   });
 };
+
+
+export const industryJobRoles = {
+  "Software and IT": [
+    "Software Engineer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "DevOps Engineer",
+    "Data Scientist",
+    "AI/ML Engineer",
+    "Cybersecurity Analyst",
+    "System Administrator",
+    "Network Engineer",
+    "Database Administrator",
+    "UI/UX Designer",
+  ],
+  "Finance and Banking": [
+    "Financial Analyst",
+    "Investment Banker",
+    "Accountant",
+    "Risk Manager",
+    "Auditor",
+    "Compliance Officer",
+  ],
+  "Healthcare and Medicine": [
+    "Doctor",
+    "Nurse",
+    "Medical Researcher",
+    "Pharmacist",
+    "Healthcare Administrator",
+    "Physician Assistant",
+  ],
+  "Education and Research": [
+    "Professor",
+    "Lecturer",
+    "Research Scientist",
+    "Academic Advisor",
+    "Teacher",
+    "Research Assistant",
+  ],
+  "Marketing and Advertising": [
+    "Marketing Manager",
+    "SEO Specialist",
+    "Social Media Manager",
+    "Content Strategist",
+    "Brand Manager",
+    "Market Research Analyst",
+  ],
+  "Sales and Business Development": [
+    "Sales Executive",
+    "Business Development Manager",
+    "Account Manager",
+    "Client Relationship Manager",
+    "Sales Director",
+  ],
+  "Human Resources": [
+    "HR Manager",
+    "Talent Acquisition Specialist",
+    "HR Generalist",
+    "Compensation & Benefits Analyst",
+    "Training & Development Specialist",
+  ],
+  "Manufacturing and Engineering": [
+    "Mechanical Engineer",
+    "Civil Engineer",
+    "Electrical Engineer",
+    "Production Manager",
+    "Quality Assurance Engineer",
+  ],
+  "Legal and Compliance": [
+    "Corporate Lawyer",
+    "Compliance Officer",
+    "Legal Consultant",
+    "Paralegal",
+    "Contract Manager",
+  ],
+  "Creative and Design": [
+    "Graphic Designer",
+    "UX/UI Designer",
+    "Video Editor",
+    "Animator",
+    "Illustrator",
+    "Creative Director",
+  ],
+};
+
 
