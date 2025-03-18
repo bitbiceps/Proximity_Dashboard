@@ -105,6 +105,8 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
         [routes.pr_services]:"Dashboard",
         [routes.package] : "Package",
         [routes.team_reply]:"Team Message",
+        [routes.topic_generator]:'Topic Generator',
+        [routes.topic_unlocked]:'Topic Generator',
         [routes.articles_unlocked]:"Articles Unlocked"
        }
        const currentRoute = location.pathname ;
