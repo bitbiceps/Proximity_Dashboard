@@ -53,7 +53,7 @@ const TeamMessage = () => {
 
       {/* Message List */}
       {userTeamMessage.length > 0 ? (
-        <div className="flex flex-col min-h-[95vh] md:min-h-[70vh] 2xl:h-[90vh] p-4 rounded-lg shadow-md">
+        <div className="flex flex-col min-h-[95vh] md:min-h-[70vh] 2xl:h-[80vh] p-4 rounded-lg shadow-md">
           <div className="w-full px-2 mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
             {userTeamMessage.map((item, index) => (
               <div

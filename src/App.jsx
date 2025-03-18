@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch , useSelector } from "react-redux";
 import Sidebar from "./components/SideBar/SideBar";
 import Dashboard from "./pages/Dashboard";
 import Package from "./pages/Package";
@@ -38,10 +38,14 @@ const stripePromise = loadStripe(
   "pk_test_51QWIkaBBg8UnRcHy6LiZZOsitw0AHYmTHUIMjMtSXhbn6cB1BKjCruCm9yXQDEvaaLgXUsowR8NgF18IYpSYjDPK00SPnOWbsq"
 ); // Replace with your Stripe publishable key
 
+const socket = io(baseURL, { autoConnect: false }); // Prevent auto-connect
+
 const App = () => {
   const location = useLocation();
   const validRoutes = Object.values(routes); // Extract the valid route paths from the routes object
   const isValidRoute = validRoutes.includes(location.pathname); // Check if the current location matches any of the valid routes
+    const userdata = useSelector((state) => state.auth); // Get user data from Redux
+    const userId = userdata?.user?.user?._id;
 
   // Determine if we should show the Sidebar (exclude login and registration routes)
   const isNoSidebar = [
@@ -59,20 +63,22 @@ const App = () => {
 
 
 
-    useEffect(() => {
-      const socket = io(baseURL);
+  useEffect(() => {
+
+    if(!userId)return ;
+
+    socket.connect();
+    socket.emit("register", userId);
+
+    socket.on("notification", (message) => {
+      dispatch(addNotification({message}))
+    });
+
+    return () => {
+      socket.off("notification");
+    };
+  }, [userId]);
   
-      // Listen for the broadcast notification from the server
-      socket.on(socketEvents.TEST__BROADCAST, (data) => {
-        console.log(data.message,"SOCKET")
-        dispatch(addNotification(data))
-      });
-  
-      // Cleanup by disconnecting the socket when the component unmounts
-      return () => {
-        socket.disconnect();
-      };
-    }, []);
   return (
       <div className="antialiased flex h-screen">
         {!isNoSidebar && !isErrorRoute && (
