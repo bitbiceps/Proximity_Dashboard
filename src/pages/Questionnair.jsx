@@ -104,6 +104,8 @@ export const Questionnair = () => {
       // Reset job role if industry changes
       if (currentQuestion.number === 1) {
         updatedAnswers[2] = "";
+        setOthersJobProfile("");
+        setOthersSelected(false);
       }
 
       localStorage.setItem(
