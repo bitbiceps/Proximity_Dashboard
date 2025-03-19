@@ -42,7 +42,8 @@ const GeneratedArticle = () => {
   const apiCalled = useRef(false);
   const [isEditing , setIsEditing] = useState(false);
   const [articleGenerate , setArticleGenerate] = useState(null);
-  const [articleLoading , setArticleLoading] = useState(true);
+  const articleLoading = useRef(true);
+
 
   const dispatch = useDispatch();
   // const navigate = useNavigate();
@@ -63,18 +64,7 @@ const GeneratedArticle = () => {
 
   
 
-  const fetchArticleDetails = async () => {
-    setArticleLoading(true);
-    try {
-      const response = await axios.post(`${baseURL}/article/create-article`, { _id : id, userId });
-      setArticleGenerate(response.data);
-      toast.success(response.data.message || 'Article Fetched Successfully');
-    } catch (error) {
-       console.log('Error while fetching the article')
-    }finally{
-      setArticleLoading(false);
-    }
-  }
+
 
 
 
@@ -86,8 +76,14 @@ const GeneratedArticle = () => {
   });
 
   useEffect(() => {
-    dispatch(generateArticles({ _id: id, userId }));
-    fetchArticleDetails();
+    const fetchData = async () => {
+      const value  =  await dispatch(generateArticles({ _id: id, userId }));
+      setArticleGenerate(value.payload);
+      articleLoading.current = false ;
+    }
+    if(articleLoading.current && userId){
+      fetchData();
+    }
   }, [userId]);
 
   const wordCount = (value) => {
@@ -224,7 +220,7 @@ const GeneratedArticle = () => {
     }
   };
 
-  if (articleLoading) {
+  if (articleLoading.current) {
     return (
       <GeneratedArticleLayout>
         <div className="flex items-center justify-center h-screen w-full">
@@ -280,6 +276,7 @@ const GeneratedArticle = () => {
               onChange={handleFileChange}
               className="hidden"
               id="profile-upload"
+              disabled={articleGenerate.status === 'completed'}
             />
             {
               <label
@@ -294,9 +291,12 @@ const GeneratedArticle = () => {
                     src={selectedFile ? previewURL : profileImage || profile}
                   />
                 </div>
-                <div className="absolute bottom-0 right-[-10px] h-[40px] w-[40px] bg-gray-100 rounded-full text-[20px] text-gray-400 flex justify-center items-center ">
+                {
+                  articleGenerate?.status !== 'completed' && <div className="absolute bottom-0 right-[-10px] h-[40px] w-[40px] bg-gray-100 rounded-full text-[20px] text-gray-400 flex justify-center items-center ">
                   <FaPen />
                 </div>
+                }
+
               </label>
             }
           </div>
@@ -320,7 +320,7 @@ const GeneratedArticle = () => {
 
         <div className="w-full mt-4 bg-[#f8f8f8] rounded-sm max-w-6xl relative p-3">
           {
-            !isEditing &&  <div
+            !isEditing && articleGenerate.status !== 'completed' &&  <div
             className="absolute h-10 w-10 top-[-32px] right-[-30px] cursor-pointer rounded-full text-xl text-gray-500 flex justify-center items-center hover:scale-110 transition-transform duration-300 ease-in-out hover:bg-gray-200"
             onClick={() => setIsEditing(true)}
           >
@@ -347,20 +347,24 @@ const GeneratedArticle = () => {
             elementum, erat
           </p> */}
 
-          <div className="flex justify-center mt-3 space-x-4">
-            <button
-              onClick={() => setIsEditing(true)}
-              className="px-8 py-2 text-blue-500 border border-[#4D49F6] rounded-lg "
-            >
-                  Edit
-            </button>
-            <button
-              onClick={handleVerify}
-              className="px-8 py-2 text-white bg-[#4D49F6] rounded-lg "
-            >
-              Verify
-            </button>
-          </div>
+          {
+            articleGenerate.status !== 'completed' && 
+            <div className="flex justify-center mt-3 space-x-4">
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-8 py-2 text-blue-500 border border-[#4D49F6] rounded-lg "
+              >
+                    Edit
+              </button>
+              <button
+                onClick={handleVerify}
+                className="px-8 py-2 text-white bg-[#4D49F6] rounded-lg "
+              >
+                Verify
+              </button>
+            </div>
+          }
+
         </div>
         {showModal && (
               <TermsCondition

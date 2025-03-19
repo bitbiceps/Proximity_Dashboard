@@ -12,7 +12,7 @@ export const ArticlesCard = ({
 }) => {
   const [articleImage, setArticleImage] = useState();
   const isDisabled =
-    articleStatus === "review" || articleStatus === "completed";
+    articleStatus === "review";
   const fetchArticle = async () => {
     try {
       const response = await axios.post(`${baseURL}/article/get`, {

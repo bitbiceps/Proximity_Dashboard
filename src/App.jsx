@@ -66,7 +66,7 @@ const App = () => {
   useEffect(() => {
 
     if(!userId)return ;
-
+    
     socket.connect();
     socket.emit("register", userId);
 
@@ -76,7 +76,6 @@ const App = () => {
 
     return () => {
       socket.off("notification");
-      socket.disconnect();
     };
   }, [userId]);
 
