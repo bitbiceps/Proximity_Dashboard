@@ -18,10 +18,11 @@ import { useSelector } from "react-redux";;
 import { toggleMobileOpen } from "../../redux/slices/sidebarSlice";
 import { MdOutlineMessage } from "react-icons/md";
 
-const MobileSidebar = ({ logout, user, articles, topics }) => {
+const MobileSidebar = ({ logout, user, articles}) => {
   const isMobileOpen = useSelector(
     ({ sidebar: { isMobileOpen } }) => isMobileOpen
   );
+  const topics = useSelector((state) => state.topics?.topics || []);
   const [active, setActive] = useState(); // Track the active state of the sidebar
   const isHovered = true;
   const transition = "transition-all duration-200 ease-in-out";

@@ -23,13 +23,13 @@ export const Questionnair = () => {
     ...primaryQuestions[key],
   }));
 
-  console.log(questionsArray)
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [animationKey, setAnimationKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [othersJobProfile , setOthersJobProfile] = useState("");
+  const [othersSelected , setOthersSelected] = useState(false);
   const currentQuestion = questionsArray[currentQuestionIndex];
   const isFirstQuestion = currentQuestionIndex === 0;
   const isLastQuestion = currentQuestionIndex === questionsArray.length - 1;
@@ -46,10 +46,33 @@ export const Questionnair = () => {
     const storedAnswers = JSON.parse(
       localStorage.getItem(`PrimaryQuestionaireAnswers${user.user.id}`)
     ) || {};
+  
+    if (storedAnswers[2]) {
+      const secondAnswer = storedAnswers[2];
+      const firstAnswer = storedAnswers[1];
+      
+      const isRoleValid = industryJobRoles[firstAnswer]?.some(
+        (role) => role.toLowerCase() === secondAnswer.toLowerCase()
+      );
+  
+      if (!isRoleValid) {
+        setOthersSelected(true);
+        setOthersJobProfile(secondAnswer);
+      }
+    }
     setAnswers(storedAnswers);
   }, []);
+  
+
+  const handleOthersSelect = () => {
+    handleAnswerChange("");
+    setOthersSelected(!othersSelected);
+  }
 
   const handleAnswerChange = (value) => {
+    if(othersSelected){
+      setOthersSelected(false);
+    }
     setAnswers((prev) => {
       const updatedAnswers = {
         ...prev,
@@ -71,6 +94,27 @@ export const Questionnair = () => {
     // Reset search query on selection
     setSearchQuery("");
   };
+
+  const handleOhersJobProfileChange = (e) => {
+    const value = e.target.value ;
+    setOthersJobProfile(value);
+    setAnswers((prev) => {
+      const updatedAnswers = {
+        ...prev,
+        [currentQuestion.number]: value,
+      };
+
+      // Reset job role if industry changes
+      if (currentQuestion.number === 1) {
+        updatedAnswers[2] = "";
+      }
+      localStorage.setItem(
+        `PrimaryQuestionaireAnswers${user.user.id}`,
+        JSON.stringify(updatedAnswers)
+      );
+      return updatedAnswers;
+    });
+  }
 
   const handleNext = () => {
     const currentAnswer = answers[currentQuestion.number];
@@ -210,35 +254,53 @@ export const Questionnair = () => {
               ) : (
                 <>
                   {/* Search Input at the Top */}
-                  <input
+                  {
+                    othersSelected && currentQuestionIndex === 1 ?  <input
                     type="text"
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Type your job profile"
+                    value={othersJobProfile}
+                    onChange={handleOhersJobProfileChange}
                     className="w-full border border-gray-300 rounded-md p-3 mb-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8A62F6]"
-                  />
+                  /> :  <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-3 mb-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8A62F6]"
+                />
+                  }
 
                   {/* Filtered Options Below */}
-                  <div className="sm:max-h-80 md:max-h-60 overflow-y-auto border border-gray-300 rounded-md p-2 md:p-5 shadow-md">
-                    {getFilteredOptions().length > 0 ? (
+                    <div className="sm:max-h-80 md:max-h-60 overflow-y-auto border border-gray-300 rounded-md p-2 md:p-5 shadow-md">
                       <div className="flex flex-wrap gap-2">
+                        {/* Render filtered options if available */}
                         {getFilteredOptions().map((option, index) => (
                           <div
                             key={index}
                             onClick={() => handleAnswerChange(option)}
                             className={`px-4 py-2 border rounded-md cursor-pointer text-sm md:text-lg transition duration-200 ${answers[currentQuestion.number] === option
-                              ? "bg-[#8A62F6] text-white border-[#8A62F6] shadow-md"
-                              : "border-gray-400 text-gray-700 hover:bg-gray-100"
+                                ? "bg-[#8A62F6] text-white border-[#8A62F6] shadow-md"
+                                : "border-gray-400 text-gray-700 hover:bg-gray-100"
                               }`}
                           >
                             {option}
                           </div>
                         ))}
+
+                        {/* Always show "Others" */}
+                        {currentQuestionIndex === 1 && (
+                          <div
+                            onClick={handleOthersSelect}
+                            className={`px-4 py-2 border rounded-md cursor-pointer text-sm md:text-lg transition duration-200 ${othersSelected
+                                ? "bg-[#8A62F6] text-white border-[#8A62F6] shadow-md"
+                                : "border-gray-400 text-gray-700 hover:bg-gray-100"
+                              }`}
+                          >
+                            Others
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      <p className="text-gray-500 text-sm text-center">No results found</p>
-                    )}
-                  </div>
+                    </div>
                 </>
 
               )}

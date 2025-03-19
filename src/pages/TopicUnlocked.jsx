@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState } from "react";
 import RootLayout from "../layouts/RootLayout";
 import { useDispatch, useSelector } from "react-redux";
-import { setTopics, setCurrentSelectedTopic } from "../redux/slices/topicSlice";
+import {setCurrentSelectedTopic } from "../redux/slices/topicSlice";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../utils";
@@ -9,6 +9,7 @@ import { ArticlesCard } from "../components/common/ArticlesCard";
 import article from "../assets/article-image.png";
 import { TopicCard } from "../components/common/TopicCard";
 import { baseURL } from "../axios/instance";
+import { fetchTopics } from "../redux/slices/topicSlice";
 
 const TopicUnlocked = () => {
   const dispatch = useDispatch();
@@ -19,27 +20,11 @@ const TopicUnlocked = () => {
   const topics = useSelector((state) => state.topics?.topics || []);
   const { user } = useSelector((state) => state.auth); // Fetch user details
 
-  // Fetch topics from the backend
-  const fetchGeneratedTopic = useCallback(async () => {
-    if (!user?.userId) return; // Early return if no user is present
-    try {
-      const url = `${baseURL}/topic?userId=${user.userId}`;
-
-      const { data } = await axios.get(url);
-
-      // Directly use the fetched data without restructuring
-      setTopicsData(data.data); // Set the raw data directly
-
-      // Store raw topic data in Redux as well (if needed)
-      dispatch(setTopics(data.data));
-    } catch (err) {
-      console.error("Error fetching topics:", err);
-    }
-  }, [user, dispatch]);
-
   useEffect(() => {
-    fetchGeneratedTopic();
-  }, [fetchGeneratedTopic]);
+    console.log(user);
+    if(user?.user?._id)
+    dispatch(fetchTopics(user?.user?._id))
+  }, []);
 
     // Effect to reload page when switching tabs
   useEffect(() => {
@@ -52,6 +37,13 @@ const TopicUnlocked = () => {
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
+
+
+  useEffect(() => {
+     if(topics?.length){
+      setTopicsData(topics);
+     }
+  } , [topics])
 
   // Early return if no topics are available
   if (topicsData.length === 0) {

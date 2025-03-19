@@ -1,12 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { baseURL } from "../../axios/instance";
 
-// Initial state for the topics slice
+export const fetchTopics = createAsyncThunk(
+  "topics/fetchTopics",
+  async (userId, { rejectWithValue }) => {
+    try {
+      if (!userId) throw new Error("User ID is required");
+      const url = `${baseURL}/topic?userId=${userId}`;
+      const { data } = await axios.get(url);
+      return data.data; 
+    } catch (err) {
+      console.error("Error fetching topics:", err);
+      return rejectWithValue(err.response?.data || "Failed to fetch topics");
+    }
+  }
+);
+
 const initialState = {
   topics: [],
   currentSelectedTopic: null,
+  loading: false,
+  error: null,
 };
 
-// Topics slice using createSlice from Redux Toolkit
+// Topics slice
 const topicsSlice = createSlice({
   name: "topics",
   initialState,
@@ -14,20 +32,28 @@ const topicsSlice = createSlice({
     resetStateTopic: (state) => {
       state.topics = [];
       state.currentSelectedTopic = null;
-    },
-    // Setter action to set the topics
-    setTopics: (state, action) => {
-      state.topics = action.payload;
+      state.error = null;
     },
     setCurrentSelectedTopic: (state, action) => {
       state.currentSelectedTopic = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTopics.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTopics.fulfilled, (state, action) => {
+        state.loading = false;
+        state.topics = action.payload;
+      })
+      .addCase(fetchTopics.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
-// Export the actions
-export const { setTopics, setCurrentSelectedTopic, resetStateTopic } =
-  topicsSlice.actions;
-
-// Export the reducer
+export const { setCurrentSelectedTopic, resetStateTopic } = topicsSlice.actions;
 export default topicsSlice.reducer;

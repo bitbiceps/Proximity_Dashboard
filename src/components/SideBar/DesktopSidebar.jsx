@@ -20,7 +20,9 @@ import { useDispatch } from "react-redux";
 import { getAllTopics } from "../../redux/slices/generatedSlice";
 import axios from "axios";
 import { baseURL } from "../../axios/instance";
-const DesktopSidebar = ({ logout, user, articles, topics }) => {
+import { useSelector } from "react-redux";
+
+const DesktopSidebar = ({ logout, user, articles}) => {
   const [active, setActive] = useState(); // Track the active state of the sidebar
   const isHovered = true;
   const transition = "transition-all duration-200 ease-in-out";
@@ -28,6 +30,8 @@ const DesktopSidebar = ({ logout, user, articles, topics }) => {
   const current = location.state?.current;
   const dispatch = useDispatch();
   const [userData, setUserData] = useState();
+  const topics = useSelector((state) => state.topics?.topics || []);
+
   const fetchUser = async (userId) => {
     try {
       if (userId) {

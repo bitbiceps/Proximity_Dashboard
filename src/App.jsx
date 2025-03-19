@@ -66,7 +66,7 @@ const App = () => {
   useEffect(() => {
 
     if(!userId)return ;
-
+    
     socket.connect();
     socket.emit("register", userId);
 
@@ -78,7 +78,7 @@ const App = () => {
       socket.off("notification");
     };
   }, [userId]);
-  
+
   return (
       <div className="antialiased flex h-screen">
         {!isNoSidebar && !isErrorRoute && (

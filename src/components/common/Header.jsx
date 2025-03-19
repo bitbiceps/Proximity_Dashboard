@@ -23,6 +23,7 @@ import { cookieAccessKeys } from "../../utils";
 import Cookies from "js-cookie";
 import { FaUserAlt } from "react-icons/fa";
 import { MdOutlineLogout } from "react-icons/md";
+import { clearNotifications } from "../../redux/slices/notificationSlice";
 
 const Header = ({userData}) => {
   const [search, setSearch] = useState("");
@@ -47,6 +48,7 @@ const Header = ({userData}) => {
       dispatch(resetStateTopic());
       dispatch(resetpState())
       dispatch(resetPaymentState())
+      dispatch(clearNotifications());
       navigate(routes.login, { replace: true });
     };
 

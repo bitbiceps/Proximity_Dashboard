@@ -683,29 +683,29 @@ const Profile = () => {
                           ))}
                         </select>
                       </div>
-                      <div>
-                        <label className="block text-sm md:text-base text-gray-600">Role/Job Title *</label>
-                        <select
-                          name="jobTitle"
-                          value={formData.jobTitle}
-                          onChange={handleInputChange}
-                          className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-xs md:text-base focus:ring-blue-500 focus:border-blue-500"
-                        >
-                          <option value="" disabled>Select your job title</option>
-                          {industryJobRoles[formData.fieldOfIndustry]?.length > 0 ? (
-                            industryJobRoles[formData.fieldOfIndustry].map((title) => (
-                              <option key={title} value={title}>
-                                {title}
-                              </option>
-                            ))
-                          ) : (
-                            <option value="" disabled>
-                              No job roles available
-                            </option>
-                          )}
+                        <div>
+                          <label className="block text-sm md:text-base text-gray-600">Role/Job Title *</label>
+                          <input
+                            type="text"
+                            name="jobTitle"
+                            value={formData.jobTitle}
+                            onChange={handleInputChange}
+                            list="jobTitles"
+                             autoComplete="off"
+                            className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-xs md:text-base focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Type or select your job title"
+                          />
 
-                        </select>
-                      </div>
+                          <datalist id="jobTitles">
+                            {industryJobRoles[formData.fieldOfIndustry]?.length > 0 ? (
+                              industryJobRoles[formData.fieldOfIndustry].map((title) => (
+                                <option key={title} value={title} />
+                              ))
+                            ) : (
+                              <option value="No job roles available" disabled />
+                            )}
+                          </datalist>
+                        </div>
                     </div>
                     <div className="grid grid-cols-2  lg:px-16 px-0 gap-2 lg:gap-16">
                       <div>
