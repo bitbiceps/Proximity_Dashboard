@@ -1,9 +1,9 @@
 import axios from "axios";
 import apiRoutes from "./apiRoutes";
 
-// export const baseURL = "https://api.proximity.press"; // PROD
+export const baseURL = "https://api.proximity.press"; // PROD
 // // export const baseURL = "https://staging.api.proximity.press"; // STAGE
-export const baseURL = "http://localhost:5000";
+// export const baseURL = "http://localhost:5000";
 
 const api = axios.create({
   baseURL,
