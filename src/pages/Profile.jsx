@@ -471,6 +471,12 @@ const Profile = () => {
     }
   };
 
+  const findJobtitles = () => {
+    return industryJobRoles[formData.fieldOfIndustry] || 
+           Object.values(industryJobRoles).flatMap((roles) => roles);
+  };
+  
+
   const UserDetailsComponent = () => {
     return <>
       <div className="h-full rounded-xl p-2  bg-[#f3f4f6] shadow-md">
@@ -656,33 +662,41 @@ const Profile = () => {
                   </div>
                   <div className="space-y-8 md:space-y-4">
                     <div className="grid grid-cols-2 lg:px-16 px-0 gap-2 lg:gap-16">
-                      <div>
-                        <label className="block text-sm md:text-base text-gray-600">Field of industry *</label>
-                        <select
-                          name="fieldOfIndustry"
-                          value={formData.fieldOfIndustry}
-                          onChange={handleInputChange}
-                          className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-xs md:text-base focus:ring-blue-500 focus:border-blue-500"
-                        >
-                          <option value="" disabled>Select your field</option>
-                          {[
-                            "Software and IT",
-                            "Finance and Banking",
-                            "Healthcare and Medicine",
-                            "Education and Research",
-                            "Marketing and Advertising",
-                            "Sales and Business Development",
-                            "Human Resources",
-                            "Manufacturing and Engineering",
-                            "Legal and Compliance",
-                            "Creative and Design"
-                          ].map((title) => (
-                            <option key={title} value={title}>
-                              {title}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                        <div>
+                          <label className="block text-sm md:text-base text-gray-600" htmlFor="fieldOfIndustry">
+                            Field of industry *
+                          </label>
+                          <input
+                            list="industry-options"
+                            name="fieldOfIndustry"
+                            autoComplete="off"
+                            value={formData.fieldOfIndustry}
+                            onChange={handleInputChange}
+                            className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-xs md:text-base focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Select your field"
+                          />
+                          <datalist id="industry-options">
+                            {[
+               "Technology & IT",
+               "Healthcare & Medicine",
+               "Finance & Banking",
+               "Education & Training",
+               "Manufacturing & Engineering",
+               "Retail & E-commerce",
+               "Media & Entertainment",
+               "Energy & Utilities",
+               "Legal & Compliance",
+               "Agriculture & Food Industry",
+               "Transportation & Logistics",
+               "Real Estate & Construction",
+               "Travel & Hospitality",
+               "Government & Public Sector",
+               "Space & Astronomy"
+                            ].map((title) => (
+                              <option key={title} value={title} />
+                            ))}
+                          </datalist>
+                        </div>
                         <div>
                           <label className="block text-sm md:text-base text-gray-600">Role/Job Title *</label>
                           <input
@@ -697,8 +711,8 @@ const Profile = () => {
                           />
 
                           <datalist id="jobTitles">
-                            {industryJobRoles[formData.fieldOfIndustry]?.length > 0 ? (
-                              industryJobRoles[formData.fieldOfIndustry].map((title) => (
+                            { findJobtitles().length > 0 ? (
+                             findJobtitles().map((title) => (
                                 <option key={title} value={title} />
                               ))
                             ) : (

@@ -28,6 +28,10 @@ export const Questionnair = () => {
   const [answers, setAnswers] = useState({});
   const [animationKey, setAnimationKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [firstOthersSelected , setFirstOthersSelected] = useState(false);
+  const [otherIndustry , setOtherIndustry] = useState("");
+
   const [othersJobProfile , setOthersJobProfile] = useState("");
   const [othersSelected , setOthersSelected] = useState(false);
   const currentQuestion = questionsArray[currentQuestionIndex];
@@ -50,10 +54,18 @@ export const Questionnair = () => {
     if (storedAnswers[2]) {
       const secondAnswer = storedAnswers[2];
       const firstAnswer = storedAnswers[1];
-      
+
+      const isIndustryValid = Object.keys(industryJobRoles).some((industry) =>
+        industry.toLowerCase() === firstAnswer.toLowerCase()
+      );
       const isRoleValid = industryJobRoles[firstAnswer]?.some(
         (role) => role.toLowerCase() === secondAnswer.toLowerCase()
       );
+
+      if(!isIndustryValid){
+         setFirstOthersSelected(true)
+         setOtherIndustry(firstAnswer);
+      }
   
       if (!isRoleValid) {
         setOthersSelected(true);
@@ -65,13 +77,23 @@ export const Questionnair = () => {
   
 
   const handleOthersSelect = () => {
+    if(currentQuestionIndex == 0) {
+      handleAnswerChange("");
+      setOtherIndustry("")
+      setFirstOthersSelected(!firstOthersSelected);
+      return ;
+    }
     handleAnswerChange("");
+    setOthersJobProfile("");
     setOthersSelected(!othersSelected);
   }
 
   const handleAnswerChange = (value) => {
-    if(othersSelected){
+    if(currentQuestionIndex === 1 && othersSelected){
       setOthersSelected(false);
+    }
+    if(currentQuestionIndex === 0 && firstOthersSelected){
+      setFirstOthersSelected(false);
     }
     setAnswers((prev) => {
       const updatedAnswers = {
@@ -82,6 +104,8 @@ export const Questionnair = () => {
       // Reset job role if industry changes
       if (currentQuestion.number === 1) {
         updatedAnswers[2] = "";
+        setOthersJobProfile("");
+        setOthersSelected(false);
       }
 
       localStorage.setItem(
@@ -107,6 +131,28 @@ export const Questionnair = () => {
       // Reset job role if industry changes
       if (currentQuestion.number === 1) {
         updatedAnswers[2] = "";
+      }
+      localStorage.setItem(
+        `PrimaryQuestionaireAnswers${user.user.id}`,
+        JSON.stringify(updatedAnswers)
+      );
+      return updatedAnswers;
+    });
+  }
+
+  const handleOtherIndustryChange = (e) => {
+    const value = e.target.value ;
+    setOtherIndustry(value);
+    setAnswers((prev) => {
+      const updatedAnswers = {
+        ...prev,
+        [currentQuestion.number]: value,
+      };
+      // Reset job role if industry changes
+      if (currentQuestion.number === 1) {
+        updatedAnswers[2] = "";
+        setOthersSelected(false);
+        setOthersJobProfile("")
       }
       localStorage.setItem(
         `PrimaryQuestionaireAnswers${user.user.id}`,
@@ -202,8 +248,10 @@ export const Questionnair = () => {
         industry.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
-    if (currentQuestion.number === 2 && answers[1]) {
+    if(currentQuestion.number === 2 && firstOthersSelected){
+      const allJobTitles = Object.values(industryJobRoles).flatMap((roles) => roles).filter((role) => role.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase()));
+      return allJobTitles ;
+    }else if (currentQuestion.number === 2 && answers[1]) {
       return industryJobRoles[answers[1]]?.filter((role) =>
         role.toLowerCase().includes(searchQuery.toLowerCase())
       ) || [];
@@ -255,11 +303,11 @@ export const Questionnair = () => {
                 <>
                   {/* Search Input at the Top */}
                   {
-                    othersSelected && currentQuestionIndex === 1 ?  <input
+                    (othersSelected && currentQuestionIndex == 1) || (firstOthersSelected && currentQuestionIndex == 0) ?  <input
                     type="text"
-                    placeholder="Type your job profile"
-                    value={othersJobProfile}
-                    onChange={handleOhersJobProfileChange}
+                    placeholder={currentQuestionIndex === 1 ? "Type your job profile" :  "Type your industry"}
+                    value={currentQuestionIndex  == 1 ?  othersJobProfile : otherIndustry}
+                    onChange={currentQuestionIndex ==1 ? handleOhersJobProfileChange : handleOtherIndustryChange}
                     className="w-full border border-gray-300 rounded-md p-3 mb-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8A62F6]"
                   /> :  <input
                   type="text"
@@ -288,10 +336,10 @@ export const Questionnair = () => {
                         ))}
 
                         {/* Always show "Others" */}
-                        {currentQuestionIndex === 1 && (
+                        {(currentQuestionIndex === 1 || currentQuestionIndex === 0 ) && (
                           <div
                             onClick={handleOthersSelect}
-                            className={`px-4 py-2 border rounded-md cursor-pointer text-sm md:text-lg transition duration-200 ${othersSelected
+                            className={`px-4 py-2 border rounded-md cursor-pointer text-sm md:text-lg transition duration-200 ${(othersSelected && currentQuestionIndex === 1) || (firstOthersSelected && currentQuestionIndex === 0)
                                 ? "bg-[#8A62F6] text-white border-[#8A62F6] shadow-md"
                                 : "border-gray-400 text-gray-700 hover:bg-gray-100"
                               }`}
