@@ -103,88 +103,128 @@ export const getCroppedImg = async (imageSrc, crop, zoom) => {
 
 
 export const industryJobRoles = {
-  "Software and IT": [
-    "Software Engineer",
-    "Frontend Developer",
-    "Backend Developer",
-    "Full Stack Developer",
-    "DevOps Engineer",
-    "Data Scientist",
-    "AI/ML Engineer",
-    "Cybersecurity Analyst",
-    "System Administrator",
-    "Network Engineer",
-    "Database Administrator",
-    "UI/UX Designer",
+  "Technology & IT": [
+    "Software Development",
+    "Cybersecurity",
+    "Artificial Intelligence (AI) & Machine Learning (ML)",
+    "Blockchain",
+    "Cloud Computing",
+    "Data Science & Analytics",
+    "IT Support & Infrastructure",
+    "Internet of Things (IoT)",
+    "Web & App Development",
+    "UI/UX Design"
   ],
-  "Finance and Banking": [
-    "Financial Analyst",
-    "Investment Banker",
-    "Accountant",
-    "Risk Manager",
-    "Auditor",
-    "Compliance Officer",
+  "Healthcare & Medicine": [
+    "Pharmaceuticals",
+    "Biotechnology",
+    "Medical Devices",
+    "Telemedicine",
+    "Health Tech (Digital Health)",
+    "Mental Health & Wellness",
+    "Healthcare Administration",
+    "Nursing & Patient Care",
+    "Public Health",
+    "Veterinary Medicine"
   ],
-  "Healthcare and Medicine": [
-    "Doctor",
-    "Nurse",
-    "Medical Researcher",
-    "Pharmacist",
-    "Healthcare Administrator",
-    "Physician Assistant",
+  "Finance & Banking": [
+    "Investment Banking",
+    "FinTech",
+    "Insurance",
+    "Wealth Management",
+    "Accounting & Auditing",
+    "Personal Finance & Budgeting",
+    "Taxation",
+    "Risk Management",
+    "Corporate Finance",
+    "Stock Market & Trading"
   ],
-  "Education and Research": [
-    "Professor",
-    "Lecturer",
-    "Research Scientist",
-    "Academic Advisor",
-    "Teacher",
-    "Research Assistant",
+  "Education & Training": [
+    "EdTech",
+    "K-12 Education",
+    "Higher Education",
+    "Vocational Training",
+    "Corporate Training",
+    "Online Learning & e-Learning",
+    "Skill Development"
   ],
-  "Marketing and Advertising": [
-    "Marketing Manager",
-    "SEO Specialist",
-    "Social Media Manager",
-    "Content Strategist",
-    "Brand Manager",
-    "Market Research Analyst",
+  "Manufacturing & Engineering": [
+    "Automotive",
+    "Aerospace & Defense",
+    "Electrical & Electronics",
+    "Robotics",
+    "Civil & Structural Engineering",
+    "Chemical Engineering",
+    "Industrial Automation",
+    "Textile & Apparel"
   ],
-  "Sales and Business Development": [
-    "Sales Executive",
-    "Business Development Manager",
-    "Account Manager",
-    "Client Relationship Manager",
-    "Sales Director",
+  "Retail & E-commerce": [
+    "Online Marketplaces",
+    "Fashion & Apparel",
+    "Consumer Electronics",
+    "Luxury Goods",
+    "Grocery & Food Delivery",
+    "B2B & B2C E-commerce"
   ],
-  "Human Resources": [
-    "HR Manager",
-    "Talent Acquisition Specialist",
-    "HR Generalist",
-    "Compensation & Benefits Analyst",
-    "Training & Development Specialist",
+  "Media & Entertainment": [
+    "Film & Television",
+    "Music Industry",
+    "Gaming & eSports",
+    "Publishing & Journalism",
+    "Social Media & Content Creation",
+    "Animation & VFX",
+    "Podcasting"
   ],
-  "Manufacturing and Engineering": [
-    "Mechanical Engineer",
-    "Civil Engineer",
-    "Electrical Engineer",
-    "Production Manager",
-    "Quality Assurance Engineer",
+  "Energy & Utilities": [
+    "Renewable Energy (Solar, Wind, Hydro)",
+    "Oil & Gas",
+    "Power Generation & Distribution",
+    "Electric Vehicles & Battery Technology",
+    "Water & Waste Management"
   ],
-  "Legal and Compliance": [
-    "Corporate Lawyer",
-    "Compliance Officer",
-    "Legal Consultant",
-    "Paralegal",
-    "Contract Manager",
+  "Legal & Compliance": [
+    "Corporate Law",
+    "Intellectual Property (IP) Law",
+    "Criminal Law",
+    "Civil & Human Rights Law",
+    "Regulatory Compliance",
+    "Cyber Law"
   ],
-  "Creative and Design": [
-    "Graphic Designer",
-    "UX/UI Designer",
-    "Video Editor",
-    "Animator",
-    "Illustrator",
-    "Creative Director",
+  "Agriculture & Food Industry": [
+    "AgriTech",
+    "Farming & Horticulture",
+    "Food Processing",
+    "Supply Chain & Logistics",
+    "Organic & Sustainable Farming"
   ],
+  "Transportation & Logistics": [
+    "Shipping & Freight",
+    "Aviation",
+    "Railway & Metro",
+    "Warehousing & Supply Chain",
+    "Last-Mile Delivery"
+  ],
+  "Real Estate & Construction": [
+    "Commercial & Residential Real Estate",
+    "Property Management",
+    "Architecture & Interior Design",
+    "Smart Cities"
+  ],
+  "Travel & Hospitality": [
+    "Tourism & Travel Agencies",
+    "Hotels & Resorts",
+    "Airlines & Aviation Services",
+    "Food & Beverage Industry"
+  ],
+  "Government & Public Sector": [
+    "Policy & Governance",
+    "Public Administration",
+    "Defense & Law Enforcement",
+    "Non-Profit Organizations (NGOs)"
+  ],
+  "Space & Astronomy": [
+    "Space Exploration",
+    "Satellite Technology",
+    "Aerospace Engineering"
+  ]
 };
-
-

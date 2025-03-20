@@ -248,8 +248,10 @@ export const Questionnair = () => {
         industry.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
-    if (currentQuestion.number === 2 && answers[1]) {
+    if(currentQuestion.number === 2 && firstOthersSelected){
+      const allJobTitles = Object.values(industryJobRoles).flatMap((roles) => roles).filter((role) => role.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase()));
+      return allJobTitles ;
+    }else if (currentQuestion.number === 2 && answers[1]) {
       return industryJobRoles[answers[1]]?.filter((role) =>
         role.toLowerCase().includes(searchQuery.toLowerCase())
       ) || [];

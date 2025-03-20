@@ -471,6 +471,12 @@ const Profile = () => {
     }
   };
 
+  const findJobtitles = () => {
+    return industryJobRoles[formData.fieldOfIndustry] || 
+           Object.values(industryJobRoles).flatMap((roles) => roles);
+  };
+  
+
   const UserDetailsComponent = () => {
     return <>
       <div className="h-full rounded-xl p-2  bg-[#f3f4f6] shadow-md">
@@ -671,16 +677,21 @@ const Profile = () => {
                           />
                           <datalist id="industry-options">
                             {[
-                              "Software and IT",
-                              "Finance and Banking",
-                              "Healthcare and Medicine",
-                              "Education and Research",
-                              "Marketing and Advertising",
-                              "Sales and Business Development",
-                              "Human Resources",
-                              "Manufacturing and Engineering",
-                              "Legal and Compliance",
-                              "Creative and Design"
+               "Technology & IT",
+               "Healthcare & Medicine",
+               "Finance & Banking",
+               "Education & Training",
+               "Manufacturing & Engineering",
+               "Retail & E-commerce",
+               "Media & Entertainment",
+               "Energy & Utilities",
+               "Legal & Compliance",
+               "Agriculture & Food Industry",
+               "Transportation & Logistics",
+               "Real Estate & Construction",
+               "Travel & Hospitality",
+               "Government & Public Sector",
+               "Space & Astronomy"
                             ].map((title) => (
                               <option key={title} value={title} />
                             ))}
@@ -700,8 +711,8 @@ const Profile = () => {
                           />
 
                           <datalist id="jobTitles">
-                            {industryJobRoles[formData.fieldOfIndustry]?.length > 0 ? (
-                              industryJobRoles[formData.fieldOfIndustry].map((title) => (
+                            { findJobtitles().length > 0 ? (
+                             findJobtitles().map((title) => (
                                 <option key={title} value={title} />
                               ))
                             ) : (
