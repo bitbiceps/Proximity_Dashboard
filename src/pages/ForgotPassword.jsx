@@ -29,10 +29,11 @@ export default function ForgotPassword() {
             return false;
         }
     
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]{2,}\.[a-z]{2,}$/;
+
         if (!emailRegex.test(email)) {
-            toast.error("Please enter a valid email address.");
-            return false;
+          toast.error("Please enter a valid email address");
+          return false;
         }
     
         return true;

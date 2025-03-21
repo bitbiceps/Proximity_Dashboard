@@ -57,12 +57,14 @@ function Registration() {
       toast.error("Full name is required!");
       return false;
     }
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]{2,}\.[a-z]{2,}$/;
 
-    if (!email || !emailRegex.test(email)) {
-      toast.error("Please enter a valid email address!");
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
       return false;
     }
+    
+    
 
     if (!validatePhonenumber()) {
       toast.error("Phone number is not valid");
