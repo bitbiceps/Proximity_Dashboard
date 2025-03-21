@@ -16,8 +16,6 @@ import "react-phone-input-2/lib/style.css";
 import parsePhoneNumberFromString from "libphonenumber-js";
 import { FaCircleInfo } from "react-icons/fa6";
 
-
-
 function Registration() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,22 +42,28 @@ function Registration() {
   const response = useSelector((state) => state.auth);
 
   const validatePhonenumber = () => {
-    const parsedNumber = parsePhoneNumberFromString(`+${phoneNumber}`, countryCode);
+    const parsedNumber = parsePhoneNumberFromString(
+      `+${phoneNumber}`,
+      countryCode
+    );
     if (!parsedNumber || !parsedNumber.isValid()) {
-      return false
-    } 
+      return false;
+    }
     return true;
-  }
+  };
 
   const validateInputs = () => {
     if (!fullName) {
       toast.error("Full name is required!");
       return false;
     }
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+
+    if (!email || !emailRegex.test(email)) {
       toast.error("Please enter a valid email address!");
       return false;
     }
+
     if (!validatePhonenumber()) {
       toast.error("Phone number is not valid");
       return false;
@@ -177,7 +181,7 @@ function Registration() {
                 onChange={(value, country) => {
                   setPhoneNumber(value);
                   setCountryCode(country?.countryCode || "");
-                }}               
+                }}
                 enableSearch={true}
                 disableDropdown={false}
                 containerClass="w-full"
@@ -208,23 +212,28 @@ function Registration() {
 
             <div className="flex gap-2 items-center mt-2 mx-auto">
               <div className="flex items-center">
-              <input
-                type="checkbox"
-                checked={termsAccepted}
-                onChange={(e) => setTermsAccepted(e.target.checked)}
-                id="terms"
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <label htmlFor="terms" className="ml-2 text-xs cursor-pointer text-gray-500">
-                I accept the terms & Conditions
-              </label>
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  id="terms"
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label
+                  htmlFor="terms"
+                  className="ml-2 text-xs cursor-pointer text-gray-500"
+                >
+                  I accept the terms & Conditions
+                </label>
               </div>
-              <a href='/terms_condition' target='_blank' rel='noopener noreferrer'>
-  <FaCircleInfo />
-</a>
-
+              <a
+                href="/terms_condition"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaCircleInfo />
+              </a>
             </div>
-
           </form>
 
           <div className="flex items-center my-6">
