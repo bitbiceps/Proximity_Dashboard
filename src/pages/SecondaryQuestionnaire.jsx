@@ -338,7 +338,7 @@ export const SecondaryQuestionnaire = () => {
               <textarea
                 ref={textareaRef}
                 rows={1}
-                placeholder="N/A"
+                placeholder="Write your answer..."
                 value={
                   answers[currentSection.section]?.[currentQuestionKey] || ""
                 }
@@ -355,7 +355,7 @@ export const SecondaryQuestionnaire = () => {
               <textarea
                 ref={textareaRef}
                 rows={1}
-                placeholder="N/A"
+                placeholder="Write your answer..."
                 value={
                   answers[currentSection.section]?.[currentQuestionKey] || ""
                 }

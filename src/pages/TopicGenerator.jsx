@@ -192,9 +192,10 @@ const TopicGenerator = ({ topicId }) => {
                       {title.verifyRequested ? "Verified" : "Verify"}
                     </button>
                     <button
+                      disabled={title?.verifyRequested}
                       onClick={() => handleUpdate(currentSelectedTopic, index)}
-                      className="px-4 py-2 text-sm font-medium border border-[#00CDE2] rounded-sm"
-                    >
+                      className="px-4 py-2 text-sm font-medium border border-[#00CDE2] rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
                       {
                         title.updateRequested ? 'Updated' : 'Update'
                       }
