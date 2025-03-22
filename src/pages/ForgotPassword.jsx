@@ -82,7 +82,7 @@ export default function ForgotPassword() {
         setLoading(true);
         try {
             const response = await requests.changePassword({
-                email,
+                email : email.toLowerCase(),
                 password : newPassword,
             });
             if (response.status === 200) {
