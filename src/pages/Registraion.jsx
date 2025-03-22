@@ -40,6 +40,7 @@ function Registration() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const { loading } = useSelector((state) => state.auth);
   const response = useSelector((state) => state.auth);
+  const [showPassword , setShowPassword] = useState(false);
 
   const validatePhonenumber = () => {
     const parsedNumber = parsePhoneNumberFromString(
@@ -53,18 +54,29 @@ function Registration() {
   };
 
   const validateInputs = () => {
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]{2,}\.[a-z]{2,}$/i;
+
+
     if (!fullName) {
       toast.error("Full name is required!");
       return false;
     }
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]{2,}\.[a-z]{2,}$/;
+
+   if (!nameRegex.test(fullName.trim())) {
+      toast.error("Full name should not contain digits or special characters!");
+      return false;
+   }
+
+   if (!email.trim()) {
+    toast.error("Please enter the email address");
+    return false;
+  }
 
     if (!emailRegex.test(email)) {
       toast.error("Please enter a valid email address");
       return false;
     }
-    
-    
 
     if (!validatePhonenumber()) {
       toast.error("Phone number is not valid");
@@ -88,7 +100,7 @@ function Registration() {
     // if (emails.includes(email.toLocaleLowerCase())) {
     const formData = {
       fullName,
-      email,
+      email : email.toLowerCase(),
       password,
       phoneNumber: `${phoneNumber}`,
       termsAccepted,
@@ -140,6 +152,7 @@ function Registration() {
               </label>
               <input
                 type="text"
+                maxLength={100}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Sana Ray"
@@ -159,20 +172,51 @@ function Registration() {
                 className="w-full border-b-2 border-gray-300 py-1 focus:outline-none focus:border-blue-600 text-sm text-gray-800"
               />
             </div>
-
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">
-                Password
-              </label>
+            <div className="relative">
+              <label className="block text-sm text-gray-500 mb-1">Password</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="****"
-                className="w-full border-b-2 border-gray-300 py-1 focus:outline-none focus:border-blue-600 text-sm text-gray-800"
+                className="w-full border-b-2 border-gray-300 py-1 pr-10 focus:outline-none focus:border-blue-600 text-sm text-gray-800"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 top-[22px] right-0 flex items-center pr-3"
+              >
+                {showPassword ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-gray-400"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                  </svg>
+                ) : (
+                  // Eye-off icon (Hidden)
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-gray-400"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M17.94 17.94A10.12 10.12 0 0112 20c-7 0-11-8-11-8a17.62 17.62 0 015.5-5.5M9.9 4.24A10.13 10.13 0 0112 4c7 0 11 8 11 8a17.63 17.63 0 01-5.5 5.5M3 3l18 18" />
+                  </svg>
+                )}
+              </button>
             </div>
-
             <div>
               <label className="block text-sm text-gray-500 mb-1">
                 Phone Number
