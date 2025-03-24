@@ -30,10 +30,32 @@ function Login() {
     return () => clearTimeout(timer);
   }, []);
 
+
+  const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]{2,}\.[a-z]{2,}$/i;
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const trimmedEmail = email.trim().toLowerCase();
+
+    if(!trimmedEmail){
+      toast.error("Please enter the email address");
+      return;
+    }
+
+    if (!emailRegex.test(trimmedEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if(!password.trim()){
+      toast.error("Please enter the password");
+      return;
+    }
+
     try {
-      const response = await requests.login({ email, password });
+      const response = await requests.login({ email : email.toLowerCase(), password });
       if (response.status === 200) {
         toast.success(response.data.message);
         dispatch(setUser(response.data));
