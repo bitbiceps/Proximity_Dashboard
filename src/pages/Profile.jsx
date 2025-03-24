@@ -205,21 +205,29 @@ const Profile = () => {
 
 
   const validateForm = () => {
+
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]{2,}\.[a-z]{2,}$/i;
+
     let errorMessage = "";
     let isValid = true;
     if (!formData.firstName.trim()) {
       errorMessage = "First name is required";
       isValid = false;
     }
-    // else if (!formData.lastName.trim()) {
-    //   errorMessage = "Last name is required";
-    //   isValid = false;
-    // }
+    else if (!nameRegex.test(formData.firstName)) {
+      errorMessage = "First name should not contain digits or special characters!"; 
+      isValid = false;
+    }
+    else if(formData.lastName.trim() && !nameRegex.test(formData.lastName.trim())){
+      errorMessage = "Last name should not contain digits or special characters!"; 
+      isValid = false;
+    }
     else if (!formData.email.trim()) {
       errorMessage = "Email is required";
       isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errorMessage = "Invalid email format";
+    } else if (!emailRegex.test(formData.email)) {
+      errorMessage = "Please enter the valid email address";
       isValid = false;
     } else if (!formData.phoneNumber.trim()) {
       errorMessage = "Phone number is required";
@@ -267,14 +275,8 @@ const Profile = () => {
     if(selectedFile){
       await handleFileUpload();
     }
-    if(formTouched || selectedFile) {
-      await dispatch(fetchUserData(userId))
-      setFormTouched(false);
-      setIsEditing(false);
-    }
     setSelectedFile(null);
     setPreviewURL(null);
-
   }
 
   const handleUserDetailsSubmit = async () => {
@@ -285,7 +287,7 @@ const Profile = () => {
           user: userId,
           fields : {
             fullName: formData.firstName + " " + formData.lastName,
-            email: formData.email,
+            email: formData.email.toLowerCase(),
             gender: formData.gender || null,
             dateOfBirth: formData.dateOfBirth || null,
             phoneNumber: phoneNumber,
@@ -302,9 +304,13 @@ const Profile = () => {
         toast.success("User Profile updated!!",{
           theme: "light",
         })
+        await dispatch(fetchUserData(userId))
+        setFormTouched(false);
+        setIsEditing(false);
       }
     } catch (error) {
-      toast.error('Error while uploading the user details')
+      console.log('error', error)
+      toast.error(error.response?.data?.message ||'Error while uploading the user details')
     }
   };
 
@@ -313,6 +319,7 @@ const Profile = () => {
 
   const handlePhoneChange = (value, country) => {
     setCountryCode(country?.countryCode || "");
+    setFormTouched(true);
     setPhoneNumber(value)
     setFormData({
       ...formData,
@@ -445,6 +452,10 @@ const Profile = () => {
           theme: "light",
         })
       }
+      await dispatch(fetchUserData(userId))
+      setFormTouched(false);
+      setIsEditing(false);
+
     } catch (error) {
       setUploadMessage("Error uploading file: " + (error.response?.data || error.message));
     }
@@ -597,6 +608,7 @@ const Profile = () => {
                         onChange={handleInputChange}
                         type="text"
                         placeholder="Enter your first name"
+                        maxLength={50}
                         value={formData.firstName}
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-xs md:text-base focus:ring-blue-500 focus:border-blue-500"
                       />
@@ -608,6 +620,7 @@ const Profile = () => {
                         type="text"
                         onChange={handleInputChange}
                         value={formData.lastName}
+                        maxLength={50}
                         placeholder="Enter your last name"
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-xs md:text-base focus:ring-blue-500 focus:border-blue-500"
                       />
@@ -621,6 +634,7 @@ const Profile = () => {
                         name="email"
                         onChange={handleInputChange}
                         value={formData.email}
+                        maxLength={60}
                         placeholder="Enter your email"
                         className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-xs md:text-base focus:ring-blue-500 focus:border-blue-500"
                       />
@@ -654,6 +668,7 @@ const Profile = () => {
                     <div className="">
                       <label className="block text-sm md:text-base text-gray-600">Gender</label>
                       <select onChange={handleInputChange} value={formData.gender} name="gender" className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-sm md:text-base focus:ring-blue-500 focus:border-blue-500">
+                        <option value="" disabled>Select the gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>
@@ -670,6 +685,7 @@ const Profile = () => {
                             list="industry-options"
                             name="fieldOfIndustry"
                             autoComplete="off"
+                            maxLength={100}
                             value={formData.fieldOfIndustry}
                             onChange={handleInputChange}
                             className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-xs md:text-base focus:ring-blue-500 focus:border-blue-500"
@@ -705,6 +721,7 @@ const Profile = () => {
                             value={formData.jobTitle}
                             onChange={handleInputChange}
                             list="jobTitles"
+                            maxLength={100}
                              autoComplete="off"
                             className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 text-xs md:text-base focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Type or select your job title"
@@ -727,6 +744,7 @@ const Profile = () => {
                         <input
                           type="text"
                           name="companyName"
+                          maxLength={100}
                           value={formData.companyName}
                           onChange={handleInputChange}
                           placeholder="Enter your area of expertise"
