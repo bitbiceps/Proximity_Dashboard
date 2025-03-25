@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 import { industryJobRoles } from "../utils";
 
 export const Questionnair = () => {
+
+  const optionsContainerRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
@@ -75,16 +77,27 @@ export const Questionnair = () => {
     setAnswers(storedAnswers);
   }, []);
   
+  const scrollToTop = () => {
+    if (optionsContainerRef.current) {
+      optionsContainerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
 
   const handleOthersSelect = () => {
     if(currentQuestionIndex == 0) {
       handleAnswerChange("");
       setOtherIndustry("")
+      if(!firstOthersSelected){
+        scrollToTop();
+      }
       setFirstOthersSelected(!firstOthersSelected);
       return ;
     }
     handleAnswerChange("");
     setOthersJobProfile("");
+    if(!othersSelected){
+      scrollToTop();
+    }
     setOthersSelected(!othersSelected);
   }
 
@@ -94,6 +107,12 @@ export const Questionnair = () => {
     }
     if(currentQuestionIndex === 0 && firstOthersSelected){
       setFirstOthersSelected(false);
+    }
+
+    if(!othersSelected && currentQuestionIndex === 1){
+      scrollToTop();
+    } else if(!firstOthersSelected && currentQuestionIndex === 0){
+      scrollToTop();
     }
     setAnswers((prev) => {
       const updatedAnswers = {
@@ -318,35 +337,60 @@ export const Questionnair = () => {
                 />
                   }
 
-                  {/* Filtered Options Below */}
-                    <div className="sm:max-h-80 md:max-h-60 overflow-y-auto border border-gray-300 rounded-md p-2 md:p-5 shadow-md">
-                      <div className="flex flex-wrap gap-2">
-                        {/* Render filtered options if available */}
-                        {getFilteredOptions().map((option, index) => (
-                          <div
-                            key={index}
-                            onClick={() => handleAnswerChange(option)}
-                            className={`px-4 py-2 border rounded-md cursor-pointer text-sm md:text-lg transition duration-200 ${answers[currentQuestion.number] === option
-                                ? "bg-[#8A62F6] text-white border-[#8A62F6] shadow-md"
-                                : "border-gray-400 text-gray-700 hover:bg-gray-100"
-                              }`}
-                          >
-                            {option}
+                    {/* {
+                      ((othersSelected && currentQuestionIndex === 1) ||
+                        (firstOthersSelected && currentQuestionIndex === 0)) ? (
+                        <div className="mt-2 mb-6">
+                          <div className="bg-[#8A62F6] w-fit p-2 text-white rounded-md text-sm md:text-lg border-[#8A62F6]  shadow-md">
+                            Others
                           </div>
-                        ))}
+                        </div>
+                      ) : (
+                        
+                           answers[currentQuestion.number] ? <div className="mt-2 mb-6 bg-[#8A62F6] w-fit p-2 text-sm md:text-lg text-white rounded-md border-[#8A62F6] shadow-md">
+                           {answers[currentQuestion.number]}
+                         </div> : null
+                        
+                      )
+                    } */}
 
-                        {/* Always show "Others" */}
-                        {(currentQuestionIndex === 1 || currentQuestionIndex === 0 ) && (
+                    <div
+                      className="sm:max-h-80 md:max-h-60 overflow-y-auto border border-gray-300 rounded-md p-2 md:p-5 shadow-md">
+                      <div
+                        ref={optionsContainerRef}
+                        className="flex flex-wrap gap-2">
+                        {(answers[currentQuestion.number] || (currentQuestionIndex === 1 && othersSelected) || (currentQuestionIndex == 0 && firstOthersSelected)) && (
+                          <div
+                            className="px-4 py-2  text-white  shadow-md cursor-pointer bg-green-700 rounded-md text-sm md:text-lg"
+                            onClick={othersSelected || firstOthersSelected ? handleOthersSelect : () => handleAnswerChange("")}
+                          >
+                            {
+                              (currentQuestionIndex === 0 && firstOthersSelected) ||
+                                (currentQuestionIndex === 1 && othersSelected)
+                                ? "Others"
+                                : answers[currentQuestion.number]
+                            }
+                          </div>
+                        )}
+                        {getFilteredOptions()
+                          .filter((option) => option !== answers[currentQuestion.number]) // Avoid re-rendering selected options
+                          .map((option, index) => (
+                            <div
+                              key={index}
+                              onClick={() => handleAnswerChange(option)}
+                              className={`px-4 py-2 border rounded-md hover:bg-[#8A62F6] hover:text-white cursor-pointer text-sm md:text-lg transition duration-200`}
+                            >
+                              {option}
+                            </div>
+                          ))}
+                        {(currentQuestionIndex === 0 && !firstOthersSelected) || (currentQuestionIndex === 1 && !othersSelected) ? (
                           <div
                             onClick={handleOthersSelect}
-                            className={`px-4 py-2 border rounded-md cursor-pointer text-sm md:text-lg transition duration-200 ${(othersSelected && currentQuestionIndex === 1) || (firstOthersSelected && currentQuestionIndex === 0)
-                                ? "bg-[#8A62F6] text-white border-[#8A62F6] shadow-md"
-                                : "border-gray-400 text-gray-700 hover:bg-gray-100"
-                              }`}
+                            className="px-4 py-2 border hover:bg-[#8A62F6] hover:text-white rounded-md cursor-pointer text-sm md:text-lg transition duration-200 border-gray-400"
                           >
                             Others
                           </div>
-                        )}
+                        ) : null}
                       </div>
                     </div>
                 </>

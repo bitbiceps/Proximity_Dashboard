@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import requests from "../axios/instance";
 import { routes } from "../utils";
+import { BrandHeader } from "../components/common/BrandHeader";
 
 const EmailVerification = () => {
   const [status, setStatus] = useState(""); // can be 'loading', 'success', or 'error'
@@ -143,17 +144,23 @@ const EmailVerification = () => {
   );
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+    <div>
+      <BrandHeader/>
+    <div className="flex items-center justify-center min-h-[80vh]">
       {/* Button to manually trigger the verification */}
       {status === "" && (
+      <div className="flex flex-col gap-2 justify-center items-center">
+        <h2 className="text-lg md:text-2xl text-gray-700 text-center font-semibold mb-8"> Verify your email and start using Proximity seamlessly </h2>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleTokenVerification}
-          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-app-blue-1 text-white px-6 py-2 rounded-lg hover:scale-105 transition-all"
         >
           Verify My Email
         </motion.button>
+      </div>
+
       )}
 
       {/* Show the loader only after the user clicks the button and verification starts */}
@@ -165,6 +172,8 @@ const EmailVerification = () => {
       {/* Show error message if the status is "error" */}
       {status === "error" && renderError()}
     </div>
+    </div>
+
   );
 };
 
