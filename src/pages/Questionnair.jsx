@@ -378,10 +378,7 @@ export const Questionnair = () => {
                             <div
                               key={index}
                               onClick={() => handleAnswerChange(option)}
-                              className={`px-4 py-2 border rounded-md hover:bg-[#8A62F6] hover:text-white cursor-pointer text-sm md:text-lg transition duration-200 ${answers[currentQuestionIndex] === option
-                                ? "bg-[#8A62F6] text-white border-[#8A62F6] shadow-md"
-                                : "border-gray-400 text-gray-700 hover:bg-gray-100"
-                                }`}
+                              className={`px-4 py-2 border rounded-md hover:bg-[#8A62F6] hover:text-white cursor-pointer text-sm md:text-lg transition duration-200`}
                             >
                               {option}
                             </div>
